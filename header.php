@@ -8,7 +8,7 @@
 </head>
 
 <body <?php body_class(); ?>>
-    <div class="container">
+    <div class="container-header">
          <div class="header-logo">
             <img src="    <?php
                             echo get_theme_file_uri('assets/images/logo1.png'); ?>" />

@@ -13,9 +13,9 @@ $qty = $_POST['quantity'];
 
     $_SESSION['productitems'][$id] = $qty;
   }
-  echo "<pre>";
-  print_r($_SESSION);
-  echo "</pre>";
+  // echo "<pre>";
+  // print_r($_SESSION);
+  // echo "</pre>";
 }
 if (have_posts()) {
   while (have_posts()) {
