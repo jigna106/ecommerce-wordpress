@@ -17,7 +17,6 @@ $qty = $_POST['quantity'];
   print_r($_SESSION);
   echo "</pre>";
 }
-
 if (have_posts()) {
   while (have_posts()) {
     the_post();

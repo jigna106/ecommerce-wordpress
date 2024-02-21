@@ -7,6 +7,7 @@ if (have_posts()) {
   while (have_posts()) {
     the_post();
 ?>
+<div class="product-itmes">
     <a href="<?php echo get_permalink() ?>">
       <div class="title">
         <h1><?php the_title(); ?></h1>
@@ -22,6 +23,7 @@ if (have_posts()) {
         </h1>
       </div>
     </a>
+  </div>
 <?php
   }
 }
