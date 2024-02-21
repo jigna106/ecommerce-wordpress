@@ -164,6 +164,7 @@ a {
 .btn-area i {
 	margin-right: 5px;
 }
+
 .right-bar {
 	flex: 25%;
 	margin-left: 20px;
@@ -221,7 +222,7 @@ a {
 		flex-direction: column;
 	}
 	.right-bar {
-		margin-left: 0;
+		margin-left: 20px;
 		margin-bottom: 20px;
 	}
 }

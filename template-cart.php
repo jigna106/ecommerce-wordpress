@@ -2,7 +2,6 @@
 get_header();
 
 // echo "<pre>";
-
 // print_r($_SESSION);
 // echo "</pre>";
 
@@ -17,24 +16,27 @@ if (isset($_POST['qtysubmit'])) {
 
 if (isset($_SESSION['productitems'])) {
 ?>
-    <form method="post">
-        <input type="submit" name=emptycartsubmit value="Empty Cart" />
-    </form>
-
+    <div class="empty-cart">
+        <form method="post">
+        
+        <i class="bi bi-cart">     <input type="submit" name=emptycartsubmit value="Empty Cart" /></i>
+        </form>
+    </div>
     <?php
-
-    $grandtotal = 100;
+ $grandtotal = 100;
     ?>
-    <h1>Your Bill Summery</h1>
-    <?php
-    foreach ($_SESSION['productitems'] as $product_id => $qty) {
-        $product = get_post($product_id);
-    ?>
-        <div class="wrapper">
+ <div class="wrapper">
+        <h1>Your Bill Summery</h1>
+        <div class="project">
+            <?php
 
-            <div class="project">
+            foreach ($_SESSION['productitems'] as $product_id => $qty) {
+                $product = get_post($product_id);
+            ?>
                 <div class="shop">
+
                     <div class="box">
+
                         <img src="<?php echo  get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px">
                         <div class="content">
                             Title : <?php echo get_the_title($product_id); ?>
@@ -49,22 +51,24 @@ if (isset($_SESSION['productitems'])) {
                                 $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int)$qty; ?>
                                 Sub Total : <?php echo  $subtotal;
                                             $grandtotal += $subtotal ?></p>
-                            <p class="btn-area"><i class="bi bi-trash"></i><span class="btn2">Remove</span></p>
+
                         </div>
                     </div>
                 </div>
 
+
+
+
+            <?php
+            }
+            ?>
+            <div class="right-bar">
+               
+                <p><span>Shipping Cost</span><span>100</span></p>
+                <hr>
+                <p><span>Grand Total</span> <span><?php echo $grandtotal; ?></span>
             </div>
         </div>
-
-    <?php
-    }
-    ?>
-    <div class="right-bar">
-        <p><span>Shipping Cost</span> <span>100</span></p>
-        <hr>
-        <p><span>Grand Total</span> <span><?php echo $grandtotal; ?></span>
-
     </div>
 <?php
 } else {
