@@ -1,12 +1,12 @@
 
 
 
-
-<?php wp_footer(); ?>
-</body>
-<div class="footer">
-2024@abc.com
 </div>
+<div class="footer">
+    <?php wp_footer(); ?>
+    2024@abc.com
+</div>
+</body>
 </html>
 
 

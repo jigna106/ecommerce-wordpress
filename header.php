@@ -18,3 +18,4 @@
             wp_nav_menu(array('menu' => 'header-menu')); ?>
         </div>
     </div>
+    <div class="main-content">

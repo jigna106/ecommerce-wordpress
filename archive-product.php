@@ -21,10 +21,6 @@ if (have_posts()) {
                     ?>
         </h1>
       </div>
-      <div>
-      </div>
-
-      </div>
     </a>
 <?php
   }

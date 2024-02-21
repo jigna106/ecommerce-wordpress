@@ -38,14 +38,19 @@ a {
   float: right;
   color: black
 }
-/* .footer{
+.main-content {
+  width: 100%;
+  float: left;
+}
+.footer{
   background-color: #d5e3ea;
   height: 37px;
-
   text-align: center;
   font-size: x-large;
-  padding: 50px; 
-} */
+  padding: 50px;
+  float: left;
+  width: 100%;
+}
 .product-picture img{
   height: 500px;
   padding: 100px;
