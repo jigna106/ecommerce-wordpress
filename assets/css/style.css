@@ -68,103 +68,7 @@ a {
   
 
 }
-.item-details {
-  display: flex;
-  align-content: space-around;
-  align-items: flex-end;
-  flex-direction: column;
-  margin: 150px
-}
-.product-wrapp{
-  display: flex;
-}
-.product-itmes {
-  float: left;
-}
-.product-itmes a{
-	text-decoration: none;
-    color: black;
-	
-  }
-  
-  .product-image {width: 20%; }
-  .product-details { float: left; width: 30%; }
-  .product-price { float: left; width: 12%; }
-  .product-quantity { float: left; width: 10%; }
-  .product-removal { float: left; width: 9%; }
-  .product-line-price { float: left; width: 12%; text-align: right; }
 
-  .column-labels label {
-	
-	  padding-bottom: 15px;
-	  margin-bottom: 15px;
-	  border-bottom: 1px solid color-border;
-	
-  }
-  
-  
-
-  .product {
-
-	margin-bottom: 20px;
-	padding-bottom: 10px;
-	border-bottom: 1px solid color-border;
-  }
-.product-image img {
-	  text-align: center;
-	  width: 100px;
-	  
-	}
-	
-	  .product-title {
-		margin-right: 20px;
-		font-family: font-bold;
-	  }
-	  
-	 
-	
-	.product-quantity  input {
-	  
-		width: 40px;
-		
-	  
-	}
-	
-	.remove-product {
-	  border: 0;
-	  padding: 4px 8px;
-	  background-color: #c66;
-	  color: #fff;
-	  font-family: font-bold;
-	  font-size: 12px;
-	  border-radius: 3px;
-	}
-	
-	
-.totals-item {
-	  float: right;
-	  clear: both;
-	  width: 100%;
-	  margin-bottom: 10px;
-	  
-	  label {
-		float: left;
-		clear: both;
-		width: 79%;
-		text-align: right;
-	  }
-	  
-	  .totals-value {
-		float: right;
-		width: 21%;
-		text-align: right;
-	  }
-	}
-	
-	.totals-item-total {
-	  font-family: font-bold;
-	}
- 
   
   .checkout {
 	float: right;
@@ -181,6 +85,19 @@ a {
 	background-color: #494;
   }
   
+  .product-section .product-table{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+  .product-section .billing-details{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+    border-radius: 5px;
+    padding: 5px;
+  }
   
 
   
