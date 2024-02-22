@@ -27,9 +27,11 @@ if (isset($_SESSION['productitems'])) {
     <?php
     $grandtotal = 100;
     ?>
-    <h1>Summary Bill</h1>
+    <h1>Bill Summary</h1>
+    <div class="container">
     <div class="shopping-cart">
-        <div class="column-labels">
+    
+    <div class="column-labels">
             <label class="product-image">Image</label>
             <label class="product-details">Product</label>
             <label class="product-price">Price</label>
@@ -37,6 +39,8 @@ if (isset($_SESSION['productitems'])) {
             <label class="product-removal">Remove</label>
             <label class="product-line-price">Total</label>
         </div>
+    
+       
         <?php
         foreach ($_SESSION['productitems'] as $product_id => $qty) {
             $product = get_post($product_id);
@@ -90,7 +94,9 @@ if (isset($_SESSION['productitems'])) {
             </div>
         </div>
 
+
         <button class="checkout">Checkout</button>
+    </div>
     </div>
 <?php
 } else {

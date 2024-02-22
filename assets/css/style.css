@@ -65,7 +65,7 @@ a {
 }
 .product-picture img{
   height: 500px;
-  padding: 100px;
+  
 
 }
 .item-details {
@@ -87,85 +87,47 @@ a {
 	
   }
   
-  
-  
-  /* Global "table" column settings */
-  .product-image { width: 20%; }
-  .product-details { float: left; width: 37%; }
+  .product-image {width: 20%; }
+  .product-details { float: left; width: 30%; }
   .product-price { float: left; width: 12%; }
   .product-quantity { float: left; width: 10%; }
   .product-removal { float: left; width: 9%; }
   .product-line-price { float: left; width: 12%; text-align: right; }
-  
-  
-  /* This is used as the traditional .clearfix class */
-  .group:before,
-  .group:after {
-	  content: '';
-	  display: table;
-  } 
-  .group:after {
-	  clear: both;
-  }
-  .group {
-	  zoom: 1;
-  }
-  h1 {
-	font-weight: 100;
-  }
-  
-  label {
-	color: color-label;
-  }
-  
-  .shopping-cart {
-	margin-top: -45px;
-  }
-  
-  
-  /* Column headers */
-  .column-labels {
-	label {
+
+  .column-labels label {
+	
 	  padding-bottom: 15px;
 	  margin-bottom: 15px;
 	  border-bottom: 1px solid color-border;
-	}
 	
-	.product-image, .product-details, .product-removal {
-	  text-indent: -9999px;
-	}
   }
   
   
-  /* Product entries */
+
   .product {
+
 	margin-bottom: 20px;
 	padding-bottom: 10px;
 	border-bottom: 1px solid color-border;
-	
-	.product-image img {
+  }
+.product-image img {
 	  text-align: center;
-	  
-		width: 100px;
+	  width: 100px;
 	  
 	}
 	
-	.product-details {
 	  .product-title {
 		margin-right: 20px;
 		font-family: font-bold;
 	  }
-	  .product-description {
-		margin: 5px 20px 5px 0;
-		line-height: 1.4em;
-	  }
-	}
+	  
+	 
 	
-	.product-quantity {
-	  input {
+	.product-quantity  input {
+	  
 		width: 40px;
 		
-	  }
+	  
 	}
 	
 	.remove-product {
@@ -178,15 +140,8 @@ a {
 	  border-radius: 3px;
 	}
 	
-	.remove-product:hover {
-	  background-color: #a44;
-	}
-  }
-  
-  
-  /* Totals section */
-  .totals {
-	.totals-item {
+	
+.totals-item {
 	  float: right;
 	  clear: both;
 	  width: 100%;
@@ -209,7 +164,7 @@ a {
 	.totals-item-total {
 	  font-family: font-bold;
 	}
-  }
+ 
   
   .checkout {
 	float: right;
@@ -226,88 +181,8 @@ a {
 	background-color: #494;
   }
   
-  /* Make adjustments for tablet */
-  @media screen and (max-width: 650px) {
-	
-	.shopping-cart {
-	  margin: 0;
-	  padding-top: 20px;
-	  border-top: 1px solid color-border;
-	}
-	
-	.column-labels {
-	  display: none;
-	}
-	
-	.product-image {
-	  /* float: right; */
-	  width: auto;
-	  img {
-		margin: 0 0 10px 10px;
-	  }
-	}
-	
-	.product-details {
-	  float: none;
-	  margin-bottom: 10px;
-	  width: auto;
-	}
-	
-	.product-price {
-	  clear: both;
-	  width: 70px;
-	}
-	
-	.product-quantity {
-	  width: 100px;
-	  input {
-		margin-left: 20px;
-	  }
-	}
-	
-	.product-quantity:before {
-	  content: 'x';
-	}
-	
-	.product-removal {
-	  width: auto;
-	}
-	
-	.product-line-price {
-	  float: right;
-	  width: 70px;
-	}
-	
-}
+  
 
   
   
-  @media screen and (max-width: 350px) {
-	
-	.product-removal {
-	  float: right;
-	}
-	
-	.product-line-price {
-	  float: right;
-	  clear: left;
-	  width: auto;
-	  margin-top: 10px;
-	}
-	
-	.product .product-line-price:before {
-	  content: 'Item Total: $';
-	}
-	
-	.totals {
-	  .totals-item {
-		label {
-		  width: 60%;
-		}
-		
-		.totals-value {
-		  width: 40%;
-		}
-	  }
-	}
-  }
+  
