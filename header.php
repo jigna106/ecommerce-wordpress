@@ -8,14 +8,15 @@
 </head>
 
 <body <?php body_class(); ?>>
-    <div class="container-header">
-         <div class="header-logo">
-            <img src="    <?php
-                            echo get_theme_file_uri('assets/images/logo1.png'); ?>" />
-        </div>
-        <div class="header-link">
-            <?php
-            wp_nav_menu(array('menu' => 'header-menu')); ?>
-        </div>
+
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary" id="navigation">
+  <div class="container-fluid">
+    <div class="header-logo">
+        <img src="<?php echo get_theme_file_uri('assets/images/logo1.png'); ?>" />
     </div>
-    <div class="main-content">
+    <div class="header-link">
+        <?php wp_nav_menu(array('menu' => 'header-menu')); ?>
+    </div>
+  </div>
+</nav>
