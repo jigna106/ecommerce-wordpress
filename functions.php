@@ -76,6 +76,7 @@ function wpdocs_theme_name_scripts()
 
   wp_enqueue_style('ecommerce-boostrap-css', get_template_directory_uri() . '/assets/css/bootstrap.min.css',rand(),true);
   wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js',rand(),true);
+  
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
 

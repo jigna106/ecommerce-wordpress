@@ -1,6 +1,3 @@
-
-
-
 </div>
 <div class="footer">
     <?php wp_footer(); ?>

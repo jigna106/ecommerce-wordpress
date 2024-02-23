@@ -86,11 +86,11 @@ if (isset($_SESSION['productitems'])) {
             <div class="col-2 billing-details pt-5">
                 <div class="totals">
                     <div class="totals-item">
-                        <label>Shipping</label>
+                        Shipping:
                         <div class="totals-value" id="cart-shipping">100</div>
                     </div>
                     <div class="totals-item totals-item-total">
-                        <label>Grand Total</label>
+                      Grand Total:
                         <div class="totals-value" id="cart-total">
                             <?php echo $grandtotal; ?>
                         </div>
@@ -98,7 +98,7 @@ if (isset($_SESSION['productitems'])) {
                 </div>
 
 
-                <button class="checkout">Checkout</button>
+                  <a href="checkout.php"><button class="checkout">Checkout</button></a>
             </div>
         </div>
     </div>

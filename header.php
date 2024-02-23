@@ -7,6 +7,7 @@
 
   <?php session_start();
   wp_head(); ?>
+  <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 </head>
 
 <body <?php body_class(); ?>>
