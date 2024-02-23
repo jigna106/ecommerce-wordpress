@@ -1,12 +1,5 @@
 
-/* .container-header {
-  background-color: #d5e3ea;
-  max-height: 100px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
- height: 100%;
-} */
+
 #navigation{
 	background-color: #d5e3ea !important;
 }
@@ -33,18 +26,7 @@ ul#menu-header-menu {
 
 
 
-p {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: x-large;
-}
-a {
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: larger;
-  float: right;
-  color: black
-}
+
 .main-content {
   /* width: 100%; */
   float: left;

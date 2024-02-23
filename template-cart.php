@@ -25,7 +25,7 @@ if (isset($_SESSION['productitems'])) {
                         <path
                             d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                     </svg> Empty Cart</button>
-                <!-- <input type="submit" name=emptycartsubmit value="Empty Cart" /> -->
+                
             </form>
         </div>
         <div class="row">
@@ -61,7 +61,7 @@ if (isset($_SESSION['productitems'])) {
                                 <input type="hidden" name="hiddenid" value="<?php echo $product_id ?>" />
                                 <input type="number" class="w-75" id="quantity" name="quantity" min="1"
                                     value="<?php echo $qty; ?>" />
-                                <input type="submit" name="qtysubmit" value="Update Quantity" />
+                                <input type="submit" name="qtysubmit" value="Update Quantity"/>
                             </form>
                         </div>
                         <div class="col-2 pt-3">
@@ -83,7 +83,7 @@ if (isset($_SESSION['productitems'])) {
                 }
                 ?>
             </div>
-            <div class="col-2 billing-details">
+            <div class="col-2 billing-details pt-5">
                 <div class="totals">
                     <div class="totals-item">
                         <label>Shipping</label>
@@ -92,7 +92,7 @@ if (isset($_SESSION['productitems'])) {
                     <div class="totals-item totals-item-total">
                         <label>Grand Total</label>
                         <div class="totals-value" id="cart-total">
-                            <?php //echo $grandtotal;                 ?>
+                            <?php echo $grandtotal; ?>
                         </div>
                     </div>
                 </div>

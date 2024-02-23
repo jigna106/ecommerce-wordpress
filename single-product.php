@@ -20,36 +20,38 @@ if (have_posts()) {
     the_post();
 ?>
     <div class="container">
-      <div class="row">
-        <div class="col-6 ">
-          <div class="card">
-            <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>">
+      <div class="row  justify-content-between">
+        <div class="col-6 img-thumbnail">
+            <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>"   width="100%" height="100%"/>
+           </div>
+        <div class="col-4 d-flex align-items-center">
+          <form method="post">
+           
+              <div class="pt-5">
+               <b>Title: </b><?php the_title(); ?></div>
+              <div class="pt-5">
+                <b>Price: </b> <?php $price = get_post_meta($post->ID, 'ecommerce_price');
+                        print_r($price[0]);
+                        ?>
+              </div>
+              <div class ="pt-5">
+               <b>Quantity</b>
+                <input type="number" class="w-29" id="quantity" name="quantity" min="1" />
+              </div>
+              <div class="pt-5">
+                <input type="submit" name="submit" value="ADD TO CART" class="btn btn-secondary" />
+              </div>
             </div>
-            </div>
-            <div class="col-6">
-            <form method="post">
-              
-                <h2 class="card-title"> Price:<?php the_title(); ?></h2>
-              
+        
 
-                <h3>Price: <?php $price = get_post_meta($post->ID, 'ecommerce_price');
-                                print_r($price[0]);
-                                ?>
-                    </h3>
-               <label for="quantity">Quantity</label>
-                <input type="number" id="quantity" name="quantity" min="1" />
-                <input type="submit" name="submit" value="ADD TO CART" />
-                 
-                </div>
-              
 
-            </form>
-          
-            </div>
+        </form>
+
       </div>
     </div>
-  <?php
+    </div>
+<?php
   }
 }
 get_footer();
-  ?>
+?>
