@@ -73,9 +73,10 @@ function wpdocs_theme_name_scripts()
 {
   wp_enqueue_style('ecommerce-boostrap-icon-css', get_template_directory_uri() . '/assets/css/bootstrap-icons.css');
   wp_enqueue_style('ecommerce-style-css', get_template_directory_uri() . '/assets/css/style.css',rand(),true);
-
   wp_enqueue_style('ecommerce-boostrap-css', get_template_directory_uri() . '/assets/css/bootstrap.min.css',rand(),true);
-  wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js',rand(),true);
+  wp_enqueue_script('jquery');
+  wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js',array(),rand(),true);
+  wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js',array('jquery'),rand(),true);
   
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
@@ -90,4 +91,22 @@ function register_my_menus()
   );
 }
 add_action('init', 'register_my_menus');
+
+
+function shop_orders()
+{
+  $Orders = array(
+    'name'          => 'Shoporder',
+    'label'        => __('Shoporder'),
+    'supports' => array('title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields'),
+    'public'      => true,
+    'has_archive' => true,
+    'menu_icon' => 'dashicons-update'
+  );
+  add_theme_support('custom-header');
+  add_theme_support('automatic-feed-links');
+  add_theme_support('post-thumbnails');
+  register_post_type('shoporder', $Orders);
+}
+add_action('init', 'shop_orders');
 ?>

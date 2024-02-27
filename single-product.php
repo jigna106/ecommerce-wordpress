@@ -39,7 +39,7 @@ if (have_posts()) {
                 <input type="number" class="w-29" id="quantity" name="quantity" min="1" />
               </div>
               <div class="pt-5">
-                <input type="submit" name="submit" value="ADD TO CART" class="btn btn-secondary" />
+            <a href="<?php echo get_permalink(94); ?>"><input type="submit" name="submit" value="ADD TO CART" class="btn btn-secondary" /></a>
               </div>
             </div>
         
