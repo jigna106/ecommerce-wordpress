@@ -6,7 +6,7 @@ get_header();
 
 if (isset($_POST['placeorder'])) {
 
-  echo "<pre>";
+echo "<pre>";
 print_r($_POST);
 print_r($_SESSION);
 echo "</pre>";
@@ -74,14 +74,14 @@ echo "</pre>";
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="firstName">First name</label>
-            <input type="text" class="form-control" id="firstName" placeholder="" value="Jigna" >
+            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" value="Jigna" >
             <div class="invalid-feedback">
               Valid first name is required.
             </div>
           </div>
           <div class="col-md-6 mb-3">
             <label for="lastName">Last name</label>
-            <input type="text" class="form-control" id="lastName" placeholder="" value="" >
+            <input type="text" class="form-control" id="lastName"  name="lastName" placeholder="" value="" >
             <div class="invalid-feedback">
               Valid last name is required.
             </div>
@@ -89,14 +89,14 @@ echo "</pre>";
         </div>
         <div class="mb-3">
           <label for="email">Email</label>
-          <input type="email" class="form-control" id="email">
+          <input type="email" class="form-control" id="email" name="email">
           <div class="invalid-feedback">
             Please enter a valid email address for shipping updates.
           </div>
         </div>
         <div class="mb-3">
           <label for="address">Address</label>
-          <input type="text" class="form-control" id="address" placeholder="" >
+          <input type="text" class="form-control" id="address" placeholder="" name="address" >
           <div class="invalid-feedback">
             Please enter your shipping address.
           </div>
@@ -104,13 +104,13 @@ echo "</pre>";
 
         <div class="mb-3">
           <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
-          <input type="text" class="form-control" id="address2" placeholder="">
+          <input type="text" class="form-control" id="address2" placeholder="" name="address2">
         </div>
 
         <div class="row">
           <div class="col-md-5 mb-3">
             <label for="country">Country</label>
-            <select class="custom-select d-block w-100" id="country" >
+            <select class="custom-select d-block w-100" id="country"  name ="country">
               <option value="">Choose...</option>
               <option>India</option>
             </select>
@@ -120,7 +120,7 @@ echo "</pre>";
           </div>
           <div class="col-md-4 mb-3">
             <label for="state">State</label>
-            <select class="custom-select d-block w-100" id="state">
+            <select class="custom-select d-block w-100" id="state" name ="state">
               <option value="">Choose...</option>
               <option value="Gujarat">Gujarat</option>
               <option value="Goa">Goa</option>
@@ -136,7 +136,7 @@ echo "</pre>";
           </div>
           <div class="col-md-3 mb-3">
             <label for="zip">Zip</label>
-            <input type="text" class="form-control" id="zip" placeholder="">
+            <input type="text" class="form-control" id="zip" placeholder="" name="zip"> 
             <div class="invalid-feedback">
               Zip code required.
             </div>
