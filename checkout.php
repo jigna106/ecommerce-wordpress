@@ -1,5 +1,5 @@
 <?php /* Template Name: checkout */
-get_header();
+session_start();
 if (isset($_POST['placeorder'])) {
   echo "<pre>";
   print_r($_POST);
@@ -29,8 +29,13 @@ if (isset($_POST['placeorder'])) {
 
   unset($_POST);
   unset($_SESSION['productitems']);
-}
 
+  // print_r(get_permalink(147));
+
+  wp_redirect(get_permalink(147) . '?Order_id=' . $id);
+  exit;
+}
+get_header();
 ?>
 <div class="container">
   <form class="" method="post">
@@ -76,6 +81,7 @@ if (isset($_POST['placeorder'])) {
 
           <div class="input-group-append">
             <button class="btn btn-success btn-lg btn-block" type="submit" name="placeorder">Place Order</button>
+
           </div>
       </div>
 
@@ -207,15 +213,9 @@ if (isset($_POST['placeorder'])) {
           </div>
         </div>
       </div>
-
-
-
     </div>
-
   </form>
 </div>
-
-
 <?php
 get_footer();
 ?>

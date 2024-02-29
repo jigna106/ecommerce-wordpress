@@ -32,7 +32,7 @@ function product_price_display($post)
   <input type="text" id="price" name="price" value="<?php echo $Pricevalue ?>" /><br>
   <lable for="sale price">Sale price</lable>
   <input type="text" id="saleprice" name="saleprice" value="<?php echo $salepricevalue ?>" />
-  <?php
+<?php
 }
 
 function save_postdata($post_id)
@@ -81,6 +81,13 @@ function wpdocs_theme_name_scripts()
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
 
+
+function admin_css()
+{
+  wp_enqueue_style('ecommerce-style-css', get_template_directory_uri() . '/assets/css/admin.css', rand(), true);
+}
+add_action('admin_enqueue_scripts', 'admin_css');
+
 function register_my_menus()
 {
   register_nav_menus(
@@ -98,14 +105,12 @@ function shop_orders()
   $Orders = array(
     'name'          => 'Shoporder',
     'label'        => __('Shoporder'),
-    'supports' => array('title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields'),
+    'supports' => array('title', 'editor', 'author'),
     'public'      => true,
     'has_archive' => true,
     'menu_icon' => 'dashicons-update'
   );
-  add_theme_support('custom-header');
-  add_theme_support('automatic-feed-links');
-  add_theme_support('post-thumbnails');
+
   register_post_type('shoporder', $Orders);
 }
 add_action('init', 'shop_orders');
@@ -114,69 +119,64 @@ add_action('init', 'shop_orders');
 
 function ecommerce_billingdata_()
 {
-  add_meta_box('billing-id', 'Billing-Data', 'billingdata_display');
+  add_meta_box('billing-id', 'Billing-Data', 'billingdata_display','shoporder');
 }
 add_action('add_meta_boxes', 'ecommerce_billingdata_');
 
 function billingdata_display($post)
-{ 
+{
   $data = get_post_meta($post->ID, 'ecommerce_billing_data', true);
-    // print_r($data);
-    echo '<p><strong>' . __('firstname') . ':</strong> ' .$data['firstName']. '</p>';
-    echo '<p><strong>' . __('lastname') . ':</strong> ' . $data['lastName']. '</p>';
-    echo '<p><strong>' . __('email') . ':</strong> ' .$data['email']. '</p>';
-    echo '<p><strong>' . __('Address') . ':</strong> ' .$data['address']. '</p>';
-    echo '<p><strong>' . __('paymentmethod') . ':</strong> ' .$data['paymentMethod']. '</p>';
-   }
+  // print_r($data);
+  echo '<p><strong>' . __('firstname') . ':</strong> ' . $data['firstName'] . '</p>';
+  echo '<p><strong>' . __('lastname') . ':</strong> ' . $data['lastName'] . '</p>';
+  echo '<p><strong>' . __('email') . ':</strong> ' . $data['email'] . '</p>';
+  echo '<p><strong>' . __('Address') . ':</strong> ' . $data['address'] . '</p>';
+  echo '<p><strong>' . __('paymentmethod') . ':</strong> ' . $data['paymentMethod'] . '</p>';
+}
 
 function ecommerce_cartdata()
 {
-  add_meta_box('cart-id', 'Cart-Data', 'ecommerce_cartdata_display');
+  add_meta_box('cart-id', 'Cart-Data', 'ecommerce_cartdata_display','shoporder');
 }
 add_action('add_meta_boxes', 'ecommerce_cartdata');
 function ecommerce_cartdata_display($post)
 {
   $cartdata = get_post_meta($post->ID, 'ecommerce_cart_data', true);
-   print_r($cartdata);
-   $grandtotal=100;
-  foreach ($cartdata['productitems'] as $product_id => $qty) {
-?>
+  // print_r($cartdata); 
 
-    <div class="row">
-    <div class="col-2 pt-3">
-        <img src="<?php echo get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px">
-    </div>
-    <div class="col-2 pt-3">
-        <?php echo get_the_title($product_id); ?>
-    </div>
-    <div class="col-2 pt-3">
-        <?php echo get_post_meta($product_id, "ecommerce_price", true); ?>
-    </div>
-    <div class="col-2 pt-3">
-        <form method="post">
-            <input type="hidden" name="hiddenid" value="<?php echo $product_id ?>" />
-            <input type="number" class="w-75" id="quantity" name="quantity" min="1" value="<?php echo $qty; ?>" />
-            <input type="submit" name="qtysubmit" value="Update Quantity" />
-        </form>
-    </div>
-    <div class="col-2 pt-3">
+?>
+  <div class="admin-cartdata">
+    <table style="width:100%">
+      <tr>
+        <th>Image</th>
+        <th>Title</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>subTotal</th>
+        <th>Grand total</th>
+      </tr>
+      <?php
+      $grandtotal = 100;
+      foreach ($cartdata['productitems'] as $product_id => $qty) {
+      ?>
+        <tr>
+          <td><img src="<?php echo get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px"></td>
+          <td><?php echo get_the_title($product_id); ?></td>
+          <td><?php echo $qty ?></td>
+          <td> <?php echo get_post_meta($product_id, "ecommerce_price", true); ?></td>
+          <td><?php $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
+            <?php echo $subtotal;
+            $grandtotal += $subtotal; ?></td>
+
+
         <?php
-        $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
-        <?php echo $subtotal;
-        $grandtotal += $subtotal; ?>
+      }
+        ?>
+        <td><?php echo $grandtotal; ?></td>
+        </tr>
 
-    </div>
-    <div class="col-2 pt-3">
-   <form method="post">
-        <button type="submit" name="remove" class="btn btn-danger" value="<?php echo $product_id ?>">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-x" viewBox="0 0 16 16">
-                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-            </svg>Remove</button>
-   </form>
-    </div>
-</div>
+
+    </table>
+  </div>
 <?php
-  }
- 
 }
-?>
