@@ -30,7 +30,7 @@ if (isset($_POST['placeorder'])) {
   unset($_POST);
   unset($_SESSION['productitems']);
 
-  // print_r(get_permalink(147));
+  
 
   wp_redirect(get_permalink(147) . '?Order_id=' . $id);
   exit;

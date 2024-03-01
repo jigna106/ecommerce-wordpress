@@ -79,7 +79,9 @@ ul#menu-header-menu {
     border-radius: 5px;
     padding: 5px;
   }
-
+  .cart-detail.d-flex.justify-content-around.mb-3 {
+    border: ridge;
+}
 
 
   
