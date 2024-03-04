@@ -3,7 +3,6 @@ get_header();
 if (isset($_POST['signup'])) {
     // print_r($_POST);
     $userdata = array(
-
         'user_login' =>  $_POST['firstname'],
         'user_email' =>  $_POST['email'],
         'user_pass'  =>   $_POST['password'],

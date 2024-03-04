@@ -68,16 +68,31 @@ function add_product_taxonomy()
 
   );
   register_taxonomy('brand', 'product', $args);
+
+
+  $args = array(
+    'label' => __('Category'),
+    'rewrite' => array('slug' => 'category'),
+    'hierarchical' => true,
+
+  );
+  register_taxonomy('Category', 'product', $args);
 }
 add_action('init', 'add_product_taxonomy');
+
 function wpdocs_theme_name_scripts()
 {
   wp_enqueue_style('ecommerce-boostrap-icon-css', get_template_directory_uri() . '/assets/css/bootstrap-icons.css');
   wp_enqueue_style('ecommerce-style-css', get_template_directory_uri() . '/assets/css/style.css', rand(), true);
   wp_enqueue_style('ecommerce-boostrap-css', get_template_directory_uri() . '/assets/css/bootstrap.min.css', rand(), true);
+  wp_enqueue_style('ecommerce-swiper-css', get_template_directory_uri() . '/assets/css/swiper.css', rand(), true);
   wp_enqueue_script('jquery');
+  wp_enqueue_script('ecommerce-swiper-script', get_template_directory_uri() . '/assets/js/swiper-bundle.min.js');
   wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js', array(), rand(), true);
   wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), rand(), true);
+  
+ 
+  
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
 
@@ -178,5 +193,11 @@ function ecommerce_cartdata_display($post)
 
     </table>
   </div>
+
+
+
+
+  
 <?php
 }
+

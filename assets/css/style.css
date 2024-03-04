@@ -82,8 +82,13 @@ ul#menu-header-menu {
   .cart-detail.d-flex.justify-content-around.mb-3 {
     border: ridge;
 }
+.carousel-item img{
+  width: 100%;
+    height: calc(100% - 120px) ;
 
+} 
+.card{
 
-  
-  
+  border: none !important;
+}
   
