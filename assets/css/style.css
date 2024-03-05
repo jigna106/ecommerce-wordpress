@@ -11,7 +11,7 @@ body{
   align-content: space-around;
   flex-wrap: wrap;
 }
-.header-link .menu-header-menu-container ul li a{
+.header-link .menu-menu-1-container ul li a{
 	color:black !important;
 	text-decoration: none;
 	padding: 14px 16px;
@@ -19,7 +19,7 @@ body{
 .header-logo img{
    height: 110px;
 }
-ul#menu-header-menu {
+ul#menu-menu-1 {
   display: flex;
   padding: 32px;
   float: left;
@@ -49,9 +49,7 @@ ul#menu-header-menu {
   
 
 }
-
-  
-  .checkout {
+.checkout {
 	float: right;
 	border: 0;
 	margin-top: 20px;
@@ -91,4 +89,10 @@ ul#menu-header-menu {
 
   border: none !important;
 }
-  
+.list-item a{
+   text-decoration: none !important;
+   color: black !important;
+
+
+}
+

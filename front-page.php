@@ -1,6 +1,5 @@
 <?php
 get_header();
-
 ?>
 <div id="demo" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
@@ -38,36 +37,39 @@ $the_query = new WP_Query($args);
 if ($the_query->have_posts()) {
 ?>
     <div class="container">
-        <div class="row d-flex justify-content-between">
+        <div class="row">
+            <h1>Latest Product</h1>
+            <div class="row d-flex justify-content-between">
 
 
-            <?php
+                <?php
 
-            while ($the_query->have_posts()) {
-                $the_query->the_post();
+                while ($the_query->have_posts()) {
+                    $the_query->the_post();
 
-            ?>
-                <div class="card" style="width: 18rem;">
-                    <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
-                        <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title"><?php the_title(); ?></h5>
-                            <p class="card-text">price: <?php $price = get_post_meta($post->ID, 'ecommerce_price');
-                                                        print_r($price[0]);
-                                                        ?></p>
-                    </a>
-                </div>
+                ?>
+                    <div class="card" style="width: 18rem;">
+
+                        <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
+                            <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php the_title(); ?></h5>
+                                <p class="card-text">price: <?php $price = get_post_meta($post->ID, 'ecommerce_price');
+                                                            print_r($price[0]);
+                                                            ?></p>
+                        </a>
+                    </div>
+            </div>
+
+        <?php
+
+                }
+
+        ?>
         </div>
-
-    <?php
-
-            }
-
-    ?>
-    </div>
     </div>
 
 <?php
-} 
+}
 get_footer();
 ?>

@@ -63,20 +63,28 @@ function add_product_taxonomy()
 {
   $args = array(
     'label' => __('Brand'),
-    'rewrite' => array('slug' => 'brand'),
+    'slug' => __('brand'),
     'hierarchical' => true,
+    'public' => true,
+    'publicly_queryable' => true,
+    'show_ui' => true,
+    'show_in_menu' => true,
+    'show_in_nav_menus' => true,
 
   );
   register_taxonomy('brand', 'product', $args);
-
-
   $args = array(
     'label' => __('Category'),
-    'rewrite' => array('slug' => 'category'),
+    'slug' => __('product_cat'),
     'hierarchical' => true,
+    'public' => true,
+    'publicly_queryable' => true,
+    'show_ui' => true,
+    'show_in_menu' => true,
+    'show_in_nav_menus' => true,
 
   );
-  register_taxonomy('Category', 'product', $args);
+  register_taxonomy('product_cat', 'product', $args);
 }
 add_action('init', 'add_product_taxonomy');
 
