@@ -24,7 +24,7 @@ $catgories = get_categories($args);
                         <h3>
                             <a href="<?php echo get_category_link($catgoriy->term_id) ?>">
                                 <?php echo $catgoriy->name; ?>
-                                 </a>
+                                 </a></h3>
                     </div>
                 </div>
 

@@ -57,8 +57,6 @@ function save_saleprice($post_id)
   }
 }
 add_action('save_post', 'save_saleprice');
-
-
 function add_product_taxonomy()
 {
   $args = array(
@@ -85,6 +83,19 @@ function add_product_taxonomy()
 
   );
   register_taxonomy('product_cat', 'product', $args);
+
+  $args = array(
+    'label' => __('Color'),
+    'slug' => __('Color'),
+    'hierarchical' => true,
+    'public' => true,
+    'publicly_queryable' => true,
+    'show_ui' => true,
+    'show_in_menu' => true,
+    'show_in_nav_menus' => true,
+
+  );
+  register_taxonomy('Color', 'product', $args);
 }
 add_action('init', 'add_product_taxonomy');
 
@@ -98,9 +109,6 @@ function wpdocs_theme_name_scripts()
   wp_enqueue_script('ecommerce-swiper-script', get_template_directory_uri() . '/assets/js/swiper-bundle.min.js');
   wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js', array(), rand(), true);
   wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), rand(), true);
-  
- 
-  
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
 
@@ -142,7 +150,7 @@ add_action('init', 'shop_orders');
 
 function ecommerce_billingdata_()
 {
-  add_meta_box('billing-id', 'Billing-Data', 'billingdata_display','shoporder');
+  add_meta_box('billing-id', 'Billing-Data', 'billingdata_display', 'shoporder');
 }
 add_action('add_meta_boxes', 'ecommerce_billingdata_');
 
@@ -159,7 +167,7 @@ function billingdata_display($post)
 
 function ecommerce_cartdata()
 {
-  add_meta_box('cart-id', 'Cart-Data', 'ecommerce_cartdata_display','shoporder');
+  add_meta_box('cart-id', 'Cart-Data', 'ecommerce_cartdata_display', 'shoporder');
 }
 add_action('add_meta_boxes', 'ecommerce_cartdata');
 function ecommerce_cartdata_display($post)
@@ -205,7 +213,6 @@ function ecommerce_cartdata_display($post)
 
 
 
-  
+
 <?php
 }
-

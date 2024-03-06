@@ -1,7 +1,6 @@
 <?php
-$imagepath=
+get_header();
+echo get_the_content();
+get_footer();
 
- wp_get_attachment_image_src(
-    get_post_thumbnail_id(),'large'
- );
 ?>
