@@ -109,15 +109,75 @@ function wpdocs_theme_name_scripts()
   wp_enqueue_script('ecommerce-swiper-script', get_template_directory_uri() . '/assets/js/swiper-bundle.min.js');
   wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js', array(), rand(), true);
   wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), rand(), true);
+  wp_localize_script('ecommerce-main-script', 'as_ecommerce_ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
 
+add_action('wp_ajax_nopriv_as_get_product_filter_color', 'as_get_product_filter_color');
+add_action('wp_ajax_as_get_product_filter_color', 'as_get_product_filter_color');
 
+
+function as_get_product_filter_color()
+{
+  // print_r($custom_terms);
+  //   exit;
+
+  $args = array(
+    'post_type' => 'product',
+
+    'tax_query' => array(
+      array(
+        'taxonomy' => 'Color',
+        'field' => 'slug',
+        'terms' => $_POST['colors'],
+      ),
+    )
+  );
+  $color = new WP_Query($args); ?>
+
+
+  <div class="col-9">
+    <div class="row ajax_response">
+      <?php
+      if ($color->have_posts()) {
+        while ($color->have_posts()) {
+          $color->the_post();
+      ?><div class="col-3 pt-3 ">
+            <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
+              <div class="col-3">
+                <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>" width="200px" height="200px">
+              </div>
+              <div class="col-3 pt-3 text-uppercase text-lg">
+                <?php the_title(); ?>
+              </div>
+              <div>Price:<?php $price = get_post_meta($_POST);
+                          print_r($price[0]);
+                          ?>
+
+              </div>
+            </a>
+          </div>
+
+
+      <?php
+        }
+      }
+
+      ?>
+    </div>
+  </div>
+  <?php
+  exit;
+  ?>
+
+<?php
+}
 function admin_css()
 {
   wp_enqueue_style('ecommerce-style-css', get_template_directory_uri() . '/assets/css/admin.css', rand(), true);
 }
 add_action('admin_enqueue_scripts', 'admin_css');
+
 
 function register_my_menus()
 {
@@ -209,10 +269,6 @@ function ecommerce_cartdata_display($post)
 
     </table>
   </div>
-
-
-
-
 
 <?php
 }

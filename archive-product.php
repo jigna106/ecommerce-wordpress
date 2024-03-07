@@ -19,22 +19,20 @@ $Colors = get_categories($args);
       ?>
         <div class="col-12 col-sm-6 col-md-4 col-lg-4">
           <div class="list-item">
-            <label><a href="<?php echo get_category_link($Color->term_id) ?>">
+            <label>
                 <?php echo $Color->name; ?>
             </label>
-            <input type="checkbox" id="color" value=" <?php echo $Color->name; ?>" /></a>
-
-
-          </div>
+            <input type="checkbox" id="color" value=" <?php echo $Color->name; ?>" name="color" /></a>
+             </div>
         </div>
 
       <?php
       }
       ?>
-<input type="submit" value="Apply" name="apply" id="apply" class="btn btn-secondary">
+      <input type="submit" value="Apply" name="apply" id="apply" class="btn btn-secondary">
     </div>
     <div class="col-9">
-      <div class="row">
+      <div class="row ajax_response">
         <?php
         if (have_posts()) {
           while (have_posts()) {
