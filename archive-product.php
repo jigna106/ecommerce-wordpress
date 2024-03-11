@@ -7,6 +7,22 @@ $args = array(
 );
 
 $Colors = get_categories($args);
+
+$args = array(
+  'taxonomy' => 'product_cat',
+  'orderby' => 'name',
+  'order'   => 'ASC'
+);
+
+$catgories = get_categories($args);
+
+$args = array(
+  'taxonomy' => 'brand',
+  'orderby' => 'name',
+  'order'   => 'ASC'
+);
+
+$brands = get_categories($args);
 // print_r($Colors );
 ?>
 
@@ -20,18 +36,52 @@ $Colors = get_categories($args);
         <div class="col-12 col-sm-6 col-md-4 col-lg-4">
           <div class="list-item">
             <label>
-                <?php echo $Color->name; ?>
+              <?php echo $Color->name; ?>
             </label>
             <input type="checkbox" id="color" value=" <?php echo $Color->name; ?>" name="color" /></a>
-             </div>
+          </div>
         </div>
 
       <?php
       }
       ?>
-      <input type="submit" value="Apply" name="apply" id="apply" class="btn btn-secondary">
+      
+       <h3>Catgories</h3>
+      <?php
+      foreach ($catgories  as $catgorie) {
+      ?>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+          <div class="list-item">
+            <label>
+              <?php echo $catgorie->name; ?>
+            </label>
+            <input type="checkbox" id="catgorie" value=" <?php echo $catgorie->name; ?>" name="catgorie" /></a>
+          </div>
+        </div>
+
+      <?php
+      }
+      ?>
+    
+      <h3>Brands</h3>
+      <?php
+      foreach ($brands  as $brand) {
+      ?>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+          <div class="list-item">
+            <label>
+              <?php echo $brand->name; ?>
+            </label>
+            <input type="checkbox" id="brand" value=" <?php echo $brand->name; ?>" name="brand" /></a>
+          </div>
+        </div>
+
+      <?php
+      }
+      ?>
+      <input type="submit" value="Apply Filters" name="apply" id="apply" class="btn btn-secondary">
     </div>
-    <div class="col-9">
+ <div class="col-9">
       <div class="row ajax_response">
         <?php
         if (have_posts()) {

@@ -119,22 +119,39 @@ add_action('wp_ajax_as_get_product_filter_color', 'as_get_product_filter_color')
 
 function as_get_product_filter_color()
 {
-  // print_r($custom_terms);
-  //   exit;
-
   $args = array(
     'post_type' => 'product',
-
-    'tax_query' => array(
+  );
+  if (isset($_POST['colors'])) {
+    $args['tax_query'] = array(
       array(
         'taxonomy' => 'Color',
         'field' => 'slug',
         'terms' => $_POST['colors'],
       ),
-    )
-  );
-  $color = new WP_Query($args); ?>
+    );
+  }
+  if (isset($_POST['catgories'])) {
+    $args['tax_query'] = array(
+      array(
+        'taxonomy' => 'product_cat',
+        'field' => 'slug',
+        'terms' => $_POST['catgories'],
+      ),
+    );
+  }
+  if (isset($_POST['brands'])) {
+    $args['tax_query'] = array(
+      array(
+        'taxonomy' => 'brand',
+        'field' => 'slug',
+        'terms' => $_POST['brands'],
+      ),
+    );
+  }
 
+  $color = new WP_Query($args);
+?>
 
   <div class="col-9">
     <div class="row ajax_response">
@@ -142,6 +159,7 @@ function as_get_product_filter_color()
       if ($color->have_posts()) {
         while ($color->have_posts()) {
           $color->the_post();
+          global $post;
       ?><div class="col-3 pt-3 ">
             <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
               <div class="col-3">
@@ -150,15 +168,17 @@ function as_get_product_filter_color()
               <div class="col-3 pt-3 text-uppercase text-lg">
                 <?php the_title(); ?>
               </div>
-              <div>Price:<?php $price = get_post_meta($_POST);
-                          print_r($price[0]);
-                          ?>
+              <div>
+                <?php
+                // print_r($post);
 
+                $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true);  ?>
+                Price:<?php
+                      print_r($Pricevalue);
+                      ?>
               </div>
             </a>
           </div>
-
-
       <?php
         }
       }
