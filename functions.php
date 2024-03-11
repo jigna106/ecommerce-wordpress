@@ -113,44 +113,55 @@ function wpdocs_theme_name_scripts()
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
 
+
 add_action('wp_ajax_nopriv_as_get_product_filter_color', 'as_get_product_filter_color');
 add_action('wp_ajax_as_get_product_filter_color', 'as_get_product_filter_color');
 
 
 function as_get_product_filter_color()
 {
-  $args = array(
-    'post_type' => 'product',
-  );
+  $tax_query = array('relation' => 'OR');
   if (isset($_POST['colors'])) {
-    $args['tax_query'] = array(
+    array_push(
+      $tax_query,
       array(
         'taxonomy' => 'Color',
-        'field' => 'slug',
+        'field' => 'name',
         'terms' => $_POST['colors'],
       ),
     );
   }
   if (isset($_POST['catgories'])) {
-    $args['tax_query'] = array(
+    array_push(
+      $tax_query,
       array(
         'taxonomy' => 'product_cat',
-        'field' => 'slug',
+        'field' => 'name',
         'terms' => $_POST['catgories'],
       ),
     );
   }
   if (isset($_POST['brands'])) {
-    $args['tax_query'] = array(
+    array_push(
+      $tax_query,
       array(
         'taxonomy' => 'brand',
-        'field' => 'slug',
+        'field' => 'name',
         'terms' => $_POST['brands'],
       ),
     );
   }
+  $args = array(
+    'post_type' => 'product',
+    'tax_query' => $tax_query,
+  );
+
+  //echo "<pre>";
+  //print_r($args);
+  //echo "</pre>";
 
   $color = new WP_Query($args);
+
 ?>
 
   <div class="col-9">
@@ -204,7 +215,6 @@ function register_my_menus()
   register_nav_menus(
     array(
       'header-menu' => __('Header Menu')
-
     )
   );
 }
@@ -225,7 +235,6 @@ function shop_orders()
   register_post_type('shoporder', $Orders);
 }
 add_action('init', 'shop_orders');
-
 
 
 function ecommerce_billingdata_()
@@ -285,8 +294,6 @@ function ecommerce_cartdata_display($post)
         ?>
         <td><?php echo $grandtotal; ?></td>
         </tr>
-
-
     </table>
   </div>
 
