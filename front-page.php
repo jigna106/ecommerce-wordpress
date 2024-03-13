@@ -1,6 +1,7 @@
 <?php
 get_header();
 ?>
+<div class="container">
 <div id="demo" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
@@ -68,7 +69,7 @@ if ($the_query->have_posts()) {
         ?>
         </div>
     </div>
-
+            </div>
 <?php
 }
 get_footer();

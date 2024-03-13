@@ -26,7 +26,7 @@ $brands = get_categories($args);
 // print_r($Colors );
 ?>
 
-<div class="container-fluid main-content">
+<div class="container main-content">
   <div class="row flex-row-reverse">
     <div class="filterShow" style="display: none; ">
       <div class="filter-close-wrap"> <input type="button" class="filter-close" value="X" /></div>
@@ -39,10 +39,10 @@ $brands = get_categories($args);
             <label>
               <?php echo $Color->name; ?>
             </label>
-            <input type="checkbox" id="color" value=" <?php echo $Color->name; ?>" name="color" /></a>
+            <input type="checkbox" id="color" value="<?php echo $Color->name; ?>" name="color" data-id="<?php echo $Color->name; ?>" /></a>
           </div>
         </div>
-  <?php
+      <?php
       }
       ?>
       <h3>Catgories</h3>
@@ -54,7 +54,7 @@ $brands = get_categories($args);
             <label>
               <?php echo $catgorie->name; ?>
             </label>
-            <input type="checkbox" id="catgorie" value=" <?php echo $catgorie->name; ?>" name="catgorie" /></a>
+            <input type="checkbox" id="catgorie" value="<?php echo $catgorie->name; ?>" name="catgorie" data-id="<?php echo $catgorie->name; ?>" /></a>
           </div>
         </div>
 
@@ -70,7 +70,7 @@ $brands = get_categories($args);
             <label>
               <?php echo $brand->name; ?>
             </label>
-            <input type="checkbox" id="brand" value=" <?php echo $brand->name; ?>" name="brand" /></a>
+            <input type="checkbox" id="brand" value="<?php echo $brand->name; ?>" name="brand" data-id="<?php echo $brand->name; ?>" /></a>
           </div>
         </div>
 
@@ -82,21 +82,20 @@ $brands = get_categories($args);
     </div>
   </div>
   <div class="row flex-row-reverse">
-    <input type="submit" value=" All Filters" name="filter" id="filter" class="btn btn-dark" />
-    <div class="filter-list">
-      <div class="colors d-flex">
+    <input type="submit" value=" All Filters" name="filter" id="filter" class="btn btn-dark filter-btn" />
+    <div class="filter-list ">
+      <div class="colors d-none">
         <strong>Colors :</strong>
         <div class="colors-filter d-flex">
-          <div class="filter-item"></div>
         </div>
-      </div> 
-      <div class="catgories d-flex" >
+      </div>
+      <div class="catgories d-none">
         <Strong>Catgories:</Strong>
         <div class="catgories-filter d-flex">
           <div class="filter-item"></div>
         </div>
       </div>
-      <div class="brand d-flex">
+      <div class="brand d-none">
         <strong>Brands:</strong>
         <div class="brands-filter d-flex">
           <div class="filter-item"></div>
