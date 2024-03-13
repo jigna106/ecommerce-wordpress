@@ -26,12 +26,7 @@ ul#menu-menu-1 {
   list-style: none;
   justify-content: space-between;
 }
-.main-content {
-  /* width: 100%; */
-  float: left;
-  padding: 50px;
-  display: flex;
-}
+
 .footer {
   background-color: #d5e3ea;
   max-height: 100px;
@@ -95,4 +90,23 @@ ul#menu-menu-1 {
 
 
 }
-
+body{
+    position:relative;
+}
+.filterShow{    
+    position: absolute;
+    height: 100%;
+    width: 20% !important;
+    padding: 20px;
+    background: white;
+    border: 1px solid;
+}
+.filter-close-wrap {
+    text-align: right;
+}
+#filter{
+  width: 12%;
+}
+.filter-list {
+  width: 76% !important
+}

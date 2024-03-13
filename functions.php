@@ -128,7 +128,7 @@ function as_get_product_filter_color()
         'taxonomy' => 'Color',
         'field' => 'name',
         'terms' => $_POST['colors'],
-      ),
+      )
     );
   }
   if (isset($_POST['catgories'])) {
@@ -138,7 +138,7 @@ function as_get_product_filter_color()
         'taxonomy' => 'product_cat',
         'field' => 'name',
         'terms' => $_POST['catgories'],
-      ),
+      )
     );
   }
   if (isset($_POST['brands'])) {
@@ -148,7 +148,7 @@ function as_get_product_filter_color()
         'taxonomy' => 'brand',
         'field' => 'name',
         'terms' => $_POST['brands'],
-      ),
+      )
     );
   }
   $args = array(
@@ -164,8 +164,6 @@ function as_get_product_filter_color()
 
 ?>
 
-  <div class="col-9">
-    <div class="row ajax_response">
       <?php
       if ($color->have_posts()) {
         while ($color->have_posts()) {
@@ -195,8 +193,6 @@ function as_get_product_filter_color()
       }
 
       ?>
-    </div>
-  </div>
   <?php
   exit;
   ?>

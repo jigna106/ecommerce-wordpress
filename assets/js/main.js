@@ -20,14 +20,23 @@ jQuery(document).ready(function () {
     var brands = [];
 
     jQuery('input[name="color"]:checked').each(function () {
-      colors.push(this.value);
+     colors.push('<div data-id="'+this.value+'" data-tax="colors">'+this.value+'</div>');
     });
+    jQuery(".colors-filter").html(colors);
+    
+    
     jQuery('input[name="catgorie"]:checked').each(function () {
-      catgories.push(this.value);
+     catgories.push('<div data-id="'+this.value+'" data-tax="catgorie">'+this.value+'</div>');
     });
+    jQuery(".catgories-filter").html(catgories);
+    
+    
     jQuery('input[name="brand"]:checked').each(function () {
-      brands.push(this.value);
+     brands.push('<div data-id="'+this.value+'" data-tax="brand">'+this.value+'</div>');
     });
+    jQuery(".brands-filter").html(brands);
+    
+    
     let data = {
       colors: colors,
       catgories: catgories,
@@ -39,10 +48,19 @@ jQuery(document).ready(function () {
       type: "post",
       url: as_ecommerce_ajax_object.ajax_url,
       data: data,
-      success: function (resuslt) {
-        jQuery(".ajax_response").html(resuslt);
-        console.log(resuslt);
+      success: function (resulet) {
+        jQuery(".ajax_response").html(resulet);
+     
+        console.log(resulet);
       },
     });
+  });
+});
+jQuery(document).ready(function () {
+  jQuery("#filter").click(function(){
+    jQuery(".filterShow").show();
+  });
+  jQuery(".filter-close").click(function(){
+    jQuery(".filterShow").hide();
   });
 });
