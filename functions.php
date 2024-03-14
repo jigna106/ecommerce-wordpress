@@ -164,35 +164,34 @@ function as_get_product_filter_color()
 
 ?>
 
-      <?php
-      if ($color->have_posts()) {
-        while ($color->have_posts()) {
-          $color->the_post();
-          global $post;
-      ?><div class="col-3 pt-3 ">
-            <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
-              <div class="col-3">
-                <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>" width="200px" height="200px">
-              </div>
-              <div class="col-3 pt-3 text-uppercase text-lg">
-                <?php the_title(); ?>
-              </div>
-              <div>
-                <?php
-                // print_r($post);
-
-                $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true);  ?>
-                Price:<?php
-                      print_r($Pricevalue);
-                      ?>
-              </div>
-            </a>
+  <?php
+  if ($color->have_posts()) {
+    while ($color->have_posts()) {
+      $color->the_post();
+      global $post;
+  ?><div class="col-3 pt-3 ">
+        <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
+          <div class="col-3">
+            <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>" width="200px" height="200px">
           </div>
-      <?php
-        }
-      }
+          <div class="col-3 pt-3 text-uppercase text-lg">
+            <?php the_title(); ?>
+          </div>
+          <div>
+            <?php
+            // print_r($post);
+            $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true);  ?>
+            Price:<?php
+                  print_r($Pricevalue);
+                  ?>
+          </div>
+        </a>
+      </div>
+  <?php
+    }
+  }
 
-      ?>
+  ?>
   <?php
   exit;
   ?>
@@ -210,7 +209,8 @@ function register_my_menus()
 {
   register_nav_menus(
     array(
-      'header-menu' => __('Header Menu')
+      'Login_user_Menu' => __('Login_user_Menu'),
+      'Logout_user_Menu' => __('Logout_user_Menu'),
     )
   );
 }
@@ -283,8 +283,6 @@ function ecommerce_cartdata_display($post)
           <td><?php $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
             <?php echo $subtotal;
             $grandtotal += $subtotal; ?></td>
-
-
         <?php
       }
         ?>
