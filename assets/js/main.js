@@ -109,3 +109,6 @@ function make_ajax() {
     },
   });
 }
+jQuery(document).ready(function () {
+  
+});

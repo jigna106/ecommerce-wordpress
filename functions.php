@@ -204,6 +204,14 @@ function admin_css()
 }
 add_action('admin_enqueue_scripts', 'admin_css');
 
+// function user_login(){
+//   if (is_user_logged_in() ) {
+//     wp_logout();
+   
+//     exit;
+// }
+// }
+//  add_action('init','user_login');
 
 function register_my_menus()
 {
@@ -291,5 +299,9 @@ function ecommerce_cartdata_display($post)
     </table>
   </div>
 
+  
+
 <?php
 }
+
+

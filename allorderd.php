@@ -1,12 +1,13 @@
 <?php /* Template Name: allorders */
 
 get_header();
-
+if($current_user->ID){
 $args = array(
     'post_type' => 'shoporder',
     'post_status' => 'draft',
     'author'        =>  $current_user->ID,
 );
+
 $my_orders = new WP_Query($args);
 // echo "<pre>";
 // print_r($my_orders);
@@ -15,13 +16,16 @@ $my_orders = new WP_Query($args);
 <div class="container">   
             <div class="admin-cartdata">
                 <table style="width:100%">
-                    <tr>
-                        <th>order-Id</th>
-                        <th>Post Title</th>
-                        <th>Total Qty</th>
-                        <th>Total Products</th>
-                        <th>Grand total</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>order-Id</th>
+                            <th>Post Title</th>
+                            <th>Total Qty</th>
+                            <th>Total Products</th>
+                            <th>Grand total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
     <?php
     if ($my_orders->have_posts()) {
         while ($my_orders->have_posts()) {
@@ -56,13 +60,12 @@ $my_orders = new WP_Query($args);
         <?php
 
         }
-
-
-        ?>
+    }
+    ?>
+                    </tbody>
                 </table>
             </div>
 </div>
-
-<?php
-    }
+    <?php
+}
     get_footer();

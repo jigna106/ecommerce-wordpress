@@ -17,13 +17,11 @@
         <img src="<?php echo get_theme_file_uri('assets/images/logo1.png'); ?>" />
       </div>
       <div class="header-link">
-        <?php
-        if (is_user_logged_in()) {
-          wp_nav_menu(array('menu' => 'Login_user_Menu'));
-        } else {
-          wp_nav_menu(array('menu' => 'Logout_user_Menu'));
-        }
-    ?>
+
+          <div class="as-e-user-login"><?php   wp_nav_menu(array('menu' => '40')); ?></div>
+          <div class="as-e-user-logout"> <?php wp_nav_menu(array('menu' => '22')); ?></div>
+        
       </div>
     </div>
   </nav>
+  <div class="main">

@@ -134,9 +134,14 @@ $brands = get_categories($args);
 
     ?>
   </div>
+  <div class="pagination">
+    <?php
+    echo get_the_posts_pagination();
+    ?>
+  </div>
+</div>
 
-</div>
-</div>
+
 <?php
 get_footer();
 ?>
