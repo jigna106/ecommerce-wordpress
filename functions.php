@@ -139,7 +139,7 @@ add_action('created_product_cat', 'save_term_image', 10, 2);
 add_action('created_Color', 'save_term_image', 10, 2);
 function save_term_image($term_id, $tt_id)
 {
-  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+  if (isset ($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
     $group = ($_POST['txt_upload_image']);
     add_term_meta($term_id, 'term_image', $group, true);
   }
@@ -149,7 +149,7 @@ add_action('edited_product_cat', 'update_image_upload', 10, 2);
 add_action('edited_Color', 'update_image_upload', 10, 2);
 function update_image_upload($term_id, $tt_id)
 {
-  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+  if (isset ($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
     $group = ($_POST['txt_upload_image']);
     update_term_meta($term_id, 'term_image', $group);
   }
@@ -177,7 +177,7 @@ add_action('wp_ajax_as_get_product_filter_color', 'as_get_product_filter_color')
 function as_get_product_filter_color()
 {
   $tax_query = array('relation' => 'OR');
-  if (isset($_POST['colors'])) {
+  if (isset ($_POST['colors'])) {
     array_push(
       $tax_query,
       array(
@@ -187,7 +187,7 @@ function as_get_product_filter_color()
       )
     );
   }
-  if (isset($_POST['catgories'])) {
+  if (isset ($_POST['catgories'])) {
     array_push(
       $tax_query,
       array(
@@ -197,7 +197,7 @@ function as_get_product_filter_color()
       )
     );
   }
-  if (isset($_POST['brands'])) {
+  if (isset ($_POST['brands'])) {
     array_push(
       $tax_query,
       array(
