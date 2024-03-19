@@ -2,10 +2,10 @@
 function create_custom_post_type()
 {
   $products = array(
-    'name'          => 'Product',
-    'label'        => __('Product'),
+    'name' => 'Product',
+    'label' => __('Product'),
     'supports' => array('title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields'),
-    'public'      => true,
+    'public' => true,
     'has_archive' => true,
     'menu_icon' => 'dashicons-products'
   );
@@ -27,12 +27,12 @@ function product_price_display($post)
 
   $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true);
   $salepricevalue = get_post_meta($post->ID, 'ecommerce_sale_price', true);
-?>
+  ?>
   <label for="new_meta"> Product price</label>
   <input type="text" id="price" name="price" value="<?php echo $Pricevalue ?>" /><br>
   <lable for="sale price">Sale price</lable>
   <input type="text" id="saleprice" name="saleprice" value="<?php echo $salepricevalue ?>" />
-<?php
+  <?php
 }
 
 function save_postdata($post_id)
@@ -77,7 +77,7 @@ function add_product_taxonomy()
     'slug' => __('product_cat'),
     'hierarchical' => true,
     'has_archive' => true,
-     'public' => true,
+    'public' => true,
     'publicly_queryable' => true,
     'show_ui' => true,
     'show_in_menu' => true,
@@ -101,6 +101,59 @@ function add_product_taxonomy()
   register_taxonomy('Color', 'product', $args);
 }
 add_action('init', 'add_product_taxonomy');
+
+add_action('brand_add_form_fields', 'add_term_image', 10, 2);
+add_action('product_cat_add_form_fields', 'add_term_image', 10, 2);
+add_action('Color_add_form_fields', 'add_term_image', 10, 2);
+
+function add_term_image($taxonomy)
+{
+  ?>
+  <div class="form-field term-group">
+    <label for="">Upload and Image</label>
+    <input type="text" name="txt_upload_image" id="txt_upload_image" value="" style="width: 77%">
+    <input type="button" id="upload_image_btn" class="button" value="Upload an Image" />
+  </div>
+  <?php
+}
+
+add_action('brand_edit_form_fields', 'edit_image_upload', 100000, 2);
+add_action('product_cat_edit_form_fields', 'edit_image_upload', 100000, 2);
+add_action('Color_edit_form_fields', 'edit_image_upload', 100000, 2);
+function edit_image_upload($term, $taxonomy)
+{
+  // get current group
+  $txt_upload_image = get_term_meta($term->term_id, 'term_image', true);
+  ?>
+  <div class="form-field term-group">
+    <label for="">Upload and Image</label>
+    <input type="text" name="txt_upload_image" id="txt_upload_image" value="<?php echo $txt_upload_image ?>"
+      style="width: 77%">
+    <input type="button" id="upload_image_btn" class="button" value="Upload an Image" />
+  </div>
+  <?php
+}
+
+add_action('created_brand', 'save_term_image', 10, 2);
+add_action('created_product_cat', 'save_term_image', 10, 2);
+add_action('created_Color', 'save_term_image', 10, 2);
+function save_term_image($term_id, $tt_id)
+{
+  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+    $group = ($_POST['txt_upload_image']);
+    add_term_meta($term_id, 'term_image', $group, true);
+  }
+}
+add_action('edited_brand', 'update_image_upload', 10, 2);
+add_action('edited_product_cat', 'update_image_upload', 10, 2);
+add_action('edited_Color', 'update_image_upload', 10, 2);
+function update_image_upload($term_id, $tt_id)
+{
+  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+    $group = ($_POST['txt_upload_image']);
+    update_term_meta($term_id, 'term_image', $group);
+  }
+}
 
 function wpdocs_theme_name_scripts()
 {
@@ -158,7 +211,7 @@ function as_get_product_filter_color()
     'post_type' => 'product',
     'tax_query' => $tax_query,
     'posts_per_page' => $_POST['page_size'],
-    'paged' =>  $_POST['page']
+    'paged' => $_POST['page']
 
   );
 
@@ -167,16 +220,17 @@ function as_get_product_filter_color()
   // echo "</pre>";
   $color = new WP_Query($args);
 
-?> <?php
-    if ($color->have_posts()) {
-      while ($color->have_posts()) {
-        $color->the_post();
-        global $post;
-    ?>
+  ?>
+  <?php
+  if ($color->have_posts()) {
+    while ($color->have_posts()) {
+      $color->the_post();
+      global $post;
+      ?>
       <div class="col-3 pt-3 ">
         <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
           <div class="col-3">
-            <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>" width="200px" height="200px">
+            <img src="<?php echo get_the_post_thumbnail_url(get_the_ID()) ?>" width="200px" height="200px">
           </div>
           <div class="col-3 pt-3 text-uppercase text-lg">
             <?php the_title(); ?>
@@ -184,18 +238,19 @@ function as_get_product_filter_color()
           <div>
             <?php
             // print_r($post);
-            $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true);  ?>
-            Price:<?php
-                  print_r($Pricevalue);
-                  ?>
+            $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true); ?>
+            Price:
+            <?php
+            print_r($Pricevalue);
+            ?>
           </div>
         </a>
       </div>
-  <?php
-      }
+      <?php
     }
+  }
   ?>
- 
+
   <div class="pagination">
     <div class="page-size">
       <select name="select-size" id="select-size" class="select-size" value="select size">
@@ -208,10 +263,10 @@ function as_get_product_filter_color()
     <div class="as-page-number">
       <?php
       for ($i = 1; $i <= ($color->max_num_pages); $i++) {
-      ?>
+        ?>
         <input type="button" name="page-number" value="<?php echo $i ?>" class="page-number" />
 
-      <?php
+        <?php
       }
       ?>
     </div>
@@ -220,11 +275,13 @@ function as_get_product_filter_color()
   exit;
   ?>
 
-<?php
+  <?php
 }
 function admin_css()
 {
-  wp_enqueue_style('ecommerce-style-css', get_template_directory_uri() . '/assets/css/admin.css', rand(), true);
+  wp_enqueue_style('ecommerce-admin-style-css', get_template_directory_uri() . '/assets/css/admin.css', rand(), true);
+  wp_enqueue_media();
+  wp_enqueue_script('ecommerce-admin-script', get_template_directory_uri() . '/assets/js/admin.js', array(), rand(), true);
 }
 add_action('admin_enqueue_scripts', 'admin_css');
 
@@ -243,10 +300,10 @@ add_action('init', 'register_my_menus');
 function shop_orders()
 {
   $Orders = array(
-    'name'          => 'Shoporder',
-    'label'        => __('Shoporder'),
+    'name' => 'Shoporder',
+    'label' => __('Shoporder'),
     'supports' => array('title', 'editor', 'author'),
-    'public'      => true,
+    'public' => true,
     'has_archive' => true,
     'menu_icon' => 'dashicons-update'
   );
@@ -283,7 +340,7 @@ function ecommerce_cartdata_display($post)
   $cartdata = get_post_meta($post->ID, 'ecommerce_cart_data', true);
   // print_r($cartdata); 
 
-?>
+  ?>
   <div class="admin-cartdata">
     <table style="width:100%">
       <tr>
@@ -297,24 +354,34 @@ function ecommerce_cartdata_display($post)
       <?php
       $grandtotal = 100;
       foreach ($cartdata['productitems'] as $product_id => $qty) {
-      ?>
+        ?>
         <tr>
           <td><img src="<?php echo get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px"></td>
-          <td><?php echo get_the_title($product_id); ?></td>
-          <td><?php echo $qty ?></td>
-          <td> <?php echo get_post_meta($product_id, "ecommerce_price", true); ?></td>
-          <td><?php $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
+          <td>
+            <?php echo get_the_title($product_id); ?>
+          </td>
+          <td>
+            <?php echo $qty ?>
+          </td>
+          <td>
+            <?php echo get_post_meta($product_id, "ecommerce_price", true); ?>
+          </td>
+          <td>
+            <?php $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
             <?php echo $subtotal;
-            $grandtotal += $subtotal; ?></td>
-        <?php
+            $grandtotal += $subtotal; ?>
+          </td>
+          <?php
       }
-        ?>
-        <td><?php echo $grandtotal; ?></td>
-        </tr>
+      ?>
+        <td>
+          <?php echo $grandtotal; ?>
+        </td>
+      </tr>
     </table>
   </div>
 
 
 
-<?php
+  <?php
 }
