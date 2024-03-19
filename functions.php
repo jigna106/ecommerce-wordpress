@@ -154,22 +154,23 @@ function as_get_product_filter_color()
   $args = array(
     'post_type' => 'product',
     'tax_query' => $tax_query,
+    'posts_per_page' => $_POST['page_size'],
+    'paged' =>  $_POST['page']
+
   );
 
-  //echo "<pre>";
-  //print_r($args);
-  //echo "</pre>";
-
+  // echo "<pre>";
+  // print_r($args);
+  // echo "</pre>";
   $color = new WP_Query($args);
 
-?>
-
-  <?php
-  if ($color->have_posts()) {
-    while ($color->have_posts()) {
-      $color->the_post();
-      global $post;
-  ?><div class="col-3 pt-3 ">
+?> <?php
+    if ($color->have_posts()) {
+      while ($color->have_posts()) {
+        $color->the_post();
+        global $post;
+    ?>
+      <div class="col-3 pt-3 ">
         <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
           <div class="col-3">
             <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>" width="200px" height="200px">
@@ -188,10 +189,30 @@ function as_get_product_filter_color()
         </a>
       </div>
   <?php
+      }
     }
-  }
-
   ?>
+ 
+  <div class="pagination">
+    <div class="page-size">
+      <select name="select-size" id="select-size" class="select-size" value="select size">
+        <option value="1"> 1 </option>
+        <option value="2"> 2 </option>
+        <option value="3"> 3 </option>
+        <option value="4"> 4 </option>
+      </select>
+    </div>
+    <div class="as-page-number">
+      <?php
+      for ($i = 1; $i <= ($color->max_num_pages); $i++) {
+      ?>
+        <input type="button" name="page-number" value="<?php echo $i ?>" class="page-number" />
+
+      <?php
+      }
+      ?>
+    </div>
+  </div>
   <?php
   exit;
   ?>
@@ -203,15 +224,6 @@ function admin_css()
   wp_enqueue_style('ecommerce-style-css', get_template_directory_uri() . '/assets/css/admin.css', rand(), true);
 }
 add_action('admin_enqueue_scripts', 'admin_css');
-
-// function user_login(){
-//   if (is_user_logged_in() ) {
-//     wp_logout();
-   
-//     exit;
-// }
-// }
-//  add_action('init','user_login');
 
 function register_my_menus()
 {
@@ -299,9 +311,7 @@ function ecommerce_cartdata_display($post)
     </table>
   </div>
 
-  
+
 
 <?php
 }
-
-

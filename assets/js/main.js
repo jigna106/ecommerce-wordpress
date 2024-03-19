@@ -15,7 +15,7 @@ jQuery(document).ready(function () {
 });
 jQuery(document).ready(function () {
   jQuery(document).on("click", "#apply", function () {
-    make_ajax();
+    make_ajax(1);
   });
 });
 
@@ -23,7 +23,8 @@ jQuery(document).ready(function () {
   jQuery(document).on("click", ".remove-filter", function () {
     var id = jQuery(this).parent().attr("data-id");
     jQuery("input[data-id='" + id + "']").removeAttr("checked");
-    make_ajax();
+    var selctedsize = jQuery('.select-size').val();
+    make_ajax(1,selctedsize);
   });
 });
 
@@ -36,10 +37,28 @@ jQuery(document).ready(function () {
   });
 });
 
-function make_ajax() {
+jQuery(document).ready(function () {
+  jQuery(document).on("click", ".page-number", function () {
+    var text = jQuery(this).val();
+    var selctedsize = jQuery('.select-size').val();
+    make_ajax(text,selctedsize);
+  });
+});
+
+jQuery(document).ready(function () {
+  jQuery(document).on("change", ".select-size", function () {
+    var selctedsize = jQuery('.select-size').val();
+  // console.log(selctedsize);
+  make_ajax(1,selctedsize);
+  });
+});
+function make_ajax(text = 1,selctedsize = 2) {
   var colors = [];
+  var colors_ajax = [];
   var catgories = [];
+  var catgories_ajax = [];
   var brands = [];
+  var brands_ajax = [];
 
   jQuery('input[name="color"]:checked').each(function () {
     colors.push(
@@ -49,6 +68,7 @@ function make_ajax() {
         this.value +
         '<input type="submit" value="X" name="close" class="remove-filter"> </div>'
     );
+    colors_ajax.push(this.value);
   });
   jQuery(".colors-filter").html(colors);
   if (colors.length > 0) {
@@ -65,6 +85,7 @@ function make_ajax() {
         this.value +
         '<input type="submit" value="X" name="close" class="remove-filter"></div>'
     );
+    catgories_ajax.push(this.value);
   });
   jQuery(".catgories-filter").html(catgories);
   if (catgories.length > 0) {
@@ -81,6 +102,7 @@ function make_ajax() {
         this.value +
         '<input type="submit" value="X" name="remove-filter" class="remove-filter"></div>'
     );
+    brands_ajax.push(this.value);
   });
   jQuery(".brands-filter").html(brands);
   if (brands.length > 0) {
@@ -93,9 +115,11 @@ function make_ajax() {
   // console.log(brands);
 
   let data = {
-    colors: colors,
-    catgories: catgories,
-    brands: brands,
+    page: text,
+    page_size: selctedsize,
+    colors: colors_ajax,
+    catgories: catgories_ajax,
+    brands: brands_ajax,
     action: "as_get_product_filter_color",
   };
 
@@ -105,10 +129,9 @@ function make_ajax() {
     data: data,
     success: function (resulet) {
       jQuery(".ajax_response").html(resulet);
-      console.log(resulet);
+      // console.log(resulet);
     },
   });
 }
-jQuery(document).ready(function () {
-  
-});
+
+

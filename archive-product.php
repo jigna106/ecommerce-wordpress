@@ -25,7 +25,6 @@ $args = array(
 $brands = get_categories($args);
 // print_r($Colors );
 ?>
-
 <div class="container main-content">
   <div class="row flex-row-reverse">
     <div class="filterShow" style="display: none; ">
@@ -104,7 +103,7 @@ $brands = get_categories($args);
     </div>
   </div>
   <div class="row ajax_response">
-    <?php
+   <?php
     if (have_posts()) {
       while (have_posts()) {
         the_post();
@@ -131,14 +130,35 @@ $brands = get_categories($args);
 
       }
     }
+    ?>
+   <?php
+    global $wp_query;
+    $totalpagenumber = $wp_query->max_num_pages;
+    // echo $totalpagenumber;
+    ?>
+    <div class="pagination">
+      <div class="page-size">
+        <select name="select-size"  class="select-size" value="select size">
+          <option value="1"> 1 </option>
+          <option value="2"> 2 </option>
+          <option value="3"> 3 </option>
+          <option value="4"> 4 </option>
+        </select>
+      </div>
+      <div class="as-page-number">
+        <?php
+        for ($i = 1; $i <= ($totalpagenumber); $i++) {
+        ?>
+          <input type="button" name="page-number" value="<?php echo $i ?>" class="page-number" />
 
-    ?>
+        <?php
+        }
+        ?>
+      </div>
+    </div>
   </div>
-  <div class="pagination">
-    <?php
-    echo get_the_posts_pagination();
-    ?>
-  </div>
+
+
 </div>
 
 
