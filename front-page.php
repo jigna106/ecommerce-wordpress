@@ -1,7 +1,6 @@
 <?php
 get_header();
 ?>
-<div class="container">
 <div id="demo" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
@@ -26,7 +25,6 @@ get_header();
         <span class="carousel-control-next-icon"></span>
     </button>
 </div>
-
 
 <?php
 $args = array(
@@ -59,7 +57,8 @@ if ($the_query->have_posts()) {
                                                             print_r($price[0]);
                                                             ?></p>
                         </a>
-                    </div>
+                  
+            </div>  
             </div>
 
         <?php
@@ -69,7 +68,7 @@ if ($the_query->have_posts()) {
         ?>
         </div>
     </div>
-            </div>
+            
 <?php
 }
 get_footer();

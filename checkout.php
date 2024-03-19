@@ -1,41 +1,41 @@
 <?php /* Template Name: checkout */
+get_header();
 session_start();
-if (isset($_POST['placeorder'])) {
-  echo "<pre>";
-  print_r($_POST);
-  print_r($_SESSION);
-  echo "</pre>";
-
-  $post_arr = array(
-    'post_title'   => $_POST['firstName'] . " " . $_POST['lastName'],
-    'post_content' => $_POST['firstName'] . " " . $_POST['lastName'],
-    'post_type' => 'shoporder'
-  );
-  $id = wp_insert_post($post_arr);
-  print_r($id);
-
-
-  update_post_meta(
-    $id,
-    'ecommerce_billing_data',
-    $_POST
-  );
-
-  update_post_meta(
-    $id,
-    'ecommerce_cart_data',
-    $_SESSION
-  );
-
-  unset($_POST);
-  unset($_SESSION['productitems']);
-
+if ( is_user_logged_in() ){
+  if (isset($_POST['placeorder'])) {
+    echo "<pre>";
+    print_r($_POST);
+    print_r($_SESSION);
+    echo "</pre>";
+  
+    $post_arr = array(
+      'post_title'   => $_POST['firstName'] . " " . $_POST['lastName'],
+      'post_content' => $_POST['firstName'] . " " . $_POST['lastName'],
+      'post_type' => 'shoporder'
+    );
+    $id = wp_insert_post($post_arr);
+    print_r($id);
+  
+  
+    update_post_meta(
+      $id,
+      'ecommerce_billing_data',
+      $_POST
+    );
+  
+    update_post_meta(
+      $id,
+      'ecommerce_cart_data',
+      $_SESSION
+    );
+  
+    unset($_POST);
+    unset($_SESSION['productitems']);
+    wp_redirect(get_permalink(147) . '?Order_id=' . $id);
+  
+  }
   
 
-  wp_redirect(get_permalink(147) . '?Order_id=' . $id);
-  exit;
-}
-get_header();
 ?>
 <div class="container">
   <form class="" method="post">
@@ -217,5 +217,11 @@ get_header();
   </form>
 </div>
 <?php
+}
+else{
+  ?>
+<h3>If you have purchase a product<a href="<?php echo get_permalink(160) ; ?>">sign in</a></h3>
+<?php
+}
 get_footer();
 ?>

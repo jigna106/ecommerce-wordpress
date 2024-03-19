@@ -37,8 +37,8 @@ $brands = get_categories($args);
           <div class="list-item">
             <label>
               <?php echo $Color->name; ?>
-            </label>
-            <input type="checkbox" id="color" value="<?php echo $Color->name; ?>" name="color" data-id="<?php echo $Color->name; ?>" /></a>
+           
+            <input type="checkbox" id="color" value="<?php echo $Color->name; ?>" name="color" data-id="<?php echo $Color->name; ?>" /></a></label>
           </div>
         </div>
       <?php
@@ -52,8 +52,7 @@ $brands = get_categories($args);
           <div class="list-item">
             <label>
               <?php echo $catgorie->name; ?>
-            </label>
-            <input type="checkbox" id="catgorie" value="<?php echo $catgorie->name; ?>" name="catgorie" data-id="<?php echo $catgorie->name; ?>" /></a>
+              <input type="checkbox" id="catgorie" value="<?php echo $catgorie->name; ?>" name="catgorie" data-id="<?php echo $catgorie->name; ?>" /></a></label>
           </div>
         </div>
 
@@ -68,8 +67,8 @@ $brands = get_categories($args);
           <div class="list-item">
             <label>
               <?php echo $brand->name; ?>
-            </label>
-            <input type="checkbox" id="brand" value="<?php echo $brand->name; ?>" name="brand" data-id="<?php echo $brand->name; ?>" /></a>
+            
+            <input type="checkbox" id="brand" value="<?php echo $brand->name; ?>" name="brand" data-id="<?php echo $brand->name; ?>" /></a></label>
           </div>
         </div>
 

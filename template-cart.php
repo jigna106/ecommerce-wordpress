@@ -1,12 +1,10 @@
 <?php /* Template Name: cart */
 get_header();
-
+session_start();
 // echo "<pre>";
 // print_r($_SESSION);
 // echo "</pre>";
-
-if ( is_user_logged_in() ) {
-	if (isset($_POST['emptycartsubmit'])) {
+if (isset($_POST['emptycartsubmit'])) {
         unset($_SESSION['productitems']);
     }
     
@@ -114,12 +112,7 @@ if ( is_user_logged_in() ) {
         echo "Your cart empty";
     }
 
-}
-else{
-    ?>
-    <h3>If you have purchase a product<a href="<?php echo get_permalink(160) ; ?>">sign in</a></h3>
-<?php
-}
+
 
 
 
