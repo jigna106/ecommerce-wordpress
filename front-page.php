@@ -57,18 +57,17 @@ if ($the_query->have_posts()) {
                                                             print_r($price[0]);
                                                             ?></p>
                         </a>
-                  
-            </div>  
+
+                    </div>
             </div>
 
         <?php
-
                 }
 
         ?>
         </div>
     </div>
-            
+
 <?php
 }
 get_footer();
