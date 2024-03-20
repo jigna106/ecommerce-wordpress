@@ -1,17 +1,13 @@
 jQuery(document).ready(function () {
-  jQuery(data == datadocument).on(
-    "change",
-    ".ecommerce-payment-getway",
-    function () {
-      if (jQuery(this).val() == "credit") {
-        jQuery(".payment-cedit-cash").show();
-      } else {
-        jQuery(".payment-cedit-cash").hide();
-      }
-
-      console.log(jQuery(this).val());
+  jQuery(document).on("change", ".ecommerce-payment-getway", function () {
+    if (jQuery(this).val() == "credit") {
+      jQuery(".payment-cedit-cash").show();
+    } else {
+      jQuery(".payment-cedit-cash").hide();
     }
-  );
+
+    console.log(jQuery(this).val());
+  });
 });
 jQuery(document).ready(function () {
   jQuery(document).on("click", "#apply", function () {
@@ -23,8 +19,8 @@ jQuery(document).ready(function () {
   jQuery(document).on("click", ".remove-filter", function () {
     var id = jQuery(this).parent().attr("data-id");
     jQuery("input[data-id='" + id + "']").removeAttr("checked");
-    var selctedsize = jQuery('.select-size').val();
-    make_ajax(1,selctedsize);
+    var selctedsize = jQuery(".select-size").val();
+    make_ajax(1, selctedsize);
   });
 });
 
@@ -40,19 +36,19 @@ jQuery(document).ready(function () {
 jQuery(document).ready(function () {
   jQuery(document).on("click", ".page-number", function () {
     var text = jQuery(this).val();
-    var selctedsize = jQuery('.select-size').val();
-    make_ajax(text,selctedsize);
+    var selctedsize = jQuery(".select-size").val();
+    make_ajax(text, selctedsize);
   });
 });
 
 jQuery(document).ready(function () {
   jQuery(document).on("change", ".select-size", function () {
-    var selctedsize = jQuery('.select-size').val();
-  // console.log(selctedsize);
-  make_ajax(1,selctedsize);
+    var selctedsize = jQuery(".select-size").val();
+    // console.log(selctedsize);
+    make_ajax(1, selctedsize);
   });
 });
-function make_ajax(text = 1,selctedsize = 2) {
+function make_ajax(text = 1, selctedsize = 2) {
   var colors = [];
   var colors_ajax = [];
   var catgories = [];
@@ -134,4 +130,18 @@ function make_ajax(text = 1,selctedsize = 2) {
   });
 }
 
+jQuery(document).ready(function () {
+  jQuery(document).on("click", "#Contact_page_submit", function () {
+    var firstname = jQuery("#firstname").val();
+    var lastname = jQuery("#lastname").val();
 
+    var email = jQuery("#email").val();
+    var phone = jQuery("#phone").val();
+    var message = jQuery("#message").val();
+
+    
+    console.log(email);
+    console.log(phone);
+    console.log(message);
+  });
+});

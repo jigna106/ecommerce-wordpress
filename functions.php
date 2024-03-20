@@ -27,12 +27,12 @@ function product_price_display($post)
 
   $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true);
   $salepricevalue = get_post_meta($post->ID, 'ecommerce_sale_price', true);
-  ?>
+?>
   <label for="new_meta"> Product price</label>
   <input type="text" id="price" name="price" value="<?php echo $Pricevalue ?>" /><br>
   <lable for="sale price">Sale price</lable>
   <input type="text" id="saleprice" name="saleprice" value="<?php echo $salepricevalue ?>" />
-  <?php
+<?php
 }
 
 function save_postdata($post_id)
@@ -106,32 +106,32 @@ add_action('brand_add_form_fields', 'add_term_image', 10, 2);
 add_action('product_cat_add_form_fields', 'add_term_image', 10, 2);
 add_action('Color_add_form_fields', 'add_term_image', 10, 2);
 
-function add_term_image($taxonomy)
+function add_term_image()
 {
-  ?>
+?>
   <div class="form-field term-group">
     <label for="">Upload and Image</label>
     <input type="text" name="txt_upload_image" id="txt_upload_image" value="" style="width: 77%">
     <input type="button" id="upload_image_btn" class="button" value="Upload an Image" />
   </div>
-  <?php
+<?php
 }
 
-add_action('brand_edit_form_fields', 'edit_image_upload', 100000, 2);
-add_action('product_cat_edit_form_fields', 'edit_image_upload', 100000, 2);
-add_action('Color_edit_form_fields', 'edit_image_upload', 100000, 2);
+add_action('brand_edit_form_fields', 'edit_image_upload', 10, 2);
+add_action('product_cat_edit_form_fields', 'edit_image_upload', 10, 2);
+add_action('Color_edit_form_fields', 'edit_image_upload', 10, 2);
+
+
 function edit_image_upload($term, $taxonomy)
 {
-  // get current group
   $txt_upload_image = get_term_meta($term->term_id, 'term_image', true);
-  ?>
+?>
   <div class="form-field term-group">
     <label for="">Upload and Image</label>
-    <input type="text" name="txt_upload_image" id="txt_upload_image" value="<?php echo $txt_upload_image ?>"
-      style="width: 77%">
+    <input type="text" name="txt_upload_image" id="txt_upload_image" value="<?php echo $txt_upload_image ?>" style="width: 77%">
     <input type="button" id="upload_image_btn" class="button" value="Upload an Image" />
   </div>
-  <?php
+<?php
 }
 
 add_action('created_brand', 'save_term_image', 10, 2);
@@ -139,7 +139,7 @@ add_action('created_product_cat', 'save_term_image', 10, 2);
 add_action('created_Color', 'save_term_image', 10, 2);
 function save_term_image($term_id, $tt_id)
 {
-  if (isset ($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
     $group = ($_POST['txt_upload_image']);
     add_term_meta($term_id, 'term_image', $group, true);
   }
@@ -149,7 +149,7 @@ add_action('edited_product_cat', 'update_image_upload', 10, 2);
 add_action('edited_Color', 'update_image_upload', 10, 2);
 function update_image_upload($term_id, $tt_id)
 {
-  if (isset ($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
     $group = ($_POST['txt_upload_image']);
     update_term_meta($term_id, 'term_image', $group);
   }
@@ -177,7 +177,7 @@ add_action('wp_ajax_as_get_product_filter_color', 'as_get_product_filter_color')
 function as_get_product_filter_color()
 {
   $tax_query = array('relation' => 'OR');
-  if (isset ($_POST['colors'])) {
+  if (isset($_POST['colors'])) {
     array_push(
       $tax_query,
       array(
@@ -187,7 +187,7 @@ function as_get_product_filter_color()
       )
     );
   }
-  if (isset ($_POST['catgories'])) {
+  if (isset($_POST['catgories'])) {
     array_push(
       $tax_query,
       array(
@@ -197,7 +197,7 @@ function as_get_product_filter_color()
       )
     );
   }
-  if (isset ($_POST['brands'])) {
+  if (isset($_POST['brands'])) {
     array_push(
       $tax_query,
       array(
@@ -220,13 +220,13 @@ function as_get_product_filter_color()
   // echo "</pre>";
   $color = new WP_Query($args);
 
-  ?>
+?>
   <?php
   if ($color->have_posts()) {
     while ($color->have_posts()) {
       $color->the_post();
       global $post;
-      ?>
+  ?>
       <div class="col-3 pt-3 ">
         <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
           <div class="col-3">
@@ -246,7 +246,7 @@ function as_get_product_filter_color()
           </div>
         </a>
       </div>
-      <?php
+  <?php
     }
   }
   ?>
@@ -263,10 +263,10 @@ function as_get_product_filter_color()
     <div class="as-page-number">
       <?php
       for ($i = 1; $i <= ($color->max_num_pages); $i++) {
-        ?>
+      ?>
         <input type="button" name="page-number" value="<?php echo $i ?>" class="page-number" />
 
-        <?php
+      <?php
       }
       ?>
     </div>
@@ -275,7 +275,7 @@ function as_get_product_filter_color()
   exit;
   ?>
 
-  <?php
+<?php
 }
 function admin_css()
 {
@@ -340,7 +340,7 @@ function ecommerce_cartdata_display($post)
   $cartdata = get_post_meta($post->ID, 'ecommerce_cart_data', true);
   // print_r($cartdata); 
 
-  ?>
+?>
   <div class="admin-cartdata">
     <table style="width:100%">
       <tr>
@@ -354,7 +354,7 @@ function ecommerce_cartdata_display($post)
       <?php
       $grandtotal = 100;
       foreach ($cartdata['productitems'] as $product_id => $qty) {
-        ?>
+      ?>
         <tr>
           <td><img src="<?php echo get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px"></td>
           <td>
@@ -371,17 +371,43 @@ function ecommerce_cartdata_display($post)
             <?php echo $subtotal;
             $grandtotal += $subtotal; ?>
           </td>
-          <?php
+        <?php
       }
-      ?>
+        ?>
         <td>
           <?php echo $grandtotal; ?>
         </td>
-      </tr>
+        </tr>
     </table>
   </div>
 
 
 
-  <?php
+<?php
+}
+
+function contact()
+{
+  $Contact = array(
+    'name' => 'Contact',
+    'label' => __('Contact'),
+    'supports' => array('title', 'editor', 'author'),
+    'public' => true,
+    'has_archive' => true,
+    'menu_icon' => 'dashicons-format-chat'
+  );
+
+  register_post_type('contact', $Contact);
+}
+add_action('init', 'contact');
+
+function contactus_data()
+{
+  add_meta_box('contactdata-id', 'contact-Data', 'contactdata_display', 'contact');
+}
+add_action('add_meta_boxes', 'contactus_data');
+
+function contactdata_display($post)
+{
+  
 }
