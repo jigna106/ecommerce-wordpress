@@ -1,4 +1,21 @@
 <?php
+
+function as_get_image_data_array($attechment_id)
+{
+  $sizes      = get_intermediate_image_sizes();
+  $sizes_data = array();
+  foreach ($sizes as $size) {
+    $src = wp_get_attachment_image_src($attechment_id, $size);
+    if ($src) {
+      $sizes_data[$size]['url']  = $src[0];
+      $sizes_data[$size]['width']  = $src[1];
+      $sizes_data[$size]['height'] = $src[2];
+    }
+  }
+  return $sizes_data;
+}
+
+
 function create_custom_post_type()
 {
   $products = array(
@@ -11,7 +28,9 @@ function create_custom_post_type()
   );
   add_theme_support('custom-header');
   add_theme_support('automatic-feed-links');
+  add_image_size('product-thumb', 300, 300);
   add_theme_support('post-thumbnails');
+
   register_post_type('product', $products);
 }
 add_action('init', 'create_custom_post_type');
@@ -172,6 +191,31 @@ add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
 
 add_action('wp_ajax_nopriv_as_get_product_filter_color', 'as_get_product_filter_color');
 add_action('wp_ajax_as_get_product_filter_color', 'as_get_product_filter_color');
+
+add_action('wp_ajax_nopriv_as_contactdata', 'as_contactdata');
+add_action('wp_ajax_as_contactdata', 'as_contactdata');
+
+function as_contactdata()
+{
+  print_r($_POST);
+
+  $Contactdata = array(
+
+    'post_title'   => $_POST['data']['Firstname'] . " " . $_POST['data']['Lastname'],
+    'post_content' => $_POST['data']['Firstname'] . " " . $_POST['data']['Lastname'],
+    'post_type' => 'contact'
+  );
+  $id = wp_insert_post($Contactdata);
+  print_r($id);
+
+
+  update_post_meta(
+    $id,
+    'contact_data',
+    $_POST
+  );
+}
+
 
 
 function as_get_product_filter_color()
@@ -400,14 +444,20 @@ function contact()
   register_post_type('contact', $Contact);
 }
 add_action('init', 'contact');
-
-function contactus_data()
+function contact_data_()
 {
-  add_meta_box('contactdata-id', 'contact-Data', 'contactdata_display', 'contact');
+  add_meta_box('contact_data_id', 'Contact-Data', 'contact_data__display', 'contact');
 }
-add_action('add_meta_boxes', 'contactus_data');
+add_action('add_meta_boxes', 'contact_data_');
 
-function contactdata_display($post)
+function contact_data__display($post)
 {
-  
+
+  $contactdata = get_post_meta($post->ID, 'contact_data', true);
+  //  print_r($contactdata);
+  echo '<p><strong>' . __('firstname') . ':</strong> ' . $contactdata['data']['Firstname'] . '</p>';
+  echo '<p><strong>' . __('lastname') . ':</strong> ' . $contactdata['data']['Lastname'] . '</p>';
+  echo '<p><strong>' . __('email') . ':</strong> ' . $contactdata['data']['Email'] . '</p>';
+  echo '<p><strong>' . __('phonenumber') . ':</strong> ' . $contactdata['data']['phone'] . '</p>';
+  echo '<p><strong>' . __('Message') . ':</strong> ' . $contactdata['data']['Message'] . '</p>';
 }

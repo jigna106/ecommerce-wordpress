@@ -60,7 +60,7 @@ get_header();
                             </div>
                             <div class="col-12">
                                 <div class="d-grid">
-                                    <button class="btn btn-primary" type="button" name="Contact_page_submit" id="Contact_page_submit">Submit</button>
+                                    <input class="btn btn-primary" type="button" name="Contact_page_submit" id="Contact_page_submit" value="Submit" />
                                 </div>
                             </div>
                         </div>

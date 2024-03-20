@@ -139,4 +139,20 @@ ul#menu-logout-user-menu li a {
 .as-e-user-login {
   display: none;
 }
+.LatestProduct{
+
+  padding-top: 20px;
+}
+.products-items {
+  padding-top: 41px;
+
+}
+.category-list-wrapper{
+  background: black;
+  color: white;
+  position: absolute;
+  rotate: -35deg;
+  
+}
+
 

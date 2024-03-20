@@ -19,10 +19,26 @@ if (have_posts()) {
   while (have_posts()) {
     the_post();
 ?>
-    <div class="container">
+<div class="container">
+    <?php
+                        $catgories = wp_get_post_terms($post->ID, "product_cat");
+                        //print_r($catgories)
+                        ?>
+                        <div class="row category-list-wrapper">
+                            <?php
+                            foreach ($catgories  as $catgoriy) {
+                            ?>
+                                <span> <?php echo $catgoriy->name; ?></span>
+                            <?php
+                            }
+                            ?>
+                        </div>
       <div class="row  justify-content-between">
+
+
+      
         <div class="col-6 img-thumbnail">
-            <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID()) ?>"   width="100%" height="100%"/>
+            <img src="<?php echo  get_the_post_thumbnail_url(get_the_ID(),'full') ?>"/>
            </div>
         <div class="col-4 d-flex align-items-center">
           <form method="post">

@@ -37,7 +37,7 @@ jQuery(document).ready(function () {
   jQuery(document).on("click", ".page-number", function () {
     var text = jQuery(this).val();
     var selctedsize = jQuery(".select-size").val();
-    make_ajax(text, selctedsize);
+    make_ajax(text,selctedsize);
   });
 });
 
@@ -132,16 +132,31 @@ function make_ajax(text = 1, selctedsize = 2) {
 
 jQuery(document).ready(function () {
   jQuery(document).on("click", "#Contact_page_submit", function () {
+    var contactdata = {};
+
     var firstname = jQuery("#firstname").val();
     var lastname = jQuery("#lastname").val();
-
     var email = jQuery("#email").val();
     var phone = jQuery("#phone").val();
     var message = jQuery("#message").val();
 
-    
-    console.log(email);
-    console.log(phone);
-    console.log(message);
+    contactdata.Firstname = firstname;
+    contactdata.Lastname = lastname;
+    contactdata.Email = email;
+    contactdata.phone = phone;
+    contactdata.Message = message;
+  
+    let contactdataajax = {
+    data: contactdata,
+    action: "as_contactdata",
+  };
+  jQuery.ajax({
+    type: "post",
+    url: as_ecommerce_ajax_object.ajax_url,
+    data: contactdataajax,
+    success: function (getdata) {
+         console.log(getdata);
+    },
+  });
   });
 });
