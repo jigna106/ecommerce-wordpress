@@ -1,8 +1,5 @@
-
-body{
-
-
-    position:relative;
+ body{
+position:relative;
   font-family: 'Roboto';
 }
 #navigation{
@@ -139,6 +136,7 @@ ul#menu-logout-user-menu li a {
 .as-e-user-login {
   display: none;
 }
+
 .LatestProduct{
 
   padding-top: 20px;
@@ -154,5 +152,9 @@ ul#menu-logout-user-menu li a {
   rotate: -35deg;
   
 }
+.as_shop_menu .sub-menu {
+   display: none; 
+   list-style: none;
+  }
 
 

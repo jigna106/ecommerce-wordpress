@@ -36,7 +36,9 @@ jQuery(document).ready(function () {
 jQuery(document).ready(function () {
   jQuery(document).on("click", ".page-number", function () {
     var text = jQuery(this).val();
-    var selctedsize = jQuery(".select-size").val();
+    var selctedsize = jQuery('.select-size').val();
+    console.log(selctedsize)
+    
     make_ajax(text,selctedsize);
   });
 });

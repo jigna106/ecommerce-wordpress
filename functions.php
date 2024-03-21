@@ -272,6 +272,19 @@ function as_get_product_filter_color()
       global $post;
   ?>
       <div class="col-3 pt-3 ">
+      <?php
+                            $catgories = wp_get_post_terms($post->ID, "product_cat");
+                            //print_r($catgories)
+                            ?>
+                            <div class="row category-list-wrapper">
+                                <?php
+                                foreach ($catgories  as $catgoriy) {
+                                ?>
+                                    <span> <?php echo $catgoriy->name; ?></span>
+                                <?php
+                                }
+                                ?>
+                            </div>
         <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
           <div class="col-3">
             <img src="<?php echo get_the_post_thumbnail_url(get_the_ID()) ?>" width="200px" height="200px">
@@ -298,10 +311,18 @@ function as_get_product_filter_color()
   <div class="pagination">
     <div class="page-size">
       <select name="select-size" id="select-size" class="select-size" value="select size">
-        <option value="1"> 1 </option>
-        <option value="2"> 2 </option>
-        <option value="3"> 3 </option>
-        <option value="4"> 4 </option>
+        <option value="1" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "1") {
+                            echo "selected='selected'";
+                          } ?>> 1 </option>
+        <option value="2" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "2") {
+                            echo "selected='selected'";
+                          } ?>> 2 </option>
+        <option value="3" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "3") {
+                            echo "selected='selected'";
+                          } ?>> 3 </option>
+        <option value="4" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "4") {
+                            echo "selected='selected'";
+                          } ?>> 4 </option>
       </select>
     </div>
     <div class="as-page-number">
