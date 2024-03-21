@@ -162,3 +162,13 @@ jQuery(document).ready(function () {
   });
   });
 });
+jQuery( document ).ready(function() {
+
+  jQuery('.as_shop_menu' ).mouseenter(function(){
+    jQuery('.as_shop_menu .sub-menu').show();
+  });
+
+  jQuery('.as_shop_menu' ).mouseleave(function(){
+    jQuery('.as_shop_menu .sub-menu').hide();
+  })
+});

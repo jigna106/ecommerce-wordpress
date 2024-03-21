@@ -47,7 +47,7 @@ if (have_posts()) {
                <b>Title: </b><?php the_title(); ?></div>
               <div class="pt-5">
                 <b>Price: </b> <?php $price = get_post_meta($post->ID, 'ecommerce_price');
-                        print_r($price[0]);
+                      echo number_format($price[0], ((int) $price[0] == $price[0] ? 0 : 2), '.', ',');;
                         ?>
               </div>
               <div class ="pt-5">

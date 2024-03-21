@@ -125,7 +125,7 @@ $brands = get_categories($args);
             <div class="col-3">
               <?php echo the_post_thumbnail('product-thumb') ?>
             </div>
-            <div class="col-3 pt-3 text-uppercase text-lg">
+            <div class="col-12 pt-3 text-uppercase text-lg">
               <?php the_title(); ?>
             </div>
             <div>
@@ -133,7 +133,7 @@ $brands = get_categories($args);
                 <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
               </svg>
               <?php $price = get_post_meta($post->ID, 'ecommerce_price');
-              print_r($price[0]);
+             echo number_format($price[0], ((int) $price[0] == $price[0] ? 0 : 2), '.', ',');
               ?>
 
             </div>
@@ -152,9 +152,10 @@ $brands = get_categories($args);
     ?>
     <div class="pagination">
       <div class="page-size">
+       <label> Select Size</label>
         <select name="select-size" class="select-size" value="select size">
           <option value="1"> 1 </option>
-          <option value="2"> 2 </option>
+          <option value="2" selected="selected"> 2 </option>
           <option value="3"> 3 </option>
           <option value="4"> 4 </option>
         </select>
@@ -168,7 +169,7 @@ $brands = get_categories($args);
         <?php
         }
         ?>
-      </div>
+      </div> 
     </div>
   </div>
 

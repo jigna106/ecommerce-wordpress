@@ -17,10 +17,8 @@
       <a href="<?php echo get_home_url(); ?>"><img src="<?php echo get_theme_file_uri('assets/images/logo1.png'); ?>" /></a>
       </div>
       <div class="header-link">
-
-          <div class="as-e-user-login"><?php   wp_nav_menu(array('menu' => '40')); ?></div>
-          <div class="as-e-user-logout"> <?php wp_nav_menu(array('menu' => '22')); ?></div>
-        
+      <?php   wp_nav_menu(array('menu' => '22')); ?>
+                
       </div>
     </div>
   </nav>

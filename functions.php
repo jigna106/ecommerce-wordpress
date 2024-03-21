@@ -216,11 +216,9 @@ function as_contactdata()
   );
 }
 
-
-
 function as_get_product_filter_color()
 {
-  $tax_query = array('relation' => 'OR');
+  $tax_query = array('relation' => 'AND');
   if (isset($_POST['colors'])) {
     array_push(
       $tax_query,
@@ -231,6 +229,7 @@ function as_get_product_filter_color()
       )
     );
   }
+
   if (isset($_POST['catgories'])) {
     array_push(
       $tax_query,
@@ -272,24 +271,24 @@ function as_get_product_filter_color()
       global $post;
   ?>
       <div class="col-3 pt-3 ">
-      <?php
-                            $catgories = wp_get_post_terms($post->ID, "product_cat");
-                            //print_r($catgories)
-                            ?>
-                            <div class="row category-list-wrapper">
-                                <?php
-                                foreach ($catgories  as $catgoriy) {
-                                ?>
-                                    <span> <?php echo $catgoriy->name; ?></span>
-                                <?php
-                                }
-                                ?>
-                            </div>
+        <?php
+        $catgories = wp_get_post_terms($post->ID, "product_cat");
+        //print_r($catgories)
+        ?>
+        <div class="row category-list-wrapper">
+          <?php
+          foreach ($catgories  as $catgoriy) {
+          ?>
+            <span> <?php echo $catgoriy->name; ?></span>
+          <?php
+          }
+          ?>
+        </div>
         <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
           <div class="col-3">
             <img src="<?php echo get_the_post_thumbnail_url(get_the_ID()) ?>" width="200px" height="200px">
           </div>
-          <div class="col-3 pt-3 text-uppercase text-lg">
+          <div class="col-12 pt-3 text-uppercase text-lg">
             <?php the_title(); ?>
           </div>
           <div>
@@ -298,7 +297,7 @@ function as_get_product_filter_color()
             $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true); ?>
             Price:
             <?php
-            print_r($Pricevalue);
+            echo number_format($Pricevalue, ((int) $Pricevalue == $Pricevalue ? 0 : 2), '.', ',');
             ?>
           </div>
         </a>
@@ -354,8 +353,8 @@ function register_my_menus()
 {
   register_nav_menus(
     array(
-      'Login_user_Menu' => __('Login_user_Menu'),
-      'Logout_user_Menu' => __('Logout_user_Menu'),
+      'header-menu' => __('header-menu'),
+
     )
   );
 }

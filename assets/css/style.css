@@ -4,19 +4,20 @@ position:relative;
 }
 #navigation{
 	background-color: #d5e3ea !important;
+  /* height: 10%; */
 }
-
+.main{
+  min-height: 80%;
+}
 .footer {
   background-color: #d5e3ea;
-  max-height: 100px;
+  height: 10%;
   text-align: center;
   font-size: x-large;
   float: left;
-  height: 100px;
+  padding-top: 20px;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+ 
 }
 .product-picture img{
   height: 500px;
@@ -63,8 +64,6 @@ position:relative;
 .list-item a{
    text-decoration: none !important;
    color: black !important;
-
-
 }
 .filterShow{    
   font-weight: 500;
@@ -87,15 +86,15 @@ position:relative;
 .filter-item{
 margin-left: 45px;
 }
-.main-content{
-padding: 50px 0px;
-}
+
 .filter-btn{
   height: 20%;
 }
 .header-logo img{
   height: 110px;
 }
+
+
  ul#menu-logout-user-menu {
   display: flex;
   justify-content: space-between;
@@ -106,7 +105,7 @@ padding: 50px 0px;
 ul#menu-login-user-menu li a {
   text-decoration: none;
   color: black;
-  padding: 30px;
+  padding: 12px 16px;
 }
 
 ul#menu-login-user-menu {
@@ -119,27 +118,30 @@ ul#menu-login-user-menu {
 ul#menu-logout-user-menu li a {
   text-decoration: none;
   color: black;
-  padding: 30px;
+  padding: 12px 16px;
 }
 
-.logged-in .as-e-user-logout {
+
+
+.logged-in .as-logout {
   display: none;
 }
-.logged-in .as-e-user-login {
-  display: flex;
+.logged-in .as-login {
+  display: block;
 }
 
-.as-e-user-logout {
-  display: flex;
+.as-logout {
+  display: block;
 }
 
-.as-e-user-login {
+.as-login {
   display: none;
 }
+
+
 
 .LatestProduct{
-
-  padding-top: 20px;
+ padding-top: 20px;
 }
 .products-items {
   padding-top: 41px;
@@ -152,9 +154,36 @@ ul#menu-logout-user-menu li a {
   rotate: -35deg;
   
 }
+.as_shop_menu {
+  position: relative;
+  display: inline-block;
+}
+
 .as_shop_menu .sub-menu {
-   display: none; 
-   list-style: none;
+  margin-top: 8px;
+  position: absolute;
+  min-width: 160px;
+  background-color: whitesmoke;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 16px 0px;
+  z-index: 1;
+  display: none; 
+  list-style: none;
   }
 
+ .pagination{
+  padding: 50px;
+ }
 
+ .as-login-link {
+  padding-top: 35px;
+}
+.as-login-link a {
+  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+  text-decoration: none;
+}
+.error{
+  color:red;
+  }
+.success{
+  color:green;
+}
