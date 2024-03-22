@@ -185,7 +185,7 @@ function wpdocs_theme_name_scripts()
   wp_enqueue_script('ecommerce-swiper-script', get_template_directory_uri() . '/assets/js/swiper-bundle.min.js');
   wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js', array(), rand(), true);
   wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), rand(), true);
-  wp_localize_script('ecommerce-main-script', 'as_ecommerce_ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'cart-itmes-data' => count(isset ($_SESSION['productitems']) ? $_SESSION['productitems'] : array())));
+  wp_localize_script('ecommerce-main-script', 'as_ecommerce_ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'cart_itmes_data' => count(isset ($_SESSION['productitems']) ? $_SESSION['productitems'] : array())));
   // session_start();
 //   wp_localize_script(
 //     'cart-data',

@@ -1,4 +1,7 @@
 jQuery(document).ready(function () {
+  if(as_ecommerce_ajax_object && as_ecommerce_ajax_object.cart_itmes_data){
+    jQuery(".cart_itmes").append("<span class='cart_total'>"+as_ecommerce_ajax_object.cart_itmes_data+"</span>")
+  }
   jQuery(document).on("change", ".ecommerce-payment-getway", function () {
     if (jQuery(this).val() == "credit") {
       jQuery(".payment-cedit-cash").show();
