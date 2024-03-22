@@ -2,13 +2,13 @@
 
 function as_get_image_data_array($attechment_id)
 {
-  $sizes      = get_intermediate_image_sizes();
+  $sizes = get_intermediate_image_sizes();
   $sizes_data = array();
   foreach ($sizes as $size) {
     $src = wp_get_attachment_image_src($attechment_id, $size);
     if ($src) {
-      $sizes_data[$size]['url']  = $src[0];
-      $sizes_data[$size]['width']  = $src[1];
+      $sizes_data[$size]['url'] = $src[0];
+      $sizes_data[$size]['width'] = $src[1];
       $sizes_data[$size]['height'] = $src[2];
     }
   }
@@ -46,12 +46,12 @@ function product_price_display($post)
 
   $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true);
   $salepricevalue = get_post_meta($post->ID, 'ecommerce_sale_price', true);
-?>
+  ?>
   <label for="new_meta"> Product price</label>
   <input type="text" id="price" name="price" value="<?php echo $Pricevalue ?>" /><br>
   <lable for="sale price">Sale price</lable>
   <input type="text" id="saleprice" name="saleprice" value="<?php echo $salepricevalue ?>" />
-<?php
+  <?php
 }
 
 function save_postdata($post_id)
@@ -127,13 +127,13 @@ add_action('Color_add_form_fields', 'add_term_image', 10, 2);
 
 function add_term_image()
 {
-?>
+  ?>
   <div class="form-field term-group">
     <label for="">Upload and Image</label>
     <input type="text" name="txt_upload_image" id="txt_upload_image" value="" style="width: 77%">
     <input type="button" id="upload_image_btn" class="button" value="Upload an Image" />
   </div>
-<?php
+  <?php
 }
 
 add_action('brand_edit_form_fields', 'edit_image_upload', 10, 2);
@@ -144,13 +144,14 @@ add_action('Color_edit_form_fields', 'edit_image_upload', 10, 2);
 function edit_image_upload($term, $taxonomy)
 {
   $txt_upload_image = get_term_meta($term->term_id, 'term_image', true);
-?>
+  ?>
   <div class="form-field term-group">
     <label for="">Upload and Image</label>
-    <input type="text" name="txt_upload_image" id="txt_upload_image" value="<?php echo $txt_upload_image ?>" style="width: 77%">
+    <input type="text" name="txt_upload_image" id="txt_upload_image" value="<?php echo $txt_upload_image ?>"
+      style="width: 77%">
     <input type="button" id="upload_image_btn" class="button" value="Upload an Image" />
   </div>
-<?php
+  <?php
 }
 
 add_action('created_brand', 'save_term_image', 10, 2);
@@ -158,7 +159,7 @@ add_action('created_product_cat', 'save_term_image', 10, 2);
 add_action('created_Color', 'save_term_image', 10, 2);
 function save_term_image($term_id, $tt_id)
 {
-  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+  if (isset ($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
     $group = ($_POST['txt_upload_image']);
     add_term_meta($term_id, 'term_image', $group, true);
   }
@@ -168,7 +169,7 @@ add_action('edited_product_cat', 'update_image_upload', 10, 2);
 add_action('edited_Color', 'update_image_upload', 10, 2);
 function update_image_upload($term_id, $tt_id)
 {
-  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+  if (isset ($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
     $group = ($_POST['txt_upload_image']);
     update_term_meta($term_id, 'term_image', $group);
   }
@@ -184,7 +185,18 @@ function wpdocs_theme_name_scripts()
   wp_enqueue_script('ecommerce-swiper-script', get_template_directory_uri() . '/assets/js/swiper-bundle.min.js');
   wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js', array(), rand(), true);
   wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), rand(), true);
-  wp_localize_script('ecommerce-main-script', 'as_ecommerce_ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
+  wp_localize_script('ecommerce-main-script', 'as_ecommerce_ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'cart-itmes-data' => count(isset ($_SESSION['productitems']) ? $_SESSION['productitems'] : array())));
+  // session_start();
+//   wp_localize_script(
+//     'cart-data',
+//     'cart-data-counts',
+//     array(
+//       1
+
+
+
+  //     )
+//   );
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
 
@@ -201,7 +213,7 @@ function as_contactdata()
 
   $Contactdata = array(
 
-    'post_title'   => $_POST['data']['Firstname'] . " " . $_POST['data']['Lastname'],
+    'post_title' => $_POST['data']['Firstname'] . " " . $_POST['data']['Lastname'],
     'post_content' => $_POST['data']['Firstname'] . " " . $_POST['data']['Lastname'],
     'post_type' => 'contact'
   );
@@ -219,7 +231,7 @@ function as_contactdata()
 function as_get_product_filter_color()
 {
   $tax_query = array('relation' => 'AND');
-  if (isset($_POST['colors'])) {
+  if (isset ($_POST['colors'])) {
     array_push(
       $tax_query,
       array(
@@ -230,7 +242,7 @@ function as_get_product_filter_color()
     );
   }
 
-  if (isset($_POST['catgories'])) {
+  if (isset ($_POST['catgories'])) {
     array_push(
       $tax_query,
       array(
@@ -240,7 +252,7 @@ function as_get_product_filter_color()
       )
     );
   }
-  if (isset($_POST['brands'])) {
+  if (isset ($_POST['brands'])) {
     array_push(
       $tax_query,
       array(
@@ -263,13 +275,13 @@ function as_get_product_filter_color()
   // echo "</pre>";
   $color = new WP_Query($args);
 
-?>
+  ?>
   <?php
   if ($color->have_posts()) {
     while ($color->have_posts()) {
       $color->the_post();
       global $post;
-  ?>
+      ?>
       <div class="col-3 pt-3 ">
         <?php
         $catgories = wp_get_post_terms($post->ID, "product_cat");
@@ -277,10 +289,12 @@ function as_get_product_filter_color()
         ?>
         <div class="row category-list-wrapper">
           <?php
-          foreach ($catgories  as $catgoriy) {
-          ?>
-            <span> <?php echo $catgoriy->name; ?></span>
-          <?php
+          foreach ($catgories as $catgoriy) {
+            ?>
+            <span>
+              <?php echo $catgoriy->name; ?>
+            </span>
+            <?php
           }
           ?>
         </div>
@@ -302,7 +316,7 @@ function as_get_product_filter_color()
           </div>
         </a>
       </div>
-  <?php
+      <?php
     }
   }
   ?>
@@ -310,27 +324,27 @@ function as_get_product_filter_color()
   <div class="pagination">
     <div class="page-size">
       <select name="select-size" id="select-size" class="select-size" value="select size">
-        <option value="1" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "1") {
-                            echo "selected='selected'";
-                          } ?>> 1 </option>
-        <option value="2" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "2") {
-                            echo "selected='selected'";
-                          } ?>> 2 </option>
-        <option value="3" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "3") {
-                            echo "selected='selected'";
-                          } ?>> 3 </option>
-        <option value="4" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "4") {
-                            echo "selected='selected'";
-                          } ?>> 4 </option>
+        <option value="1" <?php if (isset ($_POST['page_size']) && $_POST['page_size'] == "1") {
+          echo "selected='selected'";
+        } ?>> 1 </option>
+        <option value="2" <?php if (isset ($_POST['page_size']) && $_POST['page_size'] == "2") {
+          echo "selected='selected'";
+        } ?>> 2 </option>
+        <option value="3" <?php if (isset ($_POST['page_size']) && $_POST['page_size'] == "3") {
+          echo "selected='selected'";
+        } ?>> 3 </option>
+        <option value="4" <?php if (isset ($_POST['page_size']) && $_POST['page_size'] == "4") {
+          echo "selected='selected'";
+        } ?>> 4 </option>
       </select>
     </div>
     <div class="as-page-number">
       <?php
       for ($i = 1; $i <= ($color->max_num_pages); $i++) {
-      ?>
+        ?>
         <input type="button" name="page-number" value="<?php echo $i ?>" class="page-number" />
 
-      <?php
+        <?php
       }
       ?>
     </div>
@@ -339,7 +353,7 @@ function as_get_product_filter_color()
   exit;
   ?>
 
-<?php
+  <?php
 }
 function admin_css()
 {
@@ -404,7 +418,7 @@ function ecommerce_cartdata_display($post)
   $cartdata = get_post_meta($post->ID, 'ecommerce_cart_data', true);
   // print_r($cartdata); 
 
-?>
+  ?>
   <div class="admin-cartdata">
     <table style="width:100%">
       <tr>
@@ -418,7 +432,7 @@ function ecommerce_cartdata_display($post)
       <?php
       $grandtotal = 100;
       foreach ($cartdata['productitems'] as $product_id => $qty) {
-      ?>
+        ?>
         <tr>
           <td><img src="<?php echo get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px"></td>
           <td>
@@ -435,19 +449,19 @@ function ecommerce_cartdata_display($post)
             <?php echo $subtotal;
             $grandtotal += $subtotal; ?>
           </td>
-        <?php
+          <?php
       }
-        ?>
+      ?>
         <td>
           <?php echo $grandtotal; ?>
         </td>
-        </tr>
+      </tr>
     </table>
   </div>
 
 
 
-<?php
+  <?php
 }
 
 function contact()
