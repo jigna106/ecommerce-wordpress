@@ -1,5 +1,4 @@
 <?php
-
 function as_get_image_data_array($attechment_id)
 {
   $sizes = get_intermediate_image_sizes();
@@ -107,7 +106,7 @@ function add_product_taxonomy()
 
   $args = array(
     'label' => __('Color'),
-    'slug' => __('Color'),
+    'slug' => __('color'),
     'hierarchical' => true,
     'has_archive' => true,
     'public' => true,
@@ -117,7 +116,7 @@ function add_product_taxonomy()
     'show_in_nav_menus' => true,
 
   );
-  register_taxonomy('Color', 'product', $args);
+  register_taxonomy('color', 'product', $args);
 }
 add_action('init', 'add_product_taxonomy');
 

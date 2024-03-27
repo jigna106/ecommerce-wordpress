@@ -1,6 +1,7 @@
 <?php
 get_header();
-echo get_the_content();
-get_footer();
 
+echo get_the_content();
+
+get_footer();
 ?>
