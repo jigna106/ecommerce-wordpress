@@ -175,3 +175,88 @@ jQuery( document ).ready(function() {
     jQuery('.as_shop_menu .sub-menu').hide();
   })
 });
+
+
+
+jQuery(document).on("keyup", "#firstname", function () {
+   var letters = /^[A-Za-z]+$/;
+  var firstname = jQuery('#firstname').val();
+ 
+  if (firstname && !letters.test(firstname)) {
+ jQuery('#firstname_error').text('Alphabets Only');
+   
+    return false;
+  } else if (firstname == "") {
+    jQuery('#firstname_error').text('Must be fill out');
+    
+    return false;
+  } else {
+    jQuery('#firstname_error').text('');
+    return true;
+  }
+
+  
+})
+jQuery(document).on("keyup", "#lastname", function () {
+  var letters = /^[A-Za-z]+$/;
+ var lastname = jQuery('#lastname').val();
+
+ if (lastname && !letters.test(lastname)) {
+
+   jQuery('#lastname_error').text('Alphabets Only');
+  
+   return false;
+ } else if (lastname == "") {
+   jQuery('#lastname_error').text('Must be fill out');
+   
+   return false;
+ } else {
+   jQuery('#lastname_error').text('');
+   return true;
+ }
+})
+
+jQuery(document).on("keyup", "#email", function () {
+  var pattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+ var email = jQuery('#email').val();
+ if (email && !pattern.test(email)) {
+ jQuery('#email_error').text('Enter a valid email address');
+  return false;
+} else if (email == "") {
+  jQuery('#email_error').text('Must be fill out');
+  return false;
+} 
+else {
+  jQuery('#email_error').text('');
+  return true;
+}
+})
+
+jQuery(document).on("keyup", "#password", function () {
+ var password = jQuery('#password').val();
+ if (password.length >= 8) {
+  jQuery('#password_error').text(' ');
+ 
+  return false;
+} else if (password == "") {
+  jQuery('#password_error').text('Must be fill out');
+ 
+  return false;
+} else {
+  jQuery('#password_error').text('at least 8 or more characters');
+  return true;
+}
+})
+
+
+
+
+
+
+
+
+
+
+
+
+

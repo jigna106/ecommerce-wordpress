@@ -19,6 +19,18 @@ position:relative;
   width: 100%;
  
 }
+span.cart_total {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+}
+.as-img-thumbnail {
+  padding-top: 35px !important;
+  max-width: 100%;
+  height: auto;
+  border:none !important;
+}
 .product-picture img{
   height: 500px;
   }

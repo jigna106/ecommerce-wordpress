@@ -27,7 +27,7 @@ function create_custom_post_type()
   );
   add_theme_support('custom-header');
   add_theme_support('automatic-feed-links');
-  add_image_size('product-thumb', 300, 300);
+  add_image_size('product-thumb', 300, 300, true);
   add_theme_support('post-thumbnails');
 
   register_post_type('product', $products);
@@ -158,7 +158,7 @@ add_action('created_product_cat', 'save_term_image', 10, 2);
 add_action('created_Color', 'save_term_image', 10, 2);
 function save_term_image($term_id, $tt_id)
 {
-  if (isset ($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
     $group = ($_POST['txt_upload_image']);
     add_term_meta($term_id, 'term_image', $group, true);
   }
@@ -168,7 +168,7 @@ add_action('edited_product_cat', 'update_image_upload', 10, 2);
 add_action('edited_Color', 'update_image_upload', 10, 2);
 function update_image_upload($term_id, $tt_id)
 {
-  if (isset ($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
+  if (isset($_POST['txt_upload_image']) && '' !== $_POST['txt_upload_image']) {
     $group = ($_POST['txt_upload_image']);
     update_term_meta($term_id, 'term_image', $group);
   }
@@ -184,7 +184,7 @@ function wpdocs_theme_name_scripts()
   wp_enqueue_script('ecommerce-swiper-script', get_template_directory_uri() . '/assets/js/swiper-bundle.min.js');
   wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js', array(), rand(), true);
   wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), rand(), true);
-  wp_localize_script('ecommerce-main-script', 'as_ecommerce_ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'cart_itmes_data' => count(isset ($_SESSION['productitems']) ? $_SESSION['productitems'] : array())));
+  wp_localize_script('ecommerce-main-script', 'as_ecommerce_ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'cart_itmes_data' => count(isset($_SESSION['productitems']) ? $_SESSION['productitems'] : array())));
 
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
@@ -220,7 +220,7 @@ function as_contactdata()
 function as_get_product_filter_color()
 {
   $tax_query = array('relation' => 'AND');
-  if (isset ($_POST['colors'])) {
+  if (isset($_POST['colors'])) {
     array_push(
       $tax_query,
       array(
@@ -231,7 +231,7 @@ function as_get_product_filter_color()
     );
   }
 
-  if (isset ($_POST['catgories'])) {
+  if (isset($_POST['catgories'])) {
     array_push(
       $tax_query,
       array(
@@ -241,7 +241,7 @@ function as_get_product_filter_color()
       )
     );
   }
-  if (isset ($_POST['brands'])) {
+  if (isset($_POST['brands'])) {
     array_push(
       $tax_query,
       array(
@@ -295,10 +295,15 @@ function as_get_product_filter_color()
             <?php the_title(); ?>
           </div>
           <div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee"
+              viewBox="0 0 16 16">
+              <path
+                d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+            </svg>
             <?php
             // print_r($post);
             $Pricevalue = get_post_meta($post->ID, 'ecommerce_price', true); ?>
-            Price:
+
             <?php
             echo number_format($Pricevalue, ((int) $Pricevalue == $Pricevalue ? 0 : 2), '.', ',');
             ?>
@@ -312,17 +317,18 @@ function as_get_product_filter_color()
 
   <div class="pagination">
     <div class="page-size">
+      <label> Select Size</label>
       <select name="select-size" id="select-size" class="select-size" value="select size">
-        <option value="1" <?php if (isset ($_POST['page_size']) && $_POST['page_size'] == "1") {
+        <option value="1" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "1") {
           echo "selected='selected'";
         } ?>> 1 </option>
-        <option value="2" <?php if (isset ($_POST['page_size']) && $_POST['page_size'] == "2") {
+        <option value="2" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "2") {
           echo "selected='selected'";
         } ?>> 2 </option>
-        <option value="3" <?php if (isset ($_POST['page_size']) && $_POST['page_size'] == "3") {
+        <option value="3" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "3") {
           echo "selected='selected'";
         } ?>> 3 </option>
-        <option value="4" <?php if (isset ($_POST['page_size']) && $_POST['page_size'] == "4") {
+        <option value="4" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "4") {
           echo "selected='selected'";
         } ?>> 4 </option>
       </select>
@@ -405,7 +411,7 @@ add_action('add_meta_boxes', 'ecommerce_cartdata');
 function ecommerce_cartdata_display($post)
 {
   $cartdata = get_post_meta($post->ID, 'ecommerce_cart_data', true);
-  // print_r($cartdata); 
+  //print_r($cartdata);
 
   ?>
   <div class="admin-cartdata">
@@ -434,7 +440,11 @@ function ecommerce_cartdata_display($post)
             <?php echo get_post_meta($product_id, "ecommerce_price", true); ?>
           </td>
           <td>
-            <?php $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
+            <?php
+            $totalprice = get_post_meta($product_id, "ecommerce_price", true);
+
+            $subtotal = (int) $totalprice * (int) $qty;
+            ?>
             <?php echo $subtotal;
             $grandtotal += $subtotal; ?>
           </td>
