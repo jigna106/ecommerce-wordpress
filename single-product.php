@@ -1,11 +1,10 @@
-<?php
-get_header();
-if (isset ($_POST['submit'])) {
+<?php session_start();
+if (isset($_POST['submit'])) {
 
   $id = get_the_ID();
   $title = get_the_title();
   $qty = $_POST['quantity'];
-  if (isset ($_SESSION['productitems'][$id])) {
+  if (isset($_SESSION['productitems'][$id])) {
     $_SESSION['productitems'][$id] += $qty;
   } else {
     $_SESSION['productitems'][$id] = $qty;
@@ -17,6 +16,8 @@ if (isset ($_POST['submit'])) {
   // echo "<pre>";
 
 }
+get_header();
+
 if (have_posts()) {
   while (have_posts()) {
     the_post();
@@ -40,7 +41,7 @@ if (have_posts()) {
             }
             ?>
           </div>
-          <img src="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'full') ?>" />
+          <img src="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'full') ?>" height=600px , width=600px />
         </div>
         <div class="col-12 col-md-12 col-lg-6 d-flex align-items-center">
           <form method="post">

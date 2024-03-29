@@ -168,9 +168,11 @@ $brands = get_categories($args);
           <option value="2" selected="selected"> 2 </option>
           <option value="3"> 3 </option>
           <option value="4"> 4 </option>
+          <option value="12" selected="selected">12 </option>
         </select>
       </div>
       <div class="as-page-number">
+        <input type="button" name="forward" value=">>" class="page-number" />
         <?php
         for ($i = 1; $i <= ($totalpagenumber); $i++) {
           ?>
@@ -179,6 +181,7 @@ $brands = get_categories($args);
           <?php
         }
         ?>
+        <input type="button" name="backward" value="<<" class="page-number" />
       </div>
     </div>
   </div>

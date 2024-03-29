@@ -62,7 +62,7 @@ if ($the_query->have_posts()) {
                                 }
                                 ?>
                             </div>
-                            <div class="col-3">
+                            <div class="col-4">
                                 <?php echo the_post_thumbnail('product-thumb') ?>
                             </div>
                             <div class="col-md-12 text-uppercase text-lg">

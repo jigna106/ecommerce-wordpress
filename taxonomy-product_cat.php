@@ -130,7 +130,7 @@ $brands = get_categories($args);
             ?>
           </div>
           <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
-            <div class="col-3">
+            <div class="col-4">
               <?php echo the_post_thumbnail('product-thumb') ?>
             </div>
             <div class="col-12 pt-3 text-uppercase text-lg">
@@ -165,12 +165,14 @@ $brands = get_categories($args);
         <label> Select size</label>
         <select name="select-size" class="select-size" value="select size">
           <option value="1"> 1 </option>
-          <option value="2" selected="selected"> 2 </option>
+          <option value="2"> 2 </option>
           <option value="3"> 3 </option>
           <option value="4"> 4 </option>
+          <option value="12" selected="selected">12 </option>
         </select>
       </div>
       <div class="as-page-number">
+        <input type="button" name="forward" value=">>" class="forward" />
         <?php
         for ($i = 1; $i <= ($totalpagenumber); $i++) {
           ?>
@@ -179,6 +181,7 @@ $brands = get_categories($args);
           <?php
         }
         ?>
+        <input type="button" name="backward" value="<<" class="backward" />
       </div>
     </div>
   </div>

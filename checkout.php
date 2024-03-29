@@ -235,8 +235,11 @@ if (is_user_logged_in()) {
   </div>
   <?php
 } else {
+  get_header();
+  echo do_shortcode("[as_authentication_login]");
   ?>
-  <h3>If you have purchase a product<a href="<?php echo get_permalink(160); ?>">sign in</a></h3>
+
+
   <?php
 }
 get_footer();

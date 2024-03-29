@@ -27,7 +27,7 @@ function create_custom_post_type()
   );
   add_theme_support('custom-header');
   add_theme_support('automatic-feed-links');
-  add_image_size('product-thumb', 300, 300, true);
+  add_image_size('product-thumb', 300, 300, false);
   add_theme_support('post-thumbnails');
 
   register_post_type('product', $products);
@@ -147,7 +147,7 @@ function edit_image_upload($term, $taxonomy)
   <div class="form-field term-group">
     <label for="">Upload and Image</label>
     <input type="text" name="txt_upload_image" id="txt_upload_image" value="<?php echo $txt_upload_image ?>"
-      style="width: 77%">
+    style="width: 77%">
     <input type="button" id="upload_image_btn" class="button" value="Upload an Image" />
   </div>
   <?php
@@ -288,7 +288,7 @@ function as_get_product_filter_color()
           ?>
         </div>
         <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
-          <div class="col-3">
+          <div class="col-4">
             <img src="<?php echo get_the_post_thumbnail_url(get_the_ID()) ?>" width="200px" height="200px">
           </div>
           <div class="col-12 pt-3 text-uppercase text-lg">
@@ -331,9 +331,16 @@ function as_get_product_filter_color()
         <option value="4" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "4") {
           echo "selected='selected'";
         } ?>> 4 </option>
+        <option value="12" <?php if (isset($_POST['page_size']) && $_POST['page_size'] == "12") {
+          echo "selected='selected'";
+        } ?>> 12 </option>
+
       </select>
     </div>
     <div class="as-page-number">
+      <input type="hidden" class="page-number-hidden" value="<?php echo $_POST['page'] ?>" />
+
+      <input type="button" name="backward" value="<<" class="backward" />
       <?php
       for ($i = 1; $i <= ($color->max_num_pages); $i++) {
         ?>
@@ -342,6 +349,8 @@ function as_get_product_filter_color()
         <?php
       }
       ?>
+
+      <input type="button" name="forward" value=">>" class="forward" />
     </div>
   </div>
   <?php

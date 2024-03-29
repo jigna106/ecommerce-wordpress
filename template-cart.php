@@ -1,27 +1,27 @@
 <?php /* Template Name: cart */
-get_header();
 session_start();
 // echo "<pre>";
 // print_r($_SESSION);
 // echo "</pre>";
-if (isset ($_POST['emptycartsubmit'])) {
+if (isset($_POST['emptycartsubmit'])) {
     unset($_SESSION['productitems']);
 }
 
-if (isset ($_POST['remove'])) {
+if (isset($_POST['remove'])) {
     $ProductId = $_POST['remove'];
-    //    $_SESSION['productitems'][$ProductId ];
     unset($_SESSION['productitems'][$ProductId]);
 }
 
-if (isset ($_POST['qtysubmit'])) {
+if (isset($_POST['qtysubmit'])) {
     $qty = $_POST['quantity'];
     $id = $_POST['hiddenid'];
     $_SESSION['productitems'][$id] = $qty;
 }
 
-if (isset ($_SESSION['productitems']) && !empty ($_SESSION['productitems'])) {
+get_header();
+if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
     $grandtotal = 100;
+    $as_subtotal = 0;
     ?>
     <div class="container mt-5 mb-5">
         <div class="row pt-3">
@@ -39,7 +39,7 @@ if (isset ($_SESSION['productitems']) && !empty ($_SESSION['productitems'])) {
             <h1 class="d-flex justify-content-center align-items-center">Cart Details</h1>
         </div>
         <div class="row product-section">
-            <div class="col-10 product-table">
+            <div class="col-9 product-table">
                 <div class="row">
                     <div class="col-2 pt-3"><b>Image</b></div>
                     <div class="col-2 pt-3"><b>Product</b></div>
@@ -89,6 +89,7 @@ if (isset ($_SESSION['productitems']) && !empty ($_SESSION['productitems'])) {
                             <?php
                             $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
                             <?php echo number_format($subtotal);
+                            $as_subtotal += $subtotal;
                             $grandtotal += $subtotal; ?>
 
 
@@ -110,11 +111,25 @@ if (isset ($_SESSION['productitems']) && !empty ($_SESSION['productitems'])) {
                     <?php
                 }
                 ?>
+
             </div>
-            <div class="col-2 billing-details pt-5">
+            <div class="col-3 billing-details pt-5">
                 <div class="totals">
                     <div class="totals-item">
-                        Shipping:
+                        Total Products
+                        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                <path
+                                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                            </svg>
+                            <?php
+                            echo number_format($as_subtotal)
+                                ?>
+                        </div>
+                    </div>
+                    <div class="totals-item">
+                        Delivery charges
                         <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-currency-rupee" viewBox="0 0 16 16">
@@ -123,7 +138,7 @@ if (isset ($_SESSION['productitems']) && !empty ($_SESSION['productitems'])) {
                             </svg>100</div>
                     </div>
                     <div class="totals-item totals-item-total">
-                        Grand Total:
+                        Grand Total
                         <div class="totals-value" id="cart-total">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-currency-rupee" viewBox="0 0 16 16">
@@ -156,9 +171,10 @@ if (isset ($_SESSION['productitems']) && !empty ($_SESSION['productitems'])) {
                             <h3><strong>Your Cart is Empty</strong></h3>
                             <h4>Add something to make me happy </h4>
 
-                            <a href="<?php echo get_permalink(74); ?>" class=" btn btn-primary cart-btn-transform m-3"
-                                data-abc="true">continue shopping <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                    height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                            <a href="<?php echo get_post_type_archive_link('product'); ?>"
+                                class=" btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping <svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-cart" viewBox="0 0 16 16">
                                     <path
                                         d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
                                 </svg></a>

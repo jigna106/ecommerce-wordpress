@@ -113,7 +113,7 @@ $brands = get_categories($args);
       while (have_posts()) {
         the_post();
         ?>
-        <div class="col-3 pt-3 ">
+        <div class="col-4 pt-3 ">
           <?php
           $catgories = wp_get_post_terms($post->ID, "product_cat");
           //print_r($catgories)
@@ -164,22 +164,28 @@ $brands = get_categories($args);
       <div class="page-size">
         <label> Select Size</label>
         <select name="select-size" class="select-size" value="select size">
+
           <option value="1"> 1 </option>
-          <option value="2" selected="selected"> 2 </option>
+          <option value="2"> 2 </option>
           <option value="3"> 3 </option>
           <option value="4"> 4 </option>
-          <option value="12">12 </option>
+          <option value="12" selected="selected">12 </option>
+
         </select>
       </div>
+
+
       <div class="as-page-number">
+        <input type="hidden" class="page-number-hidden" value="1" />
+        <input type="button" name="backward" value="<<" class="backward" />
         <?php
         for ($i = 1; $i <= ($totalpagenumber); $i++) {
           ?>
           <input type="button" name="page-number" value="<?php echo $i ?>" class="page-number" />
-
           <?php
         }
         ?>
+        <input type="button" name="forward" value=">>" class="forward" />
       </div>
     </div>
   </div>

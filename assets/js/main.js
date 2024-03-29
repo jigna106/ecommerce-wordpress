@@ -53,7 +53,33 @@ jQuery(document).ready(function () {
     make_ajax(1, selctedsize);
   });
 });
-function make_ajax(text = 1, selctedsize = 2) {
+
+jQuery(document).ready(function(){
+jQuery(document).on("click",".forward",function(){
+var forward =jQuery('.forward').val();
+make_ajax();
+
+
+
+  })
+
+})
+
+
+jQuery(document).ready(function(){
+  jQuery(document).on("click",".backward",function(){
+  var backward =jQuery('.backward').val();
+  make_ajax();
+  
+ 
+  })
+
+})
+
+
+
+
+function make_ajax(text = 1, selctedsize = 12) {
   var colors = [];
   var colors_ajax = [];
   var catgories = [];
