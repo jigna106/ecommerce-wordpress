@@ -160,7 +160,7 @@ $brands = get_categories($args);
     $totalpagenumber = $wp_query->max_num_pages;
     // echo $totalpagenumber;
     ?>
-    <div class="pagination">
+    <div class="pagination-size">
       <div class="page-size">
         <label> Select size</label>
         <select name="select-size" class="select-size" value="select size">
@@ -172,16 +172,20 @@ $brands = get_categories($args);
         </select>
       </div>
       <div class="as-page-number">
-        <input type="button" name="forward" value=">>" class="forward" />
-        <?php
-        for ($i = 1; $i <= ($totalpagenumber); $i++) {
-          ?>
-          <input type="button" name="page-number" value="<?php echo $i ?>" class="page-number" />
-
+        <input type="hidden" class="page-number-hidden" value="1" />
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><input type="button" name="backward" value="<" class="backward page-link" /></li>
           <?php
-        }
-        ?>
-        <input type="button" name="backward" value="<<" class="backward" />
+          for ($i = 1; $i <= ($totalpagenumber); $i++) {
+            ?>
+            <li class="page-item"><input type="button" name="page-number" value="<?php echo $i ?>"
+                class="page-number page-link" />
+            </li>
+            <?php
+          }
+          ?>
+          <li class="page-item"> <input type="button" name="forward" value=">" class="forward page-link" /></li>
+
       </div>
     </div>
   </div>

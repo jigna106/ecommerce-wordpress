@@ -56,28 +56,28 @@ jQuery(document).ready(function () {
 
 jQuery(document).ready(function(){
 jQuery(document).on("click",".forward",function(){
-var forward =jQuery('.forward').val();
-make_ajax();
+var forward =jQuery('.page-number-hidden').val();
+var selctedsize = jQuery(".select-size").val();
+ var paginationNumber = parseInt(forward) + 1;
+ console.log(paginationNumber);
+make_ajax(paginationNumber, selctedsize);
 
-
-
-  })
+ })
 
 })
 
 
 jQuery(document).ready(function(){
   jQuery(document).on("click",".backward",function(){
-  var backward =jQuery('.backward').val();
-  make_ajax();
+  var backward =jQuery('.page-number-hidden').val();
+  var selctedsize = jQuery(".select-size").val();
+ var pageNumber = parseInt(backward) - 1;
+  make_ajax(pageNumber,selctedsize);
   
- 
+   
   })
 
 })
-
-
-
 
 function make_ajax(text = 1, selctedsize = 12) {
   var colors = [];

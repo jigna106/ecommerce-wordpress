@@ -147,7 +147,7 @@ function edit_image_upload($term, $taxonomy)
   <div class="form-field term-group">
     <label for="">Upload and Image</label>
     <input type="text" name="txt_upload_image" id="txt_upload_image" value="<?php echo $txt_upload_image ?>"
-    style="width: 77%">
+      style="width: 77%">
     <input type="button" id="upload_image_btn" class="button" value="Upload an Image" />
   </div>
   <?php
@@ -315,7 +315,7 @@ function as_get_product_filter_color()
   }
   ?>
 
-  <div class="pagination">
+  <div class="pagination-size">
     <div class="page-size">
       <label> Select Size</label>
       <select name="select-size" id="select-size" class="select-size" value="select size">
@@ -337,27 +337,30 @@ function as_get_product_filter_color()
 
       </select>
     </div>
+
+
+
     <div class="as-page-number">
-      <input type="hidden" class="page-number-hidden" value="<?php echo $_POST['page'] ?>" />
-
-      <input type="button" name="backward" value="<<" class="backward" />
-      <?php
-      for ($i = 1; $i <= ($color->max_num_pages); $i++) {
-        ?>
-        <input type="button" name="page-number" value="<?php echo $i ?>" class="page-number" />
-
+      <input type="hidden" class="page-number-hidden" value="1" />
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><input type="button" name="backward" value="<" class="backward page-link" /></li>
         <?php
-      }
-      ?>
+        for ($i = 1; $i <= ($color->max_num_pages); $i++) {
+          ?>
+          <li class="page-item"><input type="button" name="page-number" value="<?php echo $i ?>"
+              class="page-number page-link" />
+          </li>
+          <?php
+        }
+        ?>
+        <li class="page-item"> <input type="button" name="forward" value=">" class="forward page-link" /></li>
 
-      <input type="button" name="forward" value=">>" class="forward" />
     </div>
   </div>
   <?php
   exit;
-  ?>
-
-  <?php
+?>
+<?php
 }
 function admin_css()
 {

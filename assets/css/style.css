@@ -32,11 +32,16 @@ span.cart_total {
   text-align:center;
   font-size:12px;
   position: absolute;
-  top: 37px;
-  right: 252px;
+  top: 0px !important;
+  right: 0px !important;
 }
-  
+#menu-item-244{
 
+position: relative !important;
+}
+.pagination-size {
+  padding-top: 30px;
+}
 
 .as-img-thumbnail {
   padding-top: 35px !important;
@@ -167,7 +172,10 @@ ul#menu-logout-user-menu li a {
   display: none;
 }
 
-
+.container{
+  
+  padding-top: 20px !important;
+}
 
 .LatestProduct{
  padding-top: 20px;
@@ -216,3 +224,6 @@ ul#menu-logout-user-menu li a {
 .success{
   color:green;
 }
+
+
+

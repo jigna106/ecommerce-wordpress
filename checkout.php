@@ -37,7 +37,7 @@ if (is_user_logged_in()) {
   get_header();
 
   ?>
-  <div class="container">
+  <div class="container py-20">
     <form class="" method="post">
       <div class="row">
         <div class="col-md-4 order-md-2 mb-4">
@@ -52,7 +52,7 @@ if (is_user_logged_in()) {
             <ul class="list-group mb-3">
               <li class="list-group-item d-flex justify-content-between lh-condensed">
                 <div>
-                  <h6 class="my-0">Product name:
+                  <h6 class="my-0">
                     <?php echo get_the_title($product_id); ?>
                   </h6>
                   <small class="text-muted">Quantity:
