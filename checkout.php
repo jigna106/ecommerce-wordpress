@@ -191,7 +191,7 @@ if (is_user_logged_in()) {
             <div class="custom-control custom-radio">
               <input type="radio" name="paymentMethod" value="cash-on-delivery" id="cash-on-delivery"
                 class="custom-control-input ecommerce-payment-getway" />
-              <label class="custom-control-label" for="cash-on-delivery">Cash on delivery </label>
+              <label class="custom-control-label" for="cash-on-delivery">Cash On Delivery </label>
             </div>
           </div>
           <div class="payment-cedit-cash">

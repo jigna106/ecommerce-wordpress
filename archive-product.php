@@ -173,10 +173,12 @@ $brands = get_categories($args);
         </select>
       </div>
     </div>
+
     <div class="as-page-number">
       <input type="hidden" class="page-number-hidden" value="1" />
       <ul class="pagination justify-content-center">
-        <li class="page-item"><input type="button" name="backward" value="<" class="backward page-link" /></li>
+        <li class="page-item"><input type="button" name="backward" value="<" class="backward page-link"
+            disabled='disabled' /></li>
         <?php
         for ($i = 1; $i <= ($totalpagenumber); $i++) {
           ?>

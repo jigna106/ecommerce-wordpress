@@ -18,7 +18,7 @@ if ($current_user->ID) {
             <table style="width:100%">
                 <thead>
                     <tr>
-                        <th>order-Id</th>
+                        <th>Order_No</th>
                         <th>Name</th>
                         <th>Products</th>
 
@@ -88,8 +88,12 @@ if ($current_user->ID) {
                                     </svg>
                                     <?php echo $grandtotal; ?>
                                 </td>
-                                <td><a href="<?php echo get_permalink(233) . '?Order_id=' . $id; ?>"><button
-                                            class="orderhostory">YourOrderDetails</button></a></td>
+                                <td>
+                                    <a href="<?php echo get_permalink(233) . '?Order_id=' . $id; ?>">
+                                        <button type="button" class="btn btn-info orderhostory">
+                                            Your Order Details</button>
+                                    </a>
+                                </td>
                             </tr>
 
                             <?php

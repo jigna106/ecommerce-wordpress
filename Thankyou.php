@@ -14,7 +14,7 @@ echo "</pre>";
   </div>
   <div class="row">
     <div class="d-flex flex-row  mb-3">
-      <div class="p-3 text-secondary border-end ">order_id
+      <div class="p-3 text-secondary border-end ">Order_id
         <div class="text-dark">
           <?php echo $id ?>
         </div>

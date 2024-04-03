@@ -343,7 +343,9 @@ function as_get_product_filter_color()
     <div class="as-page-number">
       <input type="hidden" class="page-number-hidden" value="1" />
       <ul class="pagination justify-content-center">
-        <li class="page-item"><input type="button" name="backward" value="<" class="backward page-link" /></li>
+        <li class="page-item"><input type="button" name="backward" value="<" class="backward page-link" <?php if ($_POST['page'] == 1) {
+          echo "disabled='disabled'";
+        } ?> /></li>
         <?php
         for ($i = 1; $i <= ($color->max_num_pages); $i++) {
           ?>
@@ -353,7 +355,9 @@ function as_get_product_filter_color()
           <?php
         }
         ?>
-        <li class="page-item"> <input type="button" name="forward" value=">" class="forward page-link" /></li>
+        <li class="page-item"> <input type="button" name="forward" value=">" class="forward page-link" <?php if ($_POST['page'] == $color->max_num_pages) {
+          echo "disabled='disabled'";
+        } ?> /></li>
 
     </div>
   </div>
@@ -396,6 +400,69 @@ function shop_orders()
   register_post_type('shoporder', $Orders);
 }
 add_action('init', 'shop_orders');
+
+function my_custom_status_creation()
+{
+  register_post_status(
+    'completed',
+    array(
+      'label' => _x('Completed', 'post'),
+      'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Completed <span class="count">(%s)</span>'),
+      'public' => true,
+      'exclude_from_search' => false,
+      'show_in_admin_all_list' => true,
+      'show_in_admin_status_list' => true
+    )
+  );
+  register_post_status(
+    'proccesing',
+    array(
+      'label' => _x('Proccesing', 'post'),
+      'label_count' => _n_noop('Proccesing <span class="count">(%s)</span>', 'Proccesing <span class="count">(%s)</span>'),
+      'public' => true,
+      'exclude_from_search' => false,
+      'show_in_admin_all_list' => true,
+      'show_in_admin_status_list' => true
+    )
+  );
+  register_post_status(
+    'pending_payment',
+    array(
+      'label' => _x('Pending Payment', 'post'),
+      'label_count' => _n_noop('Pending Payment <span class="count">(%s)</span>', 'Pending Payment <span class="count">(%s)</span>'),
+      'public' => true,
+      'exclude_from_search' => false,
+      'show_in_admin_all_list' => true,
+      'show_in_admin_status_list' => true
+    )
+  );
+}
+add_action('init', 'my_custom_status_creation');
+
+function my_custom_status_add_in_quick_edit()
+{
+  echo "<script>
+  jQuery(document).ready( function() {
+      jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"completed\">Completed</option>' );  
+      jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"proccesing\">Proccesing</option>' );   
+      jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"pending_payment\">Pending Payment</option>' );       
+  }); 
+  </script>";
+}
+add_action('admin_footer-edit.php', 'my_custom_status_add_in_quick_edit');
+function my_custom_status_add_in_post_page()
+{
+  echo "<script>
+  jQuery(document).ready( function() {        
+      jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"completed\">Completed</option>' );
+      jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"proccesing\">Proccesing</option>' );   
+      jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"pending_payment\">Pending Payment</option>' ); 
+  });
+  </script>";
+}
+add_action('admin_footer-post.php', 'my_custom_status_add_in_post_page');
+add_action('admin_footer-post-new.php', 'my_custom_status_add_in_post_page');
+
 
 
 function ecommerce_billingdata_()
