@@ -9,6 +9,9 @@ position:relative;
 .main{
   min-height: 80%;
 }
+.w-20{
+  width: 20% !important;
+}
 .footer {
   background-color: #d5e3ea;
   height: 10%;

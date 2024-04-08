@@ -8,8 +8,7 @@ jQuery(document).ready(function () {
     } else {
       jQuery(".payment-cedit-cash").hide();
     }
-
-    console.log(jQuery(this).val());
+       console.log(jQuery(this).val());
   });
 });
 jQuery(document).ready(function () {
@@ -65,17 +64,13 @@ make_ajax(paginationNumber, selctedsize);
  })
 
 })
-
-
 jQuery(document).ready(function(){
   jQuery(document).on("click",".backward",function(){
   var backward =jQuery('.page-number-hidden').val();
   var selctedsize = jQuery(".select-size").val();
  var pageNumber = parseInt(backward) - 1;
   make_ajax(pageNumber,selctedsize);
-  
-   
-  })
+   })
 
 })
 
@@ -202,8 +197,6 @@ jQuery( document ).ready(function() {
   })
 });
 
-
-
 jQuery(document).on("keyup", "#firstname", function () {
    var letters = /^[A-Za-z]+$/;
   var firstname = jQuery('#firstname').val();
@@ -274,7 +267,35 @@ jQuery(document).on("keyup", "#password", function () {
 }
 })
 
+jQuery(document).on("keyup", "#phone", function () {
+  var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  var phone = jQuery('#phone').val();
+  if (phone && !re.test(phone)) 
+ {
+   jQuery('#phone_error').text('Enter a valiad mobile number');
+    return false;
+ } else if (phone == "") {
+   jQuery('#phone_error').text('Must be fill out');
+  
+   return false;
+ } else {
+   jQuery('#phone_error').text(' ');
+   return true;
+ }
+ })
 
+
+
+
+
+
+// jQuery(document).ready(function(){
+//   jQuery(document).on("click","#addtocart",function(){
+//          jQuery('#messages').removeClass('hide').addClass('alert alert-success alert-dismissible') ;
+//                 jQuery('#messages_content').html('<h4>Item addded to cart!</h4>').fadeTo(2000);
+              
+//  })
+// })
 
 
 

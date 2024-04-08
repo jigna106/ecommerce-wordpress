@@ -12,12 +12,20 @@ if (isset($_POST['remove'])) {
     unset($_SESSION['productitems'][$ProductId]);
 }
 
-if (isset($_POST['qtysubmit'])) {
+if (isset($_POST['increment'])) {
     $qty = $_POST['quantity'];
     $id = $_POST['hiddenid'];
-    $_SESSION['productitems'][$id] = $qty;
+    $_SESSION['productitems'][$id] = (int) $qty + 1;
 }
 
+if (isset($_POST['decrement'])) {
+    $qty = $_POST['quantity'];
+    $id = $_POST['hiddenid'];
+    if ($_SESSION['productitems'][$id] > 0) {
+        $_SESSION['productitems'][$id] = (int) $qty - 1;
+    }
+
+}
 get_header();
 if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
     $grandtotal = 100;
@@ -74,9 +82,10 @@ if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
                         <div class="col-2 pt-3">
                             <form method="post">
                                 <input type="hidden" name="hiddenid" value="<?php echo $product_id ?>" />
-                                <input type="number" class="w-75" id="quantity" name="quantity" min="1"
-                                    value="<?php echo $qty; ?>" />
-                                <input type="submit" name="qtysubmit" value="Update Quantity" />
+                                <input type="submit" value="+" name="increment" id="increment" />
+                                <input type="text" class="w-20" id="quantity" name="quantity" value="<?php echo $qty; ?>"
+                                    readonly />
+                                <input type="submit" value="-" name="decrement" id="decrement" />
                             </form>
                         </div>
                         <div class="col-2 pt-3">
@@ -106,8 +115,6 @@ if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
                             </form>
                         </div>
                     </div>
-
-
                     <?php
                 }
                 ?>

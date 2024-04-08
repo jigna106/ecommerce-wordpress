@@ -189,7 +189,6 @@ $brands = get_categories($args);
         }
         ?>
         <li class="page-item"> <input type="button" name="forward" value=">" class="forward page-link" /></li>
-
     </div>
   </div>
 </div>

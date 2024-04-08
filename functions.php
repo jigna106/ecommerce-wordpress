@@ -122,7 +122,7 @@ add_action('init', 'add_product_taxonomy');
 
 add_action('brand_add_form_fields', 'add_term_image', 10, 2);
 add_action('product_cat_add_form_fields', 'add_term_image', 10, 2);
-add_action('Color_add_form_fields', 'add_term_image', 10, 2);
+add_action('color_add_form_fields', 'add_term_image', 10, 2);
 
 function add_term_image()
 {
@@ -224,7 +224,7 @@ function as_get_product_filter_color()
     array_push(
       $tax_query,
       array(
-        'taxonomy' => 'Color',
+        'taxonomy' => 'color',
         'field' => 'name',
         'terms' => $_POST['colors'],
       )

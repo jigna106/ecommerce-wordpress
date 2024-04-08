@@ -1,7 +1,6 @@
 <?php /* Template Name: contactus */
 get_header();
 ?>
-
 <section class="bg-light py-3 py-md-5">
     <div class="container">
         <div class="row justify-content-md-center">
@@ -12,7 +11,6 @@ get_header();
             </div>
         </div>
     </div>
-
     <div class="container">
         <form method="post">
             <div class="row justify-content-lg-center">
@@ -25,11 +23,15 @@ get_header();
                                     <input type="firstname" class="form-control" id="firstname" name="firstname"
                                         value="">
                                 </div>
+                                <div class="error" id="firstname_error">
+                                </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label for="lastname" class="form-label">Last Name</label>
                                 <div class="input-group">
                                     <input type="lastname" class="form-control" id="lastname" name="lastname" value="">
+                                </div>
+                                <div class="error" id="lastname_error">
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
@@ -42,8 +44,9 @@ get_header();
                                                 d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
                                         </svg>
                                     </span>
-                                    <input type="email" class="form-control" id="email" name="email" value="">
+                                    <input type="email" class="form-control" id="email" name="email">
                                 </div>
+                                <div class="error" id="email_error"></div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label for="phone" class="form-label">Phone Number</label>
@@ -57,6 +60,8 @@ get_header();
                                     </span>
                                     <input type="text" class="form-control" id="phone" name="phone" value="">
                                 </div>
+                                <div class="error" id="phone_error"></div>
+
                             </div>
                             <div class="col-12">
                                 <label for="message" class="form-label">Message</label>

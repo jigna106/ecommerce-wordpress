@@ -1,5 +1,7 @@
 <?php session_start();
+$issucess = "";
 if (isset($_POST['submit'])) {
+
 
   $id = get_the_ID();
   $title = get_the_title();
@@ -9,7 +11,7 @@ if (isset($_POST['submit'])) {
   } else {
     $_SESSION['productitems'][$id] = $qty;
   }
-
+  $issucess = "yes";
 
   // print_r($_SESSION);
   // echo "</pre>";
@@ -23,6 +25,19 @@ if (have_posts()) {
     the_post();
     ?>
     <div class="container">
+      <?php
+      if ($issucess == "yes") { ?>
+        <div class="Sucess">
+          <div class="alert alert-success" role="alert">
+            Item addded to cart!
+          </div>
+        </div>
+      <?php } ?>
+
+
+      <div id="messages" class="hide" role="alert">
+        <div id="messages_content"></div>
+      </div>
       <?php
       $catgories = wp_get_post_terms($post->ID, "product_cat");
       //print_r($catgories)
@@ -44,6 +59,7 @@ if (have_posts()) {
           <img src="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'full') ?>" height=600px , width=600px />
         </div>
         <div class="col-12 col-md-12 col-lg-6 d-flex align-items-center">
+
           <form method="post">
 
             <div class="pt-2">
@@ -75,12 +91,14 @@ if (have_posts()) {
             </div>
             <div class="pt-2">
               <b>Quantity</b>
-              <input type="number" class="w-29" id="quantity" name="quantity" min="1" />
+              <input type="number" class="w-29" id="quantity" name="quantity" />
+
             </div>
             <div class="pt-2">
 
-              <div class="buttons"><a href="<?php echo get_permalink(94); ?>"><input type="submit" name="submit"
-                    value="ADD TO CART" class="btn btn-warning btn-long cart" /></a> </div>
+              <div class="buttons"><a href="<?php echo get_permalink(94); ?>">
+                  <input type="submit" name="submit" value="ADD TO CART" class="btn btn-warning btn-long cart"
+                    id="addtocart" /></a> </div>
 
             </div>
 
