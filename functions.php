@@ -491,8 +491,7 @@ function ecommerce_cartdata_display($post)
 {
   $cartdata = get_post_meta($post->ID, 'ecommerce_cart_data', true);
   //print_r($cartdata);
-
-  ?>
+    ?>
   <div class="admin-cartdata">
     <table style="width:100%">
       <tr>
@@ -541,7 +540,6 @@ function ecommerce_cartdata_display($post)
 
   <?php
 }
-
 function contact()
 {
   $Contact = array(
@@ -572,4 +570,15 @@ function contact_data__display($post)
   echo '<p><strong>' . __('email') . ':</strong> ' . $contactdata['data']['Email'] . '</p>';
   echo '<p><strong>' . __('phonenumber') . ':</strong> ' . $contactdata['data']['phone'] . '</p>';
   echo '<p><strong>' . __('Message') . ':</strong> ' . $contactdata['data']['Message'] . '</p>';
+}
+function random_strings($length_of_string)
+{
+
+    // String of all alphanumeric character
+    $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+    // Shuffle the $str_result and returns substring
+    // of specified length
+    return substr(str_shuffle($str_result), 
+                       0, $length_of_string);
 }

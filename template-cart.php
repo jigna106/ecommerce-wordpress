@@ -1,21 +1,33 @@
 <?php /* Template Name: cart */
-session_start();
-// echo "<pre>";
-// print_r($_SESSION);
-// echo "</pre>";
+
+if (is_user_logged_in()) {
+    $current_user = wp_get_current_user();
+    $user_id = (string)$current_user->ID;
+} else if (isset($_COOKIE['user_cart_id'])) {
+    $user_id = $_COOKIE['user_cart_id'];
+} else {
+    $user_cart_id = random_strings(8);
+    setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
+    $user_id = $user_cart_id;
+}
+$retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
+if (isset($retrieve_data[0])) {
+    $data = maybe_unserialize($retrieve_data[0]['session_data']);
+}
 if (isset($_POST['emptycartsubmit'])) {
-    unset($_SESSION['productitems']);
+    $wpdb->delete('session_management', ['cart_user_id' => $user_id]);
 }
 
 if (isset($_POST['remove'])) {
-    $ProductId = $_POST['remove'];
-    unset($_SESSION['productitems'][$ProductId]);
+
+    //  $wpdb->delete( 'session_management',['cart_user_id' => $user_id] );
 }
 
 if (isset($_POST['increment'])) {
     $qty = $_POST['quantity'];
     $id = $_POST['hiddenid'];
     $_SESSION['productitems'][$id] = (int) $qty + 1;
+      $data[get_the_ID()] = (int)$qty + 1;
 }
 
 if (isset($_POST['decrement'])) {
@@ -24,21 +36,19 @@ if (isset($_POST['decrement'])) {
     if ($_SESSION['productitems'][$id] > 0) {
         $_SESSION['productitems'][$id] = (int) $qty - 1;
     }
-
 }
+
 get_header();
-if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
+if (!empty($data)) {
     $grandtotal = 100;
     $as_subtotal = 0;
-    ?>
+?>
     <div class="container mt-5 mb-5">
         <div class="row pt-3">
             <form method="post" class="d-flex justify-content-end align-items-center">
                 <button type="submit" name="emptycartsubmit" class="btn btn-danger">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash-fill"
-                        viewBox="0 0 16 16">
-                        <path
-                            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                     </svg> Empty Cart</button>
 
             </form>
@@ -57,65 +67,61 @@ if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
                     <div class="col-2 pt-3"><b>Remove Product</b></div>
                 </div>
                 <?php
-                foreach ($_SESSION['productitems'] as $product_id => $qty) {
-                    $product = get_post($product_id);
-                    ?>
+
+
+
+                foreach ($data as $productId => $qty) {
+
+                ?>
 
                     <div class="row">
                         <div class="col-2 pt-3">
-                            <img src="<?php echo get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px">
+                            <img src="<?php echo get_the_post_thumbnail_url($productId) ?>" width="100px" height="100px">
+
                         </div>
                         <div class="col-2 pt-3">
-                            <?php echo get_the_title($product_id); ?>
+                            <?php echo get_the_title($productId);
+
+                            ?>
+
                         </div>
                         <div class="col-2 pt-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                <path
-                                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
                             </svg>
-                            <?php $price = get_post_meta($product_id, 'ecommerce_price', true);
+                            <?php $price = get_post_meta($productId, 'ecommerce_price', true);
                             echo number_format($price);
                             ?>
 
                         </div>
                         <div class="col-2 pt-3">
                             <form method="post">
-                                <input type="hidden" name="hiddenid" value="<?php echo $product_id ?>" />
+                                <input type="hidden" name="hiddenid" value="<?php echo $productId ?>" />
                                 <input type="submit" value="+" name="increment" id="increment" />
-                                <input type="text" class="w-20" id="quantity" name="quantity" value="<?php echo $qty; ?>"
-                                    readonly />
+                                <input type="text" class="w-20" id="quantity" name="quantity" value="<?php echo $qty; ?>" readonly />
                                 <input type="submit" value="-" name="decrement" id="decrement" />
                             </form>
                         </div>
                         <div class="col-2 pt-3">
-
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                <path
-                                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
                             </svg>
                             <?php
-                            $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
+                            $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty; ?>
                             <?php echo number_format($subtotal);
                             $as_subtotal += $subtotal;
                             $grandtotal += $subtotal; ?>
-
-
-
                         </div>
                         <div class="col-2 pt-3">
                             <form method="post">
-                                <button type="submit" name="remove" class="btn btn-danger" value="<?php echo $product_id ?>">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-x"
-                                        viewBox="0 0 16 16">
-                                        <path
-                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                <button type="submit" name="remove" class="btn btn-danger" value="<?php echo $productId ?>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-x" viewBox="0 0 16 16">
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
                                     </svg>Remove</button>
                             </form>
                         </div>
                     </div>
-                    <?php
+                <?php
                 }
                 ?>
 
@@ -124,33 +130,25 @@ if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
                 <div class="totals">
                     <div class="totals-item">
                         Total Products
-                        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                <path
-                                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
                             </svg>
                             <?php
                             echo number_format($as_subtotal)
-                                ?>
+                            ?>
                         </div>
                     </div>
                     <div class="totals-item">
                         Delivery charges
-                        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                <path
-                                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
                             </svg>100</div>
                     </div>
                     <div class="totals-item totals-item-total">
                         Grand Total
                         <div class="totals-value" id="cart-total">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                <path
-                                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
                             </svg>
                             <?php echo number_format($grandtotal);
                             ?>
@@ -161,10 +159,9 @@ if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
             </div>
         </div>
     </div>
-    <?php
+<?php
 } else {
-
-    ?>
+?>
     <div class="container-fluid  mt-100">
         <div class="row">
 
@@ -177,12 +174,8 @@ if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
                             <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
                             <h3><strong>Your Cart is Empty</strong></h3>
                             <h4>Add something to make me happy </h4>
-                            <a href="<?php echo get_post_type_archive_link('product'); ?>"
-                                class=" btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping <svg
-                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-cart" viewBox="0 0 16 16">
-                                    <path
-                                        d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                            <a href="<?php echo get_post_type_archive_link('product'); ?>" class=" btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
                                 </svg></a>
                         </div>
                     </div>
@@ -194,7 +187,7 @@ if (isset($_SESSION['productitems']) && !empty($_SESSION['productitems'])) {
         </div>
 
     </div>
-    <?PHP
+<?PHP
 }
 ?>
 <?php
