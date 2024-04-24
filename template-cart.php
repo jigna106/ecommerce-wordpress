@@ -126,10 +126,10 @@ if (!empty($data)) {
                         </div>
                         <div class="col-2 pt-3">
                             <form method="post">
-                                <input type="hidden" name="hiddenid" id="id" value="<?php echo $productId ?>" />
-                                <input type="button" value="-" name="decrement" id="decrement" />
-                                <input type="text" class="w-20" id="quantity" name="quantity" value="<?php echo $qty; ?>" readonly />
-                                <input type="button" value="+" name="increment" id="increment" />
+                                <input type="hidden" name="hiddenid" class="id" value="<?php echo $productId ?>" />
+                                <input type="button" value="-" name="decrement" class="decrement" />
+                                <input type="text" class="w-20 " id="quantity" name="quantity" value="<?php echo $qty; ?>" readonly />
+                                <input type="button" value="+" name="increment" class="increment" />
                             </form>
                         </div>
                         <div class="col-2 pt-3">

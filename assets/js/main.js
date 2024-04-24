@@ -1,4 +1,4 @@
-jQuery(document).ready(function () {
+      jQuery(document).ready(function () {
   if (as_ecommerce_ajax_object && as_ecommerce_ajax_object.cart_itmes_data) {
     jQuery(".cart_itmes").append(
       "<span class='cart_total'>" +
@@ -278,13 +278,13 @@ jQuery(document).on("keyup", "#phone", function () {
   }
 });
 
-jQuery(document).on("click", "#increment", function () {
+jQuery(document).on("click", ".increment", function () {
   var quantity = jQuery("#quantity").val();
-  var id = jQuery("#id").val();
+  var id = jQuery(".id").val();
   // console.log(quantity);
   var addqty = parseInt(quantity) + 1;
   console.log(addqty);
-  let data = {
+  let data ={
     id: id,
     qtyupdate: addqty,
     action: "as_update_qty",
@@ -292,11 +292,32 @@ jQuery(document).on("click", "#increment", function () {
   jQuery.ajax({
     type: "post",
     url: as_ecommerce_ajax_object.ajax_url,
-    data: data,
-    success: function (data) {
-      console.log(data);
-      jQuery(".product-section").html(data);
-     
+    data:data,
+    success: function (sucess) {
+       console.log(sucess);
+      jQuery(".product-section").html(sucess);
+    },
+  });
+});
+
+jQuery(document).on("click", ".decrement", function () {
+  var quantity = jQuery("#quantity").val();
+  var id = jQuery(".id").val();
+  // console.log(quantity);
+  var addqty = parseInt(quantity) - 1;
+  console.log(addqty);
+  let data ={
+    id: id,
+    qtyupdate: addqty,
+    action: "as_update_decrement_qty",
+  };
+  jQuery.ajax({
+    type: "post",
+    url: as_ecommerce_ajax_object.ajax_url,
+    data:data,
+    success: function (sucess) {
+       console.log(sucess);
+      jQuery(".product-section").html(sucess);
     },
   });
 });
