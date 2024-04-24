@@ -1,6 +1,10 @@
 jQuery(document).ready(function () {
-  if(as_ecommerce_ajax_object && as_ecommerce_ajax_object.cart_itmes_data){
-    jQuery(".cart_itmes").append("<span class='cart_total'>"+as_ecommerce_ajax_object.cart_itmes_data+"</span>")
+  if (as_ecommerce_ajax_object && as_ecommerce_ajax_object.cart_itmes_data) {
+    jQuery(".cart_itmes").append(
+      "<span class='cart_total'>" +
+        as_ecommerce_ajax_object.cart_itmes_data +
+        "</span>"
+    );
   }
   jQuery(document).on("change", ".ecommerce-payment-getway", function () {
     if (jQuery(this).val() == "credit") {
@@ -8,7 +12,7 @@ jQuery(document).ready(function () {
     } else {
       jQuery(".payment-cedit-cash").hide();
     }
-       console.log(jQuery(this).val());
+    console.log(jQuery(this).val());
   });
 });
 jQuery(document).ready(function () {
@@ -38,10 +42,10 @@ jQuery(document).ready(function () {
 jQuery(document).ready(function () {
   jQuery(document).on("click", ".page-number", function () {
     var text = jQuery(this).val();
-    var selctedsize = jQuery('.select-size').val();
-    console.log(selctedsize)
-    
-    make_ajax(text,selctedsize);
+    var selctedsize = jQuery(".select-size").val();
+    console.log(selctedsize);
+
+    make_ajax(text, selctedsize);
   });
 });
 
@@ -53,26 +57,23 @@ jQuery(document).ready(function () {
   });
 });
 
-jQuery(document).ready(function(){
-jQuery(document).on("click",".forward",function(){
-var forward =jQuery('.page-number-hidden').val();
-var selctedsize = jQuery(".select-size").val();
- var paginationNumber = parseInt(forward) + 1;
- console.log(paginationNumber);
-make_ajax(paginationNumber, selctedsize);
-
- })
-
-})
-jQuery(document).ready(function(){
-  jQuery(document).on("click",".backward",function(){
-  var backward =jQuery('.page-number-hidden').val();
-  var selctedsize = jQuery(".select-size").val();
- var pageNumber = parseInt(backward) - 1;
-  make_ajax(pageNumber,selctedsize);
-   })
-
-})
+jQuery(document).ready(function () {
+  jQuery(document).on("click", ".forward", function () {
+    var forward = jQuery(".page-number-hidden").val();
+    var selctedsize = jQuery(".select-size").val();
+    var paginationNumber = parseInt(forward) + 1;
+    console.log(paginationNumber);
+    make_ajax(paginationNumber, selctedsize);
+  });
+});
+jQuery(document).ready(function () {
+  jQuery(document).on("click", ".backward", function () {
+    var backward = jQuery(".page-number-hidden").val();
+    var selctedsize = jQuery(".select-size").val();
+    var pageNumber = parseInt(backward) - 1;
+    make_ajax(pageNumber, selctedsize);
+  });
+});
 
 function make_ajax(text = 1, selctedsize = 12) {
   var colors = [];
@@ -144,8 +145,7 @@ function make_ajax(text = 1, selctedsize = 12) {
     brands: brands_ajax,
     action: "as_get_product_filter_color",
   };
-
-  jQuery.ajax({
+    jQuery.ajax({
     type: "post",
     url: as_ecommerce_ajax_object.ajax_url,
     data: data,
@@ -171,139 +171,132 @@ jQuery(document).ready(function () {
     contactdata.Email = email;
     contactdata.phone = phone;
     contactdata.Message = message;
-  
+
     let contactdataajax = {
-    data: contactdata,
-    action: "as_contactdata",
+      data: contactdata,
+      action: "as_contactdata",
+    };
+    jQuery.ajax({
+      type: "post",
+      url: as_ecommerce_ajax_object.ajax_url,
+      data: contactdataajax,
+      success: function (getdata) {
+        console.log(getdata);
+      },
+    });
+  });
+});
+jQuery(document).ready(function () {
+  jQuery(".as_shop_menu").mouseenter(function () {
+    jQuery(".as_shop_menu .sub-menu").show();
+  });
+
+  jQuery(".as_shop_menu").mouseleave(function () {
+    jQuery(".as_shop_menu .sub-menu").hide();
+  });
+});
+
+jQuery(document).on("keyup", "#firstname", function () {
+  var letters = /^[A-Za-z]+$/;
+  var firstname = jQuery("#firstname").val();
+
+  if (firstname && !letters.test(firstname)) {
+    jQuery("#firstname_error").text("Alphabets Only");
+
+    return false;
+  } else if (firstname == "") {
+    jQuery("#firstname_error").text("Must be fill out");
+
+    return false;
+  } else {
+    jQuery("#firstname_error").text("");
+    return true;
+  }
+});
+jQuery(document).on("keyup", "#lastname", function () {
+  var letters = /^[A-Za-z]+$/;
+  var lastname = jQuery("#lastname").val();
+
+  if (lastname && !letters.test(lastname)) {
+    jQuery("#lastname_error").text("Alphabets Only");
+
+    return false;
+  } else if (lastname == "") {
+    jQuery("#lastname_error").text("Must be fill out");
+
+    return false;
+  } else {
+    jQuery("#lastname_error").text("");
+    return true;
+  }
+});
+
+jQuery(document).on("keyup", "#email", function () {
+  var pattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+  var email = jQuery("#email").val();
+  if (email && !pattern.test(email)) {
+    jQuery("#email_error").text("Enter a valid email address");
+    return false;
+  } else if (email == "") {
+    jQuery("#email_error").text("Must be fill out");
+    return false;
+  } else {
+    jQuery("#email_error").text("");
+    return true;
+  }
+});
+
+jQuery(document).on("keyup", "#password", function () {
+  var password = jQuery("#password").val();
+  if (password.length >= 8) {
+    jQuery("#password_error").text(" ");
+
+    return false;
+  } else if (password == "") {
+    jQuery("#password_error").text("Must be fill out");
+
+    return false;
+  } else {
+    jQuery("#password_error").text("at least 8 or more characters");
+    return true;
+  }
+});
+
+jQuery(document).on("keyup", "#phone", function () {
+  var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  var phone = jQuery("#phone").val();
+  if (phone && !re.test(phone)) {
+    jQuery("#phone_error").text("Enter a valiad mobile number");
+    return false;
+  } else if (phone == "") {
+    jQuery("#phone_error").text("Must be fill out");
+
+    return false;
+  } else {
+    jQuery("#phone_error").text(" ");
+    return true;
+  }
+});
+
+jQuery(document).on("click", "#increment", function () {
+  var quantity = jQuery("#quantity").val();
+  var id = jQuery("#id").val();
+  // console.log(quantity);
+  var addqty = parseInt(quantity) + 1;
+  console.log(addqty);
+  let data = {
+    id: id,
+    qtyupdate: addqty,
+    action: "as_update_qty",
   };
   jQuery.ajax({
     type: "post",
     url: as_ecommerce_ajax_object.ajax_url,
-    data: contactdataajax,
-    success: function (getdata) {
-         console.log(getdata);
+    data: data,
+    success: function (data) {
+      console.log(data);
+      jQuery(".product-section").html(data);
+     
     },
   });
-  });
 });
-jQuery( document ).ready(function() {
-
-  jQuery('.as_shop_menu' ).mouseenter(function(){
-    jQuery('.as_shop_menu .sub-menu').show();
-  });
-
-  jQuery('.as_shop_menu' ).mouseleave(function(){
-    jQuery('.as_shop_menu .sub-menu').hide();
-  })
-});
-
-jQuery(document).on("keyup", "#firstname", function () {
-   var letters = /^[A-Za-z]+$/;
-  var firstname = jQuery('#firstname').val();
- 
-  if (firstname && !letters.test(firstname)) {
- jQuery('#firstname_error').text('Alphabets Only');
-   
-    return false;
-  } else if (firstname == "") {
-    jQuery('#firstname_error').text('Must be fill out');
-    
-    return false;
-  } else {
-    jQuery('#firstname_error').text('');
-    return true;
-  }
-
-  
-})
-jQuery(document).on("keyup", "#lastname", function () {
-  var letters = /^[A-Za-z]+$/;
- var lastname = jQuery('#lastname').val();
-
- if (lastname && !letters.test(lastname)) {
-
-   jQuery('#lastname_error').text('Alphabets Only');
-  
-   return false;
- } else if (lastname == "") {
-   jQuery('#lastname_error').text('Must be fill out');
-   
-   return false;
- } else {
-   jQuery('#lastname_error').text('');
-   return true;
- }
-})
-
-jQuery(document).on("keyup", "#email", function () {
-  var pattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
- var email = jQuery('#email').val();
- if (email && !pattern.test(email)) {
- jQuery('#email_error').text('Enter a valid email address');
-  return false;
-} else if (email == "") {
-  jQuery('#email_error').text('Must be fill out');
-  return false;
-} 
-else {
-  jQuery('#email_error').text('');
-  return true;
-}
-})
-
-jQuery(document).on("keyup", "#password", function () {
- var password = jQuery('#password').val();
- if (password.length >= 8) {
-  jQuery('#password_error').text(' ');
- 
-  return false;
-} else if (password == "") {
-  jQuery('#password_error').text('Must be fill out');
- 
-  return false;
-} else {
-  jQuery('#password_error').text('at least 8 or more characters');
-  return true;
-}
-})
-
-jQuery(document).on("keyup", "#phone", function () {
-  var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-  var phone = jQuery('#phone').val();
-  if (phone && !re.test(phone)) 
- {
-   jQuery('#phone_error').text('Enter a valiad mobile number');
-    return false;
- } else if (phone == "") {
-   jQuery('#phone_error').text('Must be fill out');
-  
-   return false;
- } else {
-   jQuery('#phone_error').text(' ');
-   return true;
- }
- })
-
-
-
-
-
-
-// jQuery(document).ready(function(){
-//   jQuery(document).on("click","#addtocart",function(){
-//          jQuery('#messages').removeClass('hide').addClass('alert alert-success alert-dismissible') ;
-//                 jQuery('#messages_content').html('<h4>Item addded to cart!</h4>').fadeTo(2000);
-              
-//  })
-// })
-
-
-
-
-
-
-
-
-
-
-

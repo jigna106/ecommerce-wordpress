@@ -80,7 +80,7 @@ echo "</pre>";
                   <tbody>
                     <?php
                     $grandtotal = 100;
-                    foreach ($cart['productitems'] as $product_id => $qty) {
+                    foreach ($cart as $product_id => $qty) {
                       ?>
                       <tr width="100%">
                         <td width="30%"

@@ -19,22 +19,52 @@ if (isset($_POST['emptycartsubmit'])) {
 }
 
 if (isset($_POST['remove'])) {
-
-    //  $wpdb->delete( 'session_management',['cart_user_id' => $user_id] );
+    // print_r($_POST);
+    $data = maybe_unserialize($retrieve_data[0]['session_data']);
+    unset($data[$_POST['remove']]);
+    // print_r($data);
+    $wpdb->update(
+        'session_management',
+        array(
+            'session_data' => serialize($data),
+        ),
+        array(
+            "cart_user_id" => $user_id
+        )
+    );
 }
 
 if (isset($_POST['increment'])) {
     $qty = $_POST['quantity'];
     $id = $_POST['hiddenid'];
-    $_SESSION['productitems'][$id] = (int) $qty + 1;
-      $data[get_the_ID()] = (int)$qty + 1;
+    // $_SESSION['productitems'][$id] = (int) $qty + 1;
+    $data = maybe_unserialize($retrieve_data[0]['session_data']);
+    $data[$id] = (int) $qty + 1;
+    $wpdb->update(
+        'session_management',
+        array(
+            'session_data' => serialize($data),
+        ),
+        array(
+            "cart_user_id" => $user_id
+        )
+    );
 }
 
 if (isset($_POST['decrement'])) {
     $qty = $_POST['quantity'];
     $id = $_POST['hiddenid'];
-    if ($_SESSION['productitems'][$id] > 0) {
-        $_SESSION['productitems'][$id] = (int) $qty - 1;
+    if ($data[$id] > 0) {
+        $data[$id] = (int) $qty - 1;
+        $wpdb->update(
+            'session_management',
+            array(
+                'session_data' => serialize($data),
+            ),
+            array(
+                "cart_user_id" => $user_id
+            )
+        );
     }
 }
 
@@ -96,10 +126,10 @@ if (!empty($data)) {
                         </div>
                         <div class="col-2 pt-3">
                             <form method="post">
-                                <input type="hidden" name="hiddenid" value="<?php echo $productId ?>" />
-                                <input type="submit" value="+" name="increment" id="increment" />
+                                <input type="hidden" name="hiddenid" id="id" value="<?php echo $productId ?>" />
+                                <input type="button" value="-" name="decrement" id="decrement" />
                                 <input type="text" class="w-20" id="quantity" name="quantity" value="<?php echo $qty; ?>" readonly />
-                                <input type="submit" value="-" name="decrement" id="decrement" />
+                                <input type="button" value="+" name="increment" id="increment" />
                             </form>
                         </div>
                         <div class="col-2 pt-3">

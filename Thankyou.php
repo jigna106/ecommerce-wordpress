@@ -1,12 +1,15 @@
 <?php /* Template Name: Thankyou */
 get_header();
-echo "<pre>";
+
 $id = $_GET['Order_id'];
+
 $order = get_post_meta($id, 'ecommerce_billing_data', true);
 $cart = get_post_meta($id, 'ecommerce_cart_data', true);
+
 // print_r($cart);
+// print_r($id);
 // print_r($order);
-echo "</pre>";
+
 ?>
 <div class="container">
   <div class="row">
@@ -52,7 +55,7 @@ echo "</pre>";
     <tbody>
       <?php
       $grandtotal = 100;
-      foreach ($cart['productitems'] as $product_id => $qty) {
+      foreach ($cart  as $product_id => $qty) {
         ?>
         <tr>
           <td>

@@ -9,7 +9,7 @@ if ($current_user->ID) {
     );
 
     $my_orders = new WP_Query($args);
-    // echo "<pre>";
+// echo "<pre>";
 // print_r($my_orders);
 // echo "</pre>";
     ?>
@@ -37,15 +37,15 @@ if ($current_user->ID) {
                             $total_qty = 0;
                             $total_product = 0;
                             $grandtotal = 100;
-                            if (isset($orderhistory['productitems']) && !empty($orderhistory['productitems'])) {
-                                foreach ($orderhistory['productitems'] as $product_id => $qty) {
+                            if (isset($orderhistory ) && !empty($orderhistory)) {
+                                foreach ($orderhistory as $product_id => $qty) {
 
                                     $totalprice = get_post_meta($product_id, "ecommerce_price", true);
 
                                     $subtotal = (int) $totalprice * (int) $qty;
 
                                     $grandtotal += $subtotal;
-                                    $total_qty += $qty;
+                                    $total_qty += (int)$qty;
                                     $total_product += 1;
 
                                 }
@@ -65,7 +65,7 @@ if ($current_user->ID) {
                                 </td>
                                 <td>
                                     <?php
-                                    foreach ($orderhistory['productitems'] as $product_id => $qty) { ?>
+                                    foreach ($orderhistory as $product_id => $qty) { ?>
 
                                         <div>
 

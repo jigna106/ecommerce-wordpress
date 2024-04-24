@@ -1,13 +1,16 @@
 <?php /* Template Name: checkout */
-
-session_start();
+if (is_user_logged_in()) {
+  $current_user = wp_get_current_user();
+  $user_id = (string)$current_user->ID;
+} else if (isset($_COOKIE['user_cart_id'])) {
+  $user_id = $_COOKIE['user_cart_id'];
+} else {
+  $user_cart_id = random_strings(8);
+  setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
+  $user_id = $user_cart_id;
+}
 if (is_user_logged_in()) {
   if (isset($_POST['placeorder'])) {
-    // echo "<pre>";
-    // print_r($_POST);
-    // print_r($_SESSION);
-    // echo "</pre>";
-
     $post_arr = array(
       'post_title' => $_POST['firstName'] . " " . $_POST['lastName'],
       'post_content' => $_POST['firstName'] . " " . $_POST['lastName'],
@@ -22,15 +25,20 @@ if (is_user_logged_in()) {
       'ecommerce_billing_data',
       $_POST
     );
-
+    $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
+    if (isset($retrieve_data[0])) {
+    $data = maybe_unserialize($retrieve_data[0]['session_data']);
+    }
     update_post_meta(
       $id,
       'ecommerce_cart_data',
-      $_SESSION
+      $data
     );
     // exit;
     unset($_POST);
-    unset($_SESSION['productitems']);
+     $wpdb->delete('session_management', ['cart_user_id' => $user_id]);
+ 
+    // unset($_SESSION['productitems']);
     wp_redirect(get_permalink(147) . '?Order_id=' . $id);
 
   }
@@ -45,15 +53,20 @@ if (is_user_logged_in()) {
             <span class="text-secondary">Your cart</span>
           </h4>
           <?php
+          
+            $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
+            if (isset($retrieve_data[0])) {
+            $data = maybe_unserialize($retrieve_data[0]['session_data']);
+        }
           $grandtotal = 100;
-          foreach ($_SESSION['productitems'] as $product_id => $qty) {
-            $product = get_post($product_id);
+          foreach ($data as $productId => $qty) {
+            $product = get_post($productId);
             ?>
             <ul class="list-group mb-3">
               <li class="list-group-item d-flex justify-content-between lh-condensed">
                 <div>
                   <h6 class="my-0">
-                    <?php echo get_the_title($product_id); ?>
+                    <?php echo get_the_title($productId); ?>
                   </h6>
                   <small class="text-muted">Quantity:
                     <?php echo $qty; ?>
@@ -64,7 +77,7 @@ if (is_user_logged_in()) {
                     <path
                       d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
                   </svg>
-                  <?php $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
+                  <?php $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty; ?>
                   <?php echo $subtotal;
                   $grandtotal += $subtotal;
                   ?>

@@ -2,8 +2,8 @@
 $issucess = "";
 
 global $wpdb;
-
 if (isset($_POST['addtocart'])) {
+
   if (is_user_logged_in()) {
     $current_user = wp_get_current_user();
     $user_id = (string)$current_user->ID;
@@ -19,8 +19,7 @@ if (isset($_POST['addtocart'])) {
     $data = maybe_unserialize($retrieve_data[0]['session_data']);
     if (isset($data[get_the_ID()])) {
       $data[get_the_ID()] = (int)$data[get_the_ID()] + (int)$_POST['quantity'];
-    } 
-    else {
+    } else {
       $data[get_the_ID()] = (int)$_POST['quantity'];
     }
     // print_r($data);
@@ -33,8 +32,7 @@ if (isset($_POST['addtocart'])) {
         "cart_user_id" => $user_id
       )
     );
-  } 
-  else {
+  } else {
     $data[get_the_ID()] = (int)$_POST['quantity'];
     $wpdb->insert(
       'session_management',
@@ -47,18 +45,18 @@ if (isset($_POST['addtocart'])) {
   $issucess = "yes";
 }
 
-  if (is_user_logged_in()) {
-    $current_user = wp_get_current_user();
-    $user_id = (string)$current_user->ID;
-  } else if (isset($_COOKIE['user_cart_id'])) {
-    $user_id = $_COOKIE['user_cart_id'];
-  } else {
-    $user_cart_id = random_strings(8);
-    setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
-    $user_id = $user_cart_id;
-  }
-  $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
-  // print_r($retrieve_data);
+if (is_user_logged_in()) {
+  $current_user = wp_get_current_user();
+  $user_id = (string)$current_user->ID;
+} else if (isset($_COOKIE['user_cart_id'])) {
+  $user_id = $_COOKIE['user_cart_id'];
+} else {
+  $user_cart_id = random_strings(8);
+  setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
+  $user_id = $user_cart_id;
+}
+$retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
+// print_r($retrieve_data);
 get_header();
 
 if (have_posts()) {
@@ -129,8 +127,7 @@ if (have_posts()) {
             </div>
             <div class="pt-2">
               <b>Quantity</b>
-              <input type="number" class="w-29" id="quantity" name="quantity" />
-
+              <input type="number" class="w-29" id="quantity" name="quantity" min="1" max="200" value="1"/>
             </div>
             <div class="pt-2">
 
