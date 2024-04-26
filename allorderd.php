@@ -21,7 +21,7 @@ if ($current_user->ID) {
                         <th>Order_No</th>
                         <th>Name</th>
                         <th>Products</th>
-
+                        <th>Status</th>
                         <th>Grand total</th>
                     </tr>
                 </thead>
@@ -79,6 +79,12 @@ if ($current_user->ID) {
 
 
                                 </td>
+
+                                <td>
+                                    
+                                    <?php echo  get_post_status ( $product_id)?>
+                                </td>
+
 
                                 <td>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

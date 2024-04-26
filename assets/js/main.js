@@ -398,5 +398,25 @@ jQuery(document).on("click", ".as_signin", function (){
   var email = jQuery("#email").val();
   var password = jQuery("#password").val();
 
+  let data={
+    email:email,
+    password:password,
+    action:"as_userlogin",    
+  }
+
+  jQuery.ajax({
+    type: "post",
+    url: as_ecommerce_ajax_object.ajax_url,
+    data: data,
+    success: function (response) {
+      let data = JSON.parse(response);
+      if(data.succes==true){
+       window.location.href =data.redirect_url;
+     }else{
+       jQuery(".error").html(data.message);
+     }
+   console.log(response);
+    },
+  });
 
 })
