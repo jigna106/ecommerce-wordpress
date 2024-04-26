@@ -127,7 +127,7 @@ if (have_posts()) {
             </div>
             <div class="pt-2">
               <b>Quantity</b>
-              <input type="number" class="w-29" id="quantity" name="quantity" min="1" max="200" value="1"/>
+              <input type="number" class="w-29" id="quantity" name="quantity" min="1" max="200" value="1" />
             </div>
             <div class="pt-2">
 

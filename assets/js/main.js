@@ -1,4 +1,4 @@
-      jQuery(document).ready(function () {
+                        jQuery(document).ready(function () {
   if (as_ecommerce_ajax_object && as_ecommerce_ajax_object.cart_itmes_data) {
     jQuery(".cart_itmes").append(
       "<span class='cart_total'>" +
@@ -145,7 +145,7 @@ function make_ajax(text = 1, selctedsize = 12) {
     brands: brands_ajax,
     action: "as_get_product_filter_color",
   };
-    jQuery.ajax({
+  jQuery.ajax({
     type: "post",
     url: as_ecommerce_ajax_object.ajax_url,
     data: data,
@@ -279,12 +279,13 @@ jQuery(document).on("keyup", "#phone", function () {
 });
 
 jQuery(document).on("click", ".increment", function () {
-  var quantity = jQuery("#quantity").val();
-  var id = jQuery(".id").val();
-  // console.log(quantity);
+  // var quantity = jQuery(".quantity").val();
+  var quantity = jQuery(this).siblings(".quantity").val();
+  var id = jQuery(this).attr("data-id");
+  // console.log(id);
   var addqty = parseInt(quantity) + 1;
-  console.log(addqty);
-  let data ={
+  // console.log(addqty);
+  let data = {
     id: id,
     qtyupdate: addqty,
     action: "as_update_qty",
@@ -292,32 +293,110 @@ jQuery(document).on("click", ".increment", function () {
   jQuery.ajax({
     type: "post",
     url: as_ecommerce_ajax_object.ajax_url,
-    data:data,
+    data: data,
     success: function (sucess) {
-       console.log(sucess);
+      //  console.log(sucess);
       jQuery(".product-section").html(sucess);
     },
   });
 });
 
 jQuery(document).on("click", ".decrement", function () {
-  var quantity = jQuery("#quantity").val();
-  var id = jQuery(".id").val();
-  // console.log(quantity);
+  var quantity = jQuery(this).siblings(".quantity").val();
+  var id = jQuery(this).attr("data-id");
+  // console.log(id);
   var addqty = parseInt(quantity) - 1;
-  console.log(addqty);
-  let data ={
+  // console.log(addqty);
+  let data = {
     id: id,
     qtyupdate: addqty,
     action: "as_update_decrement_qty",
   };
+
   jQuery.ajax({
     type: "post",
     url: as_ecommerce_ajax_object.ajax_url,
-    data:data,
+    data: data,
     success: function (sucess) {
-       console.log(sucess);
+      //  console.log(sucess);
       jQuery(".product-section").html(sucess);
     },
   });
 });
+
+jQuery(document).on("click", ".as_cart_item_remove", function () {
+  var id = jQuery(this).attr("data-id");
+  let data = {
+    id: id,
+    action: "as_removeproduct",
+  };
+  jQuery.ajax({
+    type: "post",
+    url: as_ecommerce_ajax_object.ajax_url,
+    data: data,
+    success: function (response) {
+      console.log(response);
+      let data = JSON.parse(response);
+      jQuery(".product-section").html(data.html);
+      jQuery(".cart_total").html(data.cartproductcount);
+      if (data.cartproductcount == 0) {
+        jQuery(".emptycart").hide();
+      }
+    },
+  });
+});
+
+jQuery(document).on("click", ".emptycart", function () {
+  let data = {
+    action: "as_emptycart",
+  };
+  jQuery.ajax({
+    type: "post",
+    url: as_ecommerce_ajax_object.ajax_url,
+    data: data,
+    success: function (response) {
+      jQuery(".product-section").html(response);
+      jQuery(".cart_total").html(0);
+      jQuery(".emptycart").hide();
+    },
+  });
+});
+
+jQuery(document).on("click", ".as_signup", function () {
+  var userdata = {};
+
+  var firstname = jQuery("#firstname").val();
+  var lastname = jQuery("#lastname").val();
+  var email = jQuery("#email").val();
+  var password = jQuery("#password").val();
+
+  userdata.Firstname = firstname;
+  userdata.Lastname = lastname;
+  userdata.Email = email;
+  userdata.password = password;
+
+  let userdataAjax = {
+    data: userdata,
+    action: "as_userRegister",
+  };
+  jQuery.ajax({
+    type: "post",
+    url: as_ecommerce_ajax_object.ajax_url,
+    data: userdataAjax,
+    success: function (response) {
+    let data = JSON.parse(response);
+     if(data.succes==true){
+      window.location.href =data.redirect_url;
+    }else{
+      jQuery(".error").html(data.message);
+    }
+  //  console.log(response);
+    },
+  });
+});
+jQuery(document).on("click", ".as_signin", function (){
+  var email = jQuery("#email").val();
+  var password = jQuery("#password").val();
+
+
+})

@@ -5,16 +5,16 @@ get_header();
     <div class="carousel-inner">
         <div class="carousel-item active">
             <img src="<?php echo get_theme_file_uri('assets/images/121212.jpg'); ?>" class="d-block"
-                style="width:100% height:400px" />
+                style="width:100% height 400px" />
 
         </div>
         <div class="carousel-item">
             <img src="<?php echo get_theme_file_uri('assets/images/download.jpg'); ?>" class="d-block"
-                style="width:100% height:400px" />
+                style="width:100% height 400px" />
         </div>
         <div class="carousel-item">
             <img src="<?php echo get_theme_file_uri('assets/images/4545.jpg'); ?>" class="d-block"
-                style="width:100% height:400px" />
+                style="width:100% height 400px" />
         </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching"

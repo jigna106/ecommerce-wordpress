@@ -18,55 +18,55 @@ if (isset($_POST['emptycartsubmit'])) {
     $wpdb->delete('session_management', ['cart_user_id' => $user_id]);
 }
 
-if (isset($_POST['remove'])) {
-    // print_r($_POST);
-    $data = maybe_unserialize($retrieve_data[0]['session_data']);
-    unset($data[$_POST['remove']]);
-    // print_r($data);
-    $wpdb->update(
-        'session_management',
-        array(
-            'session_data' => serialize($data),
-        ),
-        array(
-            "cart_user_id" => $user_id
-        )
-    );
-}
+// if (isset($_POST['remove'])) {
+//     // print_r($_POST);
+//     $data = maybe_unserialize($retrieve_data[0]['session_data']);
+//     unset($data[$_POST['remove']]);
+//     // print_r($data);
+//     $wpdb->update(
+//         'session_management',
+//         array(
+//             'session_data' => serialize($data),
+//         ),
+//         array(
+//             "cart_user_id" => $user_id
+//         )
+//     );
+// }
 
-if (isset($_POST['increment'])) {
-    $qty = $_POST['quantity'];
-    $id = $_POST['hiddenid'];
-    // $_SESSION['productitems'][$id] = (int) $qty + 1;
-    $data = maybe_unserialize($retrieve_data[0]['session_data']);
-    $data[$id] = (int) $qty + 1;
-    $wpdb->update(
-        'session_management',
-        array(
-            'session_data' => serialize($data),
-        ),
-        array(
-            "cart_user_id" => $user_id
-        )
-    );
-}
+// if (isset($_POST['increment'])) {
+//     $qty = $_POST['quantity'];
+//     $id = $_POST['hiddenid'];
+//     // $_SESSION['productitems'][$id] = (int) $qty + 1;
+//     $data = maybe_unserialize($retrieve_data[0]['session_data']);
+//     $data[$id] = (int) $qty + 1;
+//     $wpdb->update(
+//         'session_management',
+//         array(
+//             'session_data' => serialize($data),
+//         ),
+//         array(
+//             "cart_user_id" => $user_id
+//         )
+//     );
+// }
 
-if (isset($_POST['decrement'])) {
-    $qty = $_POST['quantity'];
-    $id = $_POST['hiddenid'];
-    if ($data[$id] > 0) {
-        $data[$id] = (int) $qty - 1;
-        $wpdb->update(
-            'session_management',
-            array(
-                'session_data' => serialize($data),
-            ),
-            array(
-                "cart_user_id" => $user_id
-            )
-        );
-    }
-}
+// if (isset($_POST['decrement'])) {
+//     $qty = $_POST['quantity'];
+//     $id = $_POST['hiddenid'];
+//     if ($data[$id] > 0) {
+//         $data[$id] = (int) $qty - 1;
+//         $wpdb->update(
+//             'session_management',
+//             array(
+//                 'session_data' => serialize($data),
+//             ),
+//             array(
+//                 "cart_user_id" => $user_id
+//             )
+//         );
+//     }
+// }
 
 get_header();
 if (!empty($data)) {
@@ -74,9 +74,9 @@ if (!empty($data)) {
     $as_subtotal = 0;
 ?>
     <div class="container mt-5 mb-5">
-        <div class="row pt-3">
+        <div class="row pt-3 emptycart">
             <form method="post" class="d-flex justify-content-end align-items-center">
-                <button type="submit" name="emptycartsubmit" class="btn btn-danger">
+                <button type="button" name="emptycartsubmit" class="btn btn-danger emptycart ">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash-fill" viewBox="0 0 16 16">
                         <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                     </svg> Empty Cart</button>
@@ -125,11 +125,11 @@ if (!empty($data)) {
 
                         </div>
                         <div class="col-2 pt-3">
-                            <form method="post">
+                            <form method="post" class="product-form">
                                 <input type="hidden" name="hiddenid" class="id" value="<?php echo $productId ?>" />
-                                <input type="button" value="-" name="decrement" class="decrement" />
-                                <input type="text" class="w-20 " id="quantity" name="quantity" value="<?php echo $qty; ?>" readonly />
-                                <input type="button" value="+" name="increment" class="increment" />
+                                <input type="button" value="-" name="decrement" class="decrement" data-id="<?php echo $productId ?>" <?php if($qty == 1){echo "disabled='disabled'";}?> />
+                                <input type="text" class="w-20 quantity" name="quantity" value="<?php echo $qty; ?>"  readonly />
+                                <input type="button" value="+" name="increment" class="increment" data-id="<?php echo $productId ?>" />
                             </form>
                         </div>
                         <div class="col-2 pt-3">
@@ -144,7 +144,7 @@ if (!empty($data)) {
                         </div>
                         <div class="col-2 pt-3">
                             <form method="post">
-                                <button type="submit" name="remove" class="btn btn-danger" value="<?php echo $productId ?>">
+                                <button name="remove"  type= "button" class="btn btn-danger as_cart_item_remove" value="<?php echo $productId ?>" data-id="<?php echo $productId ?>" >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-x" viewBox="0 0 16 16">
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
                                     </svg>Remove</button>
@@ -190,7 +190,8 @@ if (!empty($data)) {
         </div>
     </div>
 <?php
-} else {
+}
+ else {
 ?>
     <div class="container-fluid  mt-100">
         <div class="row">
@@ -211,7 +212,7 @@ if (!empty($data)) {
                     </div>
                 </div>
 
-
+ 
             </div>
 
         </div>
