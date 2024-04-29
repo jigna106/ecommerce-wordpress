@@ -4,7 +4,7 @@ get_header();
 if ($current_user->ID) {
     $args = array(
         'post_type' => 'shoporder',
-        'post_status' => 'draft',
+        'post_status' => array('draft','pending','completed','Proccesing','pending_payment'),
         'author' => $current_user->ID,
     );
 
@@ -59,7 +59,7 @@ if ($current_user->ID) {
 
                                 </td>
                                 <td>
-                                    <?php echo get_the_title(); ?>
+                                    <?php echo $post->post_title; ?>
 
 
                                 </td>
@@ -69,7 +69,7 @@ if ($current_user->ID) {
 
                                         <div>
 
-                                            <?php echo get_the_title($product_id); ?> X
+                                            <?php echo $post->post_title; ?> X
                                             <?php echo $qty ?>
 
                                         </div>
@@ -82,7 +82,7 @@ if ($current_user->ID) {
 
                                 <td>
                                     
-                                    <?php echo  get_post_status ( $product_id)?>
+                                    <?php echo  $post->post_status; ?>
                                 </td>
 
 

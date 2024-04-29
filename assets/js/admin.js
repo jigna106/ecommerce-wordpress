@@ -1,4 +1,4 @@
-jQuery(document).ready(function($){
+                jQuery(document).ready(function($){
     var meta_image_frame;
     jQuery(document).on("click",'#upload_image_btn',function(e){
          e.preventDefault();
@@ -30,3 +30,13 @@ jQuery(document).ready(function($){
      });
    
    });
+   
+jQuery(document).on("change","body.post-type-shoporder #post_status",function(){
+  
+jQuery("#hidden_post_status").val(jQuery(this).val());
+ });
+
+jQuery(document).ready(function(){
+    jQuery("#post-status-display").html(jQuery("#hidden_post_status").val(jQuery(this).val()));
+});
+

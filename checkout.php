@@ -64,7 +64,7 @@ if (is_user_logged_in()) {
         }
           $grandtotal = 100;
           foreach ($data as $productId => $qty) {
-            $product = get_post($productId);
+            $product = get_post($productId);    
             ?>
             <ul class="list-group mb-3">
               <li class="list-group-item d-flex justify-content-between lh-condensed">

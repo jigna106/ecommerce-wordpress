@@ -1,4 +1,4 @@
-                <?php
+<?php
   function as_get_image_data_array($attechment_id)
   {
     $sizes = get_intermediate_image_sizes();
@@ -466,23 +466,25 @@
     }); 
     </script>";
   }
-  add_action('admin_footer-edit.php', 'my_custom_status_add_in_quick_edit');
-  function my_custom_status_add_in_post_page()
-  {
+  add_action('admin_footer-edit.php','my_custom_status_add_in_quick_edit');
+
+  function my_custom_status_add_in_post_page() {
     echo "<script>
     jQuery(document).ready( function() {        
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"completed\">Completed</option>' );
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"proccesing\">Proccesing</option>' );   
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"pending_payment\">Pending Payment</option>' ); 
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"completed\">completed</option>' );
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"Proccesing\">Proccesing</option>' );
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"pending_payment\">pending_payment</option>' );
+
     });
+ 
     </script>";
-  }
-  add_action('admin_footer-post.php', 'my_custom_status_add_in_post_page');
-  add_action('admin_footer-post-new.php', 'my_custom_status_add_in_post_page');
+
+}
+add_action('admin_footer-post.php', 'my_custom_status_add_in_post_page');
+add_action('admin_footer-post-new.php', 'my_custom_status_add_in_post_page');
 
 
-
-  function ecommerce_billingdata_()
+function ecommerce_billingdata_()
   {
     add_meta_box('billing-id', 'Billing-Data', 'billingdata_display', 'shoporder');
   }
