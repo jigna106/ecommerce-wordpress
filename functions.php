@@ -474,10 +474,8 @@
         jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"completed\">completed</option>' );
         jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"Proccesing\">Proccesing</option>' );
         jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"pending_payment\">pending_payment</option>' );
-
-    });
- 
-    </script>";
+      });
+ </script>";
 
 }
 add_action('admin_footer-post.php', 'my_custom_status_add_in_post_page');

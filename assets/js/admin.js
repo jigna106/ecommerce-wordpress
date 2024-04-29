@@ -32,11 +32,12 @@
    });
    
 jQuery(document).on("change","body.post-type-shoporder #post_status",function(){
-  
-jQuery("#hidden_post_status").val(jQuery(this).val());
- });
+
+    jQuery("#hidden_post_status").val(jQuery(this).val());
+
+});
 
 jQuery(document).ready(function(){
-    jQuery("#post-status-display").html(jQuery("#hidden_post_status").val(jQuery(this).val()));
+    jQuery("#post-status-display").html(jQuery("#hidden_post_status").val());
 });
 

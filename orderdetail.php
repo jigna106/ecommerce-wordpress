@@ -39,7 +39,9 @@ echo "</pre>";
                         <p>Payment method: <span style="font-size:18px;font-weight:bold">
                             <?php echo $order['paymentMethod'] ?>
                           </span></p>
-                        <p>Delivery :<span style="font-size:18px;font-weight:bold">6-7
+                        <p>Delivery :<span style="font-size:18px;font-weight:bold">
+                        
+                        6-7
                             working days</span>
                         </p>
                       </td>
