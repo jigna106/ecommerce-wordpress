@@ -1111,21 +1111,18 @@ function as_emptycart()
   exit;
 }
 
-add_action("init","product_discount");
+add_action("wp","product_discount");
 function product_discount(){
-
+// echo "testdata";
     $obj = get_queried_object();
-    //  print_r($obj);
-    // exit;
-  
+    print_r($obj);
+     if($obj->post_type == "product"){
         global $wpdb;  
         if (is_user_logged_in() ) {
             $current_user = wp_get_current_user();
             $user_id = (string)$current_user->ID;
-          
-            // $count = (int) get_post_meta($post_id);
-      
-            $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=");
+            $post_id = $obj->ID;
+            $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$post_id");
             if(!empty($product_data)){
                 $addcount= $product_data[0]->count_product+1;
                 
@@ -1136,7 +1133,7 @@ function product_discount(){
                     ),
                     array(
                         'user_id' =>$user_id,
-                        // 'product_id' =>$post_id,
+                        'product_id' =>$post_id,
                     )
                 );
             }else{
@@ -1144,7 +1141,7 @@ function product_discount(){
                     'product_discount',
                     array(
                         'user_id' => $user_id,
-                        // 'product_id' =>$post_id,
+                        'product_id' =>$post_id,
                         'count_product' => 1
                     )
                 );
@@ -1152,4 +1149,4 @@ function product_discount(){
         }
     }
 
-
+  }
