@@ -1,6 +1,6 @@
 <?php session_start();
-$issucess = "";
 
+$issucess = "";
 global $wpdb;
 if (isset($_POST['addtocart'])) {
 
@@ -48,7 +48,8 @@ if (isset($_POST['addtocart'])) {
 if (is_user_logged_in()) {
   $current_user = wp_get_current_user();
   $user_id = (string)$current_user->ID;
-} else if (isset($_COOKIE['user_cart_id'])) {
+  } 
+  else if (isset($_COOKIE['user_cart_id'])) {
   $user_id = $_COOKIE['user_cart_id'];
 } else {
   $user_cart_id = random_strings(8);
