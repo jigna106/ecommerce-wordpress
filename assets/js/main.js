@@ -42,7 +42,7 @@ jQuery(document).ready(function () {
 
 
 jQuery(document).ready(function () {
-  jQuery(document).on("click", ".page-number", function () {
+  jQuery(document).on("click", ".page-number:not(.active)", function () {
     var text = jQuery(this).val();
     var selctedsize = jQuery(".select-size").val();
     console.log(selctedsize);

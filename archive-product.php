@@ -194,7 +194,7 @@ $brands = get_categories($args);
         for ($i = 1; $i <= ($totalpagenumber); $i++) {
          ?>
         <li class="page-item"><input type="button" name="page-number" value="<?php echo $i ?>" class="page-number page-link <?php 
-          if($i==$totalpagenumber)
+          if($i==1)
           {echo "active";}
           ?>" />
           </li>
