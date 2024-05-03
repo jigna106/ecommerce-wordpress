@@ -1,5 +1,7 @@
 <?php session_start();
 
+
+
 $issucess = "";
 global $wpdb;
 if (isset($_POST['addtocart'])) {
@@ -48,8 +50,7 @@ if (isset($_POST['addtocart'])) {
 if (is_user_logged_in()) {
   $current_user = wp_get_current_user();
   $user_id = (string)$current_user->ID;
-  } 
-  else if (isset($_COOKIE['user_cart_id'])) {
+} else if (isset($_COOKIE['user_cart_id'])) {
   $user_id = $_COOKIE['user_cart_id'];
 } else {
   $user_cart_id = random_strings(8);
@@ -63,7 +64,7 @@ get_header();
 if (have_posts()) {
   while (have_posts()) {
     the_post();
-    
+
 ?>
     <div class="container">
       <?php
@@ -119,12 +120,27 @@ if (have_posts()) {
               </div>
             </div>
             <div class="pt-2">
-              <h4 class="font-weight-bold"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                  <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-                </svg>
-                <?php $price = get_post_meta($post->ID, 'ecommerce_price');
-                echo number_format($price[0], ((int) $price[0] == $price[0] ? 0 : 2), '.', ',');
-                ?>
+              <h4 class="font-weight-bold">
+                
+
+                <?php
+                $product_id = $post->ID;
+                $price = apply_filters("get_product_discountprice",get_post_meta($post->ID, 'ecommerce_price',true), $product_id);
+                    
+                if($price['sale_price'] != $price['regular_price']){
+                 echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                .number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',').'</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                .number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+                }else{
+                    ?>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                      <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                    </svg>
+                    <?php
+                    echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+                }
+                // print_r($product_id);
+               ?>
               </h4>
             </div>
             <div class="pt-2">

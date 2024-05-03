@@ -66,7 +66,7 @@ $cart = get_post_meta($id, 'ecommerce_cart_data', true);
             <?php echo $qty ?>
           </td>
           <td>
-            <?php $subtotal = get_post_meta($product_id, "ecommerce_price", true) * (int) $qty; ?>
+            <?php $subtotal = $price['sale_price'] * (int) $qty; ?>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               class="bi bi-currency-rupee" viewBox="0 0 16 16">
               <path

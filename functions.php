@@ -367,7 +367,10 @@ function as_get_product_filter_color()
         <?php
         for ($i = 1; $i <= ($color->max_num_pages); $i++) {
         ?>
-          <li class="page-item"><input type="button" name="page-number" value="<?php echo $i ?>" class="page-number page-link" />
+          <li class="page-item"><input type="button" name="page-number" value="<?php echo $i ?>" class="page-number page-link <?php 
+          if($i==$_POST['page'])
+          {echo "active";}
+          ?>" />
           </li>
         <?php
         }
@@ -683,13 +686,22 @@ function as_update_qty()
 
         </div>
         <div class="col-2 pt-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-          </svg>
-          <?php $price = get_post_meta($productId, 'ecommerce_price', true);
-          echo number_format($price);
-          ?>
+          <?php
+                            $product_id = $productId;
+                            $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
+                            // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
 
+                            if ($price['sale_price'] != $price['regular_price']) {
+                                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+                            } else {
+                            ?>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                                </svg>
+                            <?php
+                                echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+                            }
+                            ?>
         </div>
         <div class="col-2 pt-3">
           <form method="post">
@@ -706,10 +718,11 @@ function as_update_qty()
             <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
           </svg>
           <?php
-          $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty; ?>
-          <?php echo number_format($subtotal);
-          $as_subtotal += $subtotal;
-          $grandtotal += $subtotal; ?>
+                     
+                     $subtotal = $price['sale_price']* (int) $qty; ?>
+                     <?php echo number_format($subtotal);
+                     $as_subtotal += $subtotal;
+                     $grandtotal += $subtotal; ?>
         </div>
         <div class="col-2 pt-3">
           <form method="post">
@@ -820,12 +833,24 @@ function as_update_decrement_qty()
 
         </div>
         <div class="col-2 pt-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-          </svg>
-          <?php $price = get_post_meta($productId, 'ecommerce_price', true);
-          echo number_format($price);
-          ?>
+          
+         
+          <?php
+                            $product_id = $productId;
+                            $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
+                            // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
+
+                            if ($price['sale_price'] != $price['regular_price']) {
+                                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+                            } else {
+                            ?>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                                </svg>
+                            <?php
+                                echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+                            }
+                            ?>
 
         </div>
         <div class="col-2 pt-3">
@@ -843,10 +868,11 @@ function as_update_decrement_qty()
             <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
           </svg>
           <?php
-          $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty; ?>
-          <?php echo number_format($subtotal);
-          $as_subtotal += $subtotal;
-          $grandtotal += $subtotal; ?>
+                     
+                            $subtotal = $price['sale_price']* (int) $qty; ?>
+                            <?php echo number_format($subtotal);
+                            $as_subtotal += $subtotal;
+                            $grandtotal += $subtotal; ?>
         </div>
         <div class="col-2 pt-3">
           <form method="post">
@@ -1111,42 +1137,64 @@ function as_emptycart()
   exit;
 }
 
-add_action("wp","product_discount");
-function product_discount(){
-// echo "testdata";
-    $obj = get_queried_object();
-    print_r($obj);
-     if($obj->post_type == "product"){
-        global $wpdb;  
-        if (is_user_logged_in() ) {
-            $current_user = wp_get_current_user();
-            $user_id = (string)$current_user->ID;
-            $post_id = $obj->ID;
-            $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$post_id");
-            if(!empty($product_data)){
-                $addcount= $product_data[0]->count_product+1;
-                
-                $wpdb->update(
-                    'product_discount',
-                    array(
-                        'count_product' => $addcount,
-                    ),
-                    array(
-                        'user_id' =>$user_id,
-                        'product_id' =>$post_id,
-                    )
-                );
-            }else{
-                $wpdb->insert(
-                    'product_discount',
-                    array(
-                        'user_id' => $user_id,
-                        'product_id' =>$post_id,
-                        'count_product' => 1
-                    )
-                );
-            }
+add_action("wp", "product_discount");
+
+function product_discount()
+{
+  $obj = get_queried_object();
+
+  // print_r($obj);
+  if (is_singular( 'product' ) && $obj->post_type == "product") {
+    global $wpdb;
+    if (is_user_logged_in()) {
+      $current_user = wp_get_current_user();
+      $user_id = (string)$current_user->ID;
+      $post_id = $obj->ID;
+      $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$post_id");
+      if (!empty($product_data)) {
+        $addcount = $product_data[0]->count_product + 1;
+
+        $wpdb->update(
+          'product_discount',
+          array(
+            'count_product' => $addcount,
+          ),
+          array(
+            'user_id' => $user_id,
+            'product_id' => $post_id,
+          )
+        );
+      } else {
+        $wpdb->insert(
+          'product_discount',
+          array(
+            'user_id' => $user_id,
+            'product_id' => $post_id,
+            'count_product' => 1
+          )
+        );
+      }
+    }
+  }
+}
+add_filter("get_product_discountprice", "get_product_discountprice", 10, 2);
+
+function get_product_discountprice($price, $product_id)
+{
+    global $wpdb;
+    if (is_user_logged_in()){
+        $current_user = wp_get_current_user();
+        $user_id = (string) $current_user->ID;
+        $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$product_id",ARRAY_A);
+        
+        if ($product_data && $product_data[0]['count_product'] > 3) {
+            $discounted_price = (int) $price - ((int) $price * 0.10);
+            $discounted_price = round($discounted_price, 2);
+            return array("sale_price"=>$discounted_price,"regular_price"=>(int)$price);
+        }
+        else{
+            return array("sale_price"=>(int)$price,"regular_price"=>(int)$price);
         }
     }
-
-  }
+    return array("sale_price"=>(int)$price,"regular_price"=>(int)$price);
+}

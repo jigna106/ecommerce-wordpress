@@ -39,13 +39,14 @@ jQuery(document).ready(function () {
   });
 });
 
+
+
 jQuery(document).ready(function () {
   jQuery(document).on("click", ".page-number", function () {
     var text = jQuery(this).val();
     var selctedsize = jQuery(".select-size").val();
     console.log(selctedsize);
-
-    make_ajax(text, selctedsize);
+  make_ajax(text, selctedsize);
   });
 });
 
@@ -82,7 +83,6 @@ function make_ajax(text = 1, selctedsize = 12) {
   var catgories_ajax = [];
   var brands = [];
   var brands_ajax = [];
-
   jQuery('input[name="color"]:checked').each(function () {
     colors.push(
       '<div  class="filter-item" data-id="' +
