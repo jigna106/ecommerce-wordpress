@@ -202,7 +202,7 @@ function wpdocs_theme_name_scripts()
   wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), rand(), true);
   wp_localize_script('ecommerce-main-script', 'as_ecommerce_ajax_object', array(
     'ajax_url' => admin_url('admin-ajax.php'),
-    'cart_itmes_data' => count(isset($data) ? $data : array())
+    'cart_itmes_data' => count(isset($data['product']) ? $data['product'] : array())
   ));
 }
 add_action('wp_enqueue_scripts', 'wpdocs_theme_name_scripts');
@@ -367,10 +367,11 @@ function as_get_product_filter_color()
         <?php
         for ($i = 1; $i <= ($color->max_num_pages); $i++) {
         ?>
-          <li class="page-item"><input type="button" name="page-number" value="<?php echo $i ?>" class="page-number page-link <?php 
-          if($i==$_POST['page'])
-          {echo "active";}
-          ?>" />
+          <li class="page-item"><input type="button" name="page-number" value="<?php echo $i ?>" class="page-number page-link <?php
+                                                                                                                              if ($i == $_POST['page']) {
+                                                                                                                                echo "active";
+                                                                                                                              }
+                                                                                                                              ?>" />
           </li>
         <?php
         }
@@ -510,7 +511,7 @@ add_action('add_meta_boxes', 'ecommerce_cartdata');
 function ecommerce_cartdata_display($post)
 {
 
-  $cartdata = get_post_meta($post->ID, 'ecommerce_cart_data', true);
+  $cartdata['product'] = get_post_meta($post->ID, 'ecommerce_cart_data', true);
   // print_r($cartdata);
 ?>
   <div class="admin-cartdata">
@@ -525,7 +526,7 @@ function ecommerce_cartdata_display($post)
       </tr>
       <?php
       $grandtotal = 100;
-      foreach ($cartdata as $product_id => $qty) {
+      foreach ($cartdata['product'] as $product_id => $qty) {
       ?>
         <tr>
           <td><img src="<?php echo get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px"></td>
@@ -646,8 +647,8 @@ function as_update_qty()
   $data = maybe_unserialize($retrieve_data[0]['session_data']);
   $qty = $_POST['qtyupdate'];
   $id = $_POST['id'];
-  if ($data[$id] > 0) {
-    $data[$id] = (int) $qty;
+  if ($data['product'][$id] > 0) {
+    $data['product'][$id] = (int) $qty;
     $wpdb->update(
       'session_management',
       array(
@@ -672,7 +673,7 @@ function as_update_qty()
     <?php
     $grandtotal = 100;
     $as_subtotal = 0;
-    foreach ($data as $productId => $qty) {
+    foreach ($data['product'] as $productId => $qty) {
     ?>
       <div class="row">
         <div class="col-2 pt-3">
@@ -687,21 +688,21 @@ function as_update_qty()
         </div>
         <div class="col-2 pt-3">
           <?php
-                            $product_id = $productId;
-                            $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
-                            // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
+          $product_id = $productId;
+          $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
+          // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
 
-                            if ($price['sale_price'] != $price['regular_price']) {
-                                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
-                            } else {
-                            ?>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-                                </svg>
-                            <?php
-                                echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
-                            }
-                            ?>
+          if ($price['sale_price'] != $price['regular_price']) {
+            echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+          } else {
+          ?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+            </svg>
+          <?php
+            echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+          }
+          ?>
         </div>
         <div class="col-2 pt-3">
           <form method="post">
@@ -718,11 +719,11 @@ function as_update_qty()
             <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
           </svg>
           <?php
-                     
-                     $subtotal = $price['sale_price']* (int) $qty; ?>
-                     <?php echo number_format($subtotal);
-                     $as_subtotal += $subtotal;
-                     $grandtotal += $subtotal; ?>
+
+          $subtotal = $price['sale_price'] * (int) $qty; ?>
+          <?php echo number_format($subtotal);
+          $as_subtotal += $subtotal;
+          $grandtotal += $subtotal; ?>
         </div>
         <div class="col-2 pt-3">
           <form method="post">
@@ -795,7 +796,7 @@ function as_update_decrement_qty()
   $qty = $_POST['qtyupdate'];
   $id = $_POST['id'];
 
-  $data[$id] = (int) $qty;
+  $data['product'][$id] = (int) $qty;
   $wpdb->update(
     'session_management',
     array(
@@ -819,7 +820,7 @@ function as_update_decrement_qty()
     <?php
     $grandtotal = 100;
     $as_subtotal = 0;
-    foreach ($data as $productId => $qty) {
+    foreach ($data['product'] as $productId => $qty) {
     ?>
       <div class="row">
         <div class="col-2 pt-3">
@@ -833,24 +834,24 @@ function as_update_decrement_qty()
 
         </div>
         <div class="col-2 pt-3">
-          
-         
-          <?php
-                            $product_id = $productId;
-                            $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
-                            // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
 
-                            if ($price['sale_price'] != $price['regular_price']) {
-                                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
-                            } else {
-                            ?>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-                                </svg>
-                            <?php
-                                echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
-                            }
-                            ?>
+
+          <?php
+          $product_id = $productId;
+          $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
+          // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
+
+          if ($price['sale_price'] != $price['regular_price']) {
+            echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+          } else {
+          ?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+            </svg>
+          <?php
+            echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+          }
+          ?>
 
         </div>
         <div class="col-2 pt-3">
@@ -868,11 +869,11 @@ function as_update_decrement_qty()
             <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
           </svg>
           <?php
-                     
-                            $subtotal = $price['sale_price']* (int) $qty; ?>
-                            <?php echo number_format($subtotal);
-                            $as_subtotal += $subtotal;
-                            $grandtotal += $subtotal; ?>
+
+          $subtotal = $price['sale_price'] * (int) $qty; ?>
+          <?php echo number_format($subtotal);
+          $as_subtotal += $subtotal;
+          $grandtotal += $subtotal; ?>
         </div>
         <div class="col-2 pt-3">
           <form method="post">
@@ -943,7 +944,7 @@ function as_removeproduct()
   $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
   $data = maybe_unserialize($retrieve_data[0]['session_data']);
   //  print_r($data);
-  unset($data[$_POST['id']]);
+  unset($data['product'][$_POST['id']]);
 
   $wpdb->update(
     'session_management',
@@ -957,7 +958,7 @@ function as_removeproduct()
   ob_start();
 
 
-  if (!empty($data)) {
+  if (!empty($data['product'])) {
   ?>
     <div class="col-9 product-table">
       <div class="row">
@@ -972,7 +973,7 @@ function as_removeproduct()
 
       $grandtotal = 100;
       $as_subtotal = 0;
-      foreach ($data as $productId => $qty) {
+      foreach ($data['product'] as $productId => $qty) {
       ?>
         <div class="row">
           <div class="col-2 pt-3">
@@ -986,22 +987,22 @@ function as_removeproduct()
 
           </div>
           <div class="col-2 pt-3">
-             <?php
-                            $product_id = $productId;
-                            $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
-                            // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
+            <?php
+            $product_id = $productId;
+            $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
+            // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
 
-                            if ($price['sale_price'] != $price['regular_price']) {
-                                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
-                            } else {
-                            ?>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-                                </svg>
-                            <?php
-                                echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
-                            }
-                            ?>
+            if ($price['sale_price'] != $price['regular_price']) {
+              echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+            } else {
+            ?>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+              </svg>
+            <?php
+              echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+            }
+            ?>
 
           </div>
           <div class="col-2 pt-3">
@@ -1154,7 +1155,7 @@ function product_discount()
   $obj = get_queried_object();
 
   // print_r($obj);
-  if (is_singular( 'product' ) && $obj->post_type == "product") {
+  if (is_singular('product') && $obj->post_type == "product") {
     global $wpdb;
     if (is_user_logged_in()) {
       $current_user = wp_get_current_user();
@@ -1191,20 +1192,128 @@ add_filter("get_product_discountprice", "get_product_discountprice", 10, 2);
 
 function get_product_discountprice($price, $product_id)
 {
-    global $wpdb;
-    if (is_user_logged_in()){
-        $current_user = wp_get_current_user();
-        $user_id = (string) $current_user->ID;
-        $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$product_id",ARRAY_A);
-        
-        if ($product_data && $product_data[0]['count_product'] > 3) {
-            $discounted_price = (int) $price - ((int) $price * 0.10);
-            $discounted_price = round($discounted_price, 2);
-            return array("sale_price"=>$discounted_price,"regular_price"=>(int)$price);
-        }
-        else{
-            return array("sale_price"=>(int)$price,"regular_price"=>(int)$price);
-        }
+  global $wpdb;
+  if (is_user_logged_in()) {
+    $current_user = wp_get_current_user();
+    $user_id = (string) $current_user->ID;
+    $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$product_id", ARRAY_A);
+
+    if ($product_data && $product_data[0]['count_product'] > 3) {
+      $discounted_price = (int) $price - ((int) $price * 0.10);
+      $discounted_price = round($discounted_price, 2);
+      return array("sale_price" => $discounted_price, "regular_price" => (int)$price);
+    } else {
+      return array("sale_price" => (int)$price, "regular_price" => (int)$price);
     }
-    return array("sale_price"=>(int)$price,"regular_price"=>(int)$price);
+  }
+  return array("sale_price" => (int)$price, "regular_price" => (int)$price);
 }
+
+
+
+// register a custom post type for coupon
+
+function as_coupon()
+{
+  $Coupon = array(
+    'name' => 'Coupon',
+    'label' => __('Coupon'),
+    'supports' => array('title', 'editor', 'author'),
+    'public' => true,
+    'has_archive' => true,
+    'menu_icon' => 'dashicons-money-alt'
+  );
+
+  register_post_type('as_coupon', $Coupon);
+}
+add_action('init', 'as_coupon');
+
+add_action('wp_ajax_nopriv_as_couponcode', 'as_couponcode');
+add_action('wp_ajax_as_couponcode', 'as_couponcode');
+
+
+
+
+
+
+
+function as_couponcode()
+{
+  print_r($_POST);
+  global $wpdb;
+
+  $args = array(
+    'post_type' => 'as_coupon',
+    's' => $_POST['coupon']
+
+  );
+  $posts = new WP_Query($args);
+  // echo "<pre>";
+  // print_r($posts);
+
+  if ($posts->have_posts()) {
+    $coupon_id = $posts->post->ID;
+    if (is_user_logged_in()) {
+      $current_user = wp_get_current_user();
+      $user_id = (string)$current_user->ID;
+    } else if (isset($_COOKIE['user_cart_id'])) {
+      $user_id = $_COOKIE['user_cart_id'];
+    } else {
+      $user_cart_id = random_strings(8);
+      setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
+      $user_id = $user_cart_id;
+    }
+    global $wpdb;
+    $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
+    $data = maybe_unserialize($retrieve_data[0]['session_data']);
+
+    $data['coupen_code'] = $coupon_id;
+    $wpdb->update(
+      'session_management',
+      array(
+        'session_data' => serialize($data),
+      ),
+      array(
+        "cart_user_id" => $user_id
+      )
+    );
+  }
+  // $coupon_id=get_the_ID();
+if ($data['coupen_code']>0){
+
+  $coupon_discount = get_post_meta(get_the_ID(), 'as_coupon_discount', true);
+  print_r($coupon_discount);
+
+}
+
+}
+
+function as_couponcode_metabox()
+{
+  add_meta_box('test-meta-id', 'Coupon_Discount', 'Coupon_Discount_display', 'as_coupon');
+}
+add_action('add_meta_boxes', 'as_couponcode_metabox');
+
+function Coupon_Discount_display($post)
+{
+
+  $coupon_discount = get_post_meta($post->ID, 'as_coupon_discount', true);
+
+?>
+  <label for="new_meta"> Coupon_Discount </label>
+  <input type="text" id="as_discount_id" name="as_discount_id" value="<?php echo $coupon_discount ?>"/>
+
+<?php
+}
+
+function save_coupon_discount($post_id)
+{
+  if (array_key_exists('as_discount_id', $_POST)) {
+    update_post_meta(
+      $post_id,
+      'as_coupon_discount',
+      $_POST['as_discount_id']
+    );
+  }
+}
+add_action('save_post', 'save_coupon_discount');

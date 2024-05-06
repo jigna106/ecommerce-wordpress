@@ -62,7 +62,7 @@ if (is_user_logged_in()) {
             $data = maybe_unserialize($retrieve_data[0]['session_data']);
           }
           $grandtotal = 100;
-          foreach ($data as $productId => $qty) {
+          foreach ($data['product'] as $productId => $qty) {
             $product = get_post($productId);
           ?>
             <ul class="list-group mb-3">

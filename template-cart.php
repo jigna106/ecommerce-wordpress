@@ -14,9 +14,9 @@ $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart
 if (isset($retrieve_data[0])) {
     $data = maybe_unserialize($retrieve_data[0]['session_data']);
 }
-if (isset($_POST['emptycartsubmit'])) {
-    $wpdb->delete('session_management', ['cart_user_id' => $user_id]);
-}
+// if (isset($_POST['emptycartsubmit'])) {
+//     $wpdb->delete('session_management', ['cart_user_id' => $user_id]);
+// }
 
 // if (isset($_POST['remove'])) {
 //     // print_r($_POST);
@@ -69,7 +69,7 @@ if (isset($_POST['emptycartsubmit'])) {
 // }
 
 get_header();
-if (!empty($data)) {
+if (!empty($data['product'])) {
     $grandtotal = 100;
     $as_subtotal = 0;
 ?>
@@ -80,7 +80,6 @@ if (!empty($data)) {
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash-fill" viewBox="0 0 16 16">
                         <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                     </svg> Empty Cart</button>
-
             </form>
         </div>
         <div class="row">
@@ -100,7 +99,7 @@ if (!empty($data)) {
 
 
 
-                foreach ($data as $productId => $qty) {
+                foreach ($data['product'] as $productId => $qty) {
 
                 ?>
 
@@ -151,8 +150,8 @@ if (!empty($data)) {
                                 <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
                             </svg>
                             <?php
-                     
-                            $subtotal = $price['sale_price']* (int) $qty; ?>
+
+                            $subtotal = $price['sale_price'] * (int) $qty; ?>
                             <?php echo number_format($subtotal);
                             $as_subtotal += $subtotal;
                             $grandtotal += $subtotal; ?>
@@ -172,6 +171,14 @@ if (!empty($data)) {
 
             </div>
             <div class="col-3 billing-details pt-5">
+                <div class="form-group"> <label>Have coupon?</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control coupon" placeholder="Coupon code">
+                        <span class="input-group-append"><button class="btn btn-primary btn-apply as_coupon">Apply</button>
+                        </span>
+
+                    </div>
+                </div>
                 <div class="totals">
                     <div class="totals-item">
                         Total Products
@@ -202,6 +209,7 @@ if (!empty($data)) {
                 </div>
                 <a href="<?php echo get_permalink(103); ?>"><button class="checkout">Checkout</button></a>
             </div>
+
         </div>
     </div>
 <?php

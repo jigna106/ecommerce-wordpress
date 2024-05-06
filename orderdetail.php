@@ -98,7 +98,7 @@ echo "</pre>";
                   <tbody>
                     <?php
                     $grandtotal = 100;
-                    foreach ($cart as $product_id => $qty) {
+                    foreach ($cart['product'] as $product_id => $qty) {
                     ?>
                       <tr width="100%">
                         <td width="30%" style="text-align:left;vertical-align:middle;border-left:1px solid #eee;border-bottom:1px solid #eee;border-right:0;border-top:0;word-wrap:break-word">

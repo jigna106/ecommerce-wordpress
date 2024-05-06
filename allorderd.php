@@ -37,8 +37,8 @@ if ($current_user->ID) {
                             $total_qty = 0;
                             $total_product = 0;
                             $grandtotal = 100;
-                            if (isset($orderhistory ) && !empty($orderhistory)) {
-                                foreach ($orderhistory as $product_id => $qty) {
+                            if (isset($orderhistory['product'] ) && !empty($orderhistory['product'])) {
+                                foreach ($orderhistory['product'] as $product_id => $qty) {
 
                                     $totalprice = get_post_meta($product_id, "ecommerce_price", true);
 
@@ -65,7 +65,7 @@ if ($current_user->ID) {
                                 </td>
                                 <td>
                                     <?php
-                                    foreach ($orderhistory as $product_id => $qty) { ?>
+                                    foreach ($orderhistory['product'] as $product_id => $qty) { ?>
 
                                         <div>
 

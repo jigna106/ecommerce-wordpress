@@ -1,4 +1,4 @@
-                        jQuery(document).ready(function () {
+jQuery(document).ready(function () {
   if (as_ecommerce_ajax_object && as_ecommerce_ajax_object.cart_itmes_data) {
     jQuery(".cart_itmes").append(
       "<span class='cart_total'>" +
@@ -39,14 +39,12 @@ jQuery(document).ready(function () {
   });
 });
 
-
-
 jQuery(document).ready(function () {
   jQuery(document).on("click", ".page-number:not(.active)", function () {
     var text = jQuery(this).val();
     var selctedsize = jQuery(".select-size").val();
     console.log(selctedsize);
-  make_ajax(text, selctedsize);
+    make_ajax(text, selctedsize);
   });
 });
 
@@ -384,25 +382,25 @@ jQuery(document).on("click", ".as_signup", function () {
     url: as_ecommerce_ajax_object.ajax_url,
     data: userdataAjax,
     success: function (response) {
-    let data = JSON.parse(response);
-     if(data.succes==true){
-      window.location.href =data.redirect_url;
-    }else{
-      jQuery(".error").html(data.message);
-    }
-  //  console.log(response);
+      let data = JSON.parse(response);
+      if (data.succes == true) {
+        window.location.href = data.redirect_url;
+      } else {
+        jQuery(".error").html(data.message);
+      }
+      //  console.log(response);
     },
   });
 });
-jQuery(document).on("click", ".as_signin", function (){
+jQuery(document).on("click", ".as_signin", function () {
   var email = jQuery("#email").val();
   var password = jQuery("#password").val();
 
-  let data={
-    email:email,
-    password:password,
-    action:"as_userlogin",    
-  }
+  let data = {
+    email: email,
+    password: password,
+    action: "as_userlogin",
+  };
 
   jQuery.ajax({
     type: "post",
@@ -410,13 +408,30 @@ jQuery(document).on("click", ".as_signin", function (){
     data: data,
     success: function (response) {
       let data = JSON.parse(response);
-      if(data.succes==true){
-       window.location.href =data.redirect_url;
-     }else{
-       jQuery(".error").html(data.message);
-     }
-   console.log(response);
+      if (data.succes == true) {
+        window.location.href = data.redirect_url;
+      } else {
+        jQuery(".error").html(data.message);
+      }
+      console.log(response);
     },
   });
+});
 
-})
+jQuery(document).on("click", ".as_coupon", function () {
+  var coupon = jQuery(".coupon").val();
+  console.log(coupon);
+
+  let coupondata = {
+    coupon: coupon,
+    action: "as_couponcode",
+  };
+   jQuery.ajax({
+    type: "post",
+    url: as_ecommerce_ajax_object.ajax_url,
+    data: coupondata,
+    success: function (response) {
+       console.log(response);
+    },
+  });
+});
