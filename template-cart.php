@@ -70,8 +70,14 @@ if (isset($retrieve_data[0])) {
 
 get_header();
 if (!empty($data['product'])) {
+    $coupon_id = $data['coupen_code'];
+    $coupon_discount = get_post_meta($coupon_id, 'as_coupon_discount', true);
+    $type_discount = get_post_meta($coupon_id, 'type_discount', true);
     $grandtotal = 100;
     $as_subtotal = 0;
+    $as_new_subtotal = 100;
+
+
 ?>
     <div class="container mt-5 mb-5">
         <div class="row pt-3 emptycart">
@@ -98,11 +104,8 @@ if (!empty($data['product'])) {
                 <?php
 
 
-
                 foreach ($data['product'] as $productId => $qty) {
-
                 ?>
-
                     <div class="row">
                         <div class="col-2 pt-3">
                             <img src="<?php echo get_the_post_thumbnail_url($productId) ?>" width="100px" height="100px">
@@ -110,12 +113,10 @@ if (!empty($data['product'])) {
                         </div>
                         <div class="col-2 pt-3">
                             <?php echo get_the_title($productId);
-
                             ?>
 
                         </div>
                         <div class="col-2 pt-3">
-
                             <?php
                             $product_id = $productId;
                             $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
@@ -133,11 +134,10 @@ if (!empty($data['product'])) {
                             }
                             ?>
 
-
                         </div>
                         <div class="col-2 pt-3">
                             <form method="post" class="product-form">
-                                <input type="hidden" name="hiddenid" class="id" value="<?php echo $productId ?>" />
+
                                 <input type="button" value="-" name="decrement" class="decrement" data-id="<?php echo $productId ?>" <?php if ($qty == 1) {
                                                                                                                                             echo "disabled='disabled'";
                                                                                                                                         } ?> />
@@ -146,15 +146,34 @@ if (!empty($data['product'])) {
                             </form>
                         </div>
                         <div class="col-2 pt-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-                            </svg>
                             <?php
 
-                            $subtotal = $price['sale_price'] * (int) $qty; ?>
-                            <?php echo number_format($subtotal);
+
+                            $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty;
+                            $newprice = $price['sale_price'] * (int) $qty;
+
+
+                            if ($subtotal != $newprice) {
+                                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                            </svg>'
+                                    . number_format($subtotal) .'</del>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                        </svg>'
+                                    . number_format($newprice);
+                            } else {
+                            ?>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                                </svg>
+                            <?php
+                                echo number_format($subtotal);
+                            }
                             $as_subtotal += $subtotal;
-                            $grandtotal += $subtotal; ?>
+                            $grandtotal += $subtotal;
+
+                            ?>
                         </div>
                         <div class="col-2 pt-3">
                             <form method="post">
@@ -168,25 +187,53 @@ if (!empty($data['product'])) {
                 <?php
                 }
                 ?>
-
             </div>
             <div class="col-3 billing-details pt-5">
                 <div class="form-group"> <label>Have coupon?</label>
                     <div class="input-group">
-                        <input type="text" class="form-control coupon" placeholder="Coupon code">
+                        <input type="text" class="form-control coupon" placeholder="Coupon code" value=/>
                         <span class="input-group-append"><button class="btn btn-primary btn-apply as_coupon">Apply</button>
                         </span>
-
+                        <div>
+                            <span class="input-group-append">Coupen Code "<?php echo get_the_title($coupon_id); ?>" Apply Sucessfully</span>
+                        </div>
                     </div>
                 </div>
                 <div class="totals">
                     <div class="totals-item">
                         Total Products
-                        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-                            </svg>
+                        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i>
+
                             <?php
-                            echo number_format($as_subtotal)
+                              $coupon_price = (int) $as_subtotal * (100 - $coupon_discount) / 100;
+                              $coupon_price = round($coupon_price, 2);
+                            if ($type_discount == 'percentage_discount') {
+                             
+                                    echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                                        . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                                        . number_format($coupon_price);
+                                
+                            } else if ($type_discount == 'fix_discount') {
+                                $coupon_price = (int) $as_subtotal - $coupon_discount;
+                                
+                                    echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                                        . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                                        . number_format($coupon_price);
+                                
+                            } else {
+                               
+                                echo   number_format($as_subtotal);
+                           
+                }
+                            
+
+
+
+
                             ?>
                         </div>
                     </div>
@@ -199,17 +246,32 @@ if (!empty($data['product'])) {
                     <div class="totals-item totals-item-total">
                         Grand Total
                         <div class="totals-value" id="cart-total">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-                            </svg>
-                            <?php echo number_format($grandtotal);
-                            ?>
+
+                        <div class="totals-value" id="cart-total">
+          <?php
+          $coupon_price = (int) $as_subtotal - $coupon_discount;
+
+
+          if ($coupon_price != $as_subtotal) {
+            echo '<del>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+              . number_format($grandtotal) . '</del>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+              . number_format($coupon_price += $as_new_subtotal);
+          } else {
+          ?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+            </svg>
+          <?php
+            echo number_format($grandtotal);
+          }
+          ?>
                         </div>
                     </div>
                 </div>
                 <a href="<?php echo get_permalink(103); ?>"><button class="checkout">Checkout</button></a>
             </div>
-
         </div>
     </div>
 <?php

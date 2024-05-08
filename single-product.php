@@ -38,6 +38,7 @@ if (isset($_POST['addtocart'])) {
     $products[get_the_ID()] = (int)$_POST['quantity'];
     $data['product'] = $products;
     $data['coupen_code'] = 0;
+   
 
     $wpdb->insert(
       'session_management',
@@ -51,7 +52,7 @@ if (isset($_POST['addtocart'])) {
 }
 
 if (is_user_logged_in()) {
-  $current_user = wp_get_current_user();
+  $current_user = wp_get_current_user(); 
   $user_id = (string)$current_user->ID;
 } else if (isset($_COOKIE['user_cart_id'])) {
   $user_id = $_COOKIE['user_cart_id'];
@@ -87,8 +88,7 @@ if (have_posts()) {
       $catgories = wp_get_post_terms($post->ID, "product_cat");
       //print_r($catgories)
       ?>
-
-      <div class="row  justify-content-between">
+ <div class="row  justify-content-between">
         <div class="col-12 col-md-12 col-lg-6 img-thumbnail as-img-thumbnail">
           <div class="row category-list-wrapper">
             <?php

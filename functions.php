@@ -659,6 +659,15 @@ function as_update_qty()
       )
     );
   }
+  $coupon_id = $data['coupen_code'];
+
+  $coupon_discount = get_post_meta($coupon_id, 'as_coupon_discount', true);
+  $type_discount = get_post_meta($coupon_id, 'type_discount', true);
+
+
+  $grandtotal = 100;
+  $as_subtotal = 0;
+  $as_new_subtotal = 100;
   ob_start();
 ?>
   <div class="col-9 product-table">
@@ -671,8 +680,8 @@ function as_update_qty()
       <div class="col-2 pt-3"><b>Remove Product</b></div>
     </div>
     <?php
-    $grandtotal = 100;
-    $as_subtotal = 0;
+
+
     foreach ($data['product'] as $productId => $qty) {
     ?>
       <div class="row">
@@ -682,7 +691,6 @@ function as_update_qty()
         </div>
         <div class="col-2 pt-3">
           <?php echo get_the_title($productId);
-
           ?>
 
         </div>
@@ -703,10 +711,11 @@ function as_update_qty()
             echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
           }
           ?>
+
         </div>
         <div class="col-2 pt-3">
-          <form method="post">
-            <input type="hidden" name="hiddenid" class="id" value="<?php echo $productId ?>" />
+          <form method="post" class="product-form">
+
             <input type="button" value="-" name="decrement" class="decrement" data-id="<?php echo $productId ?>" <?php if ($qty == 1) {
                                                                                                                     echo "disabled='disabled'";
                                                                                                                   } ?> />
@@ -715,15 +724,34 @@ function as_update_qty()
           </form>
         </div>
         <div class="col-2 pt-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-          </svg>
           <?php
 
-          $subtotal = $price['sale_price'] * (int) $qty; ?>
-          <?php echo number_format($subtotal);
+
+          $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty;
+          $newprice = $price['sale_price'] * (int) $qty;
+
+
+          if ($subtotal != $newprice) {
+            echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+</svg>'
+              . number_format($subtotal) . '</del>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+<path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+</svg>'
+              . number_format($newprice);
+          } else {
+          ?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+            </svg>
+          <?php
+            echo number_format($subtotal);
+          }
           $as_subtotal += $subtotal;
-          $grandtotal += $subtotal; ?>
+          $grandtotal += $subtotal;
+
+          ?>
         </div>
         <div class="col-2 pt-3">
           <form method="post">
@@ -739,14 +767,49 @@ function as_update_qty()
     ?>
   </div>
   <div class="col-3 billing-details pt-5">
+    <div class="form-group"> <label>Have coupon?</label>
+      <div class="input-group">
+        <?php
+        ?>
+        <input type="text" class="form-control coupon" placeholder="Coupon code" value=<?php echo get_the_title($coupon_id); ?> />
+        <span class="input-group-append"><button class="btn btn-primary btn-apply as_coupon">Apply</button>
+        </span>
+        <div>
+          <span class="input-group-append">Coupen Code "<?php echo get_the_title($coupon_id); ?>" Apply Sucessfully</span>
+        </div>
+      </div>
+    </div>
     <div class="totals">
       <div class="totals-item">
         Total Products
-        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-          </svg>
+        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i>
+
           <?php
-          echo number_format($as_subtotal)
+          $coupon_price = (int) $as_subtotal * (100 - $coupon_discount) / 100;
+          $coupon_price = round($coupon_price, 2);
+          if ($type_discount == 'percentage_discount') {
+            
+           
+              echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($coupon_price);
+            
+          } else if ($type_discount == 'fix_discount') {
+           
+              echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($coupon_price);
+            
+          } else {
+            echo number_format($newprice);
+          }
+
+
+
           ?>
         </div>
       </div>
@@ -759,11 +822,27 @@ function as_update_qty()
       <div class="totals-item totals-item-total">
         Grand Total
         <div class="totals-value" id="cart-total">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-          </svg>
-          <?php echo number_format($grandtotal);
+          <?php
+          $coupon_price = (int) $as_subtotal - $coupon_discount;
+
+
+          if ($coupon_price != $as_subtotal) {
+            echo '<del>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+              . number_format($grandtotal) . '</del>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+              . number_format($coupon_price += $as_new_subtotal);
+          } else {
           ?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+            </svg>
+          <?php
+            echo number_format($grandtotal);
+          }
+          ?>
+
+
         </div>
       </div>
     </div>
@@ -806,6 +885,14 @@ function as_update_decrement_qty()
       "cart_user_id" => $user_id
     )
   );
+
+
+  $coupon_id = $data['coupen_code'];
+  $coupon_discount = get_post_meta($coupon_id, 'as_coupon_discount', true);
+  $type_discount = get_post_meta($coupon_id, 'type_discount', true);
+  $grandtotal = 100;
+  $as_subtotal = 0;
+  $as_new_subtotal = 100;
   ob_start();
 ?>
   <div class="col-9 product-table">
@@ -818,8 +905,8 @@ function as_update_decrement_qty()
       <div class="col-2 pt-3"><b>Remove Product</b></div>
     </div>
     <?php
-    $grandtotal = 100;
-    $as_subtotal = 0;
+
+
     foreach ($data['product'] as $productId => $qty) {
     ?>
       <div class="row">
@@ -829,13 +916,10 @@ function as_update_decrement_qty()
         </div>
         <div class="col-2 pt-3">
           <?php echo get_the_title($productId);
-
           ?>
 
         </div>
         <div class="col-2 pt-3">
-
-
           <?php
           $product_id = $productId;
           $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
@@ -865,15 +949,37 @@ function as_update_decrement_qty()
           </form>
         </div>
         <div class="col-2 pt-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-          </svg>
+
           <?php
 
-          $subtotal = $price['sale_price'] * (int) $qty; ?>
-          <?php echo number_format($subtotal);
+
+          $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty;
+          $newprice = $price['sale_price'] * (int) $qty;
+
+
+          if ($subtotal != $newprice) {
+            echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+</svg>'
+              . number_format($subtotal) . '</del>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+<path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+</svg>'
+              . number_format($newprice);
+          } else {
+          ?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+            </svg>
+          <?php
+            echo number_format($subtotal);
+          }
           $as_subtotal += $subtotal;
-          $grandtotal += $subtotal; ?>
+          $grandtotal += $subtotal;
+
+          ?>
+
+
         </div>
         <div class="col-2 pt-3">
           <form method="post">
@@ -889,14 +995,49 @@ function as_update_decrement_qty()
     ?>
   </div>
   <div class="col-3 billing-details pt-5">
+    <div class="form-group"> <label>Have coupon?</label>
+      <div class="input-group">
+        <?php
+        ?>
+        <input type="text" class="form-control coupon" placeholder="Coupon code" value=<?php echo get_the_title($coupon_id); ?> />
+        <span class="input-group-append"><button class="btn btn-primary btn-apply as_coupon">Apply</button>
+        </span>
+        <div>
+          <span class="input-group-append">Coupen Code "<?php echo get_the_title($coupon_id); ?>" Apply Sucessfully</span>
+        </div>
+      </div>
+    </div>
     <div class="totals">
       <div class="totals-item">
         Total Products
-        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-          </svg>
+        <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i>
+
           <?php
-          echo number_format($as_subtotal)
+          $coupon_price = (int) $as_subtotal * (100 - $coupon_discount) / 100;
+          $coupon_price = round($coupon_price, 2);
+          if ($type_discount == 'percentage_discount') {
+            
+           
+              echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($coupon_price);
+            
+          } else if ($type_discount == 'fix_discount') {
+           
+              echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($coupon_price);
+            
+          } else {
+            echo number_format($newprice);
+          }
+
+
+
           ?>
         </div>
       </div>
@@ -909,350 +1050,44 @@ function as_update_decrement_qty()
       <div class="totals-item totals-item-total">
         Grand Total
         <div class="totals-value" id="cart-total">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-          </svg>
-          <?php echo number_format($grandtotal);
-          ?>
-        </div>
-      </div>
-    </div>
-    <a href="<?php echo get_permalink(103); ?>"><button class="checkout">Checkout</button></a>
-  </div>
-  <?php
-  // echo $data;
-  echo ob_get_clean();
-  exit;
-}
-
-add_action('wp_ajax_nopriv_as_removeproduct', 'as_removeproduct');
-add_action('wp_ajax_as_removeproduct', 'as_removeproduct');
-
-function as_removeproduct()
-{
-  if (is_user_logged_in()) {
-    $current_user = wp_get_current_user();
-    $user_id = (string)$current_user->ID;
-  } else if (isset($_COOKIE['user_cart_id'])) {
-    $user_id = $_COOKIE['user_cart_id'];
-  } else {
-    $user_cart_id = random_strings(8);
-    setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
-    $user_id = $user_cart_id;
-  }
-  global $wpdb;
-  $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
-  $data = maybe_unserialize($retrieve_data[0]['session_data']);
-  //  print_r($data);
-  unset($data['product'][$_POST['id']]);
-
-  $wpdb->update(
-    'session_management',
-    array(
-      'session_data' => serialize($data),
-    ),
-    array(
-      "cart_user_id" => $user_id
-    )
-  );
-  ob_start();
-
-
-  if (!empty($data['product'])) {
-  ?>
-    <div class="col-9 product-table">
-      <div class="row">
-        <div class="col-2 pt-3"><b>Image</b></div>
-        <div class="col-2 pt-3"><b>Product</b></div>
-        <div class="col-2 pt-3"><b>Price</b></div>
-        <div class="col-2 pt-3"><b>Quantity</b></div>
-        <div class="col-2 pt-3"><b>Sub Total</b></div>
-        <div class="col-2 pt-3"><b>Remove Product</b></div>
-      </div>
-      <?php
-
-      $grandtotal = 100;
-      $as_subtotal = 0;
-      foreach ($data['product'] as $productId => $qty) {
-      ?>
-        <div class="row">
-          <div class="col-2 pt-3">
-            <img src="<?php echo get_the_post_thumbnail_url($productId) ?>" width="100px" height="100px">
-
-          </div>
-          <div class="col-2 pt-3">
-            <?php echo get_the_title($productId);
-
-            ?>
-
-          </div>
-          <div class="col-2 pt-3">
+          <div class="totals-value" id="cart-total">
             <?php
-            $product_id = $productId;
-            $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
-            // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
+            $coupon_price = (int) $as_subtotal - $coupon_discount;
 
-            if ($price['sale_price'] != $price['regular_price']) {
-              echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+
+            if ($coupon_price != $as_subtotal) {
+              echo '<del>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($grandtotal) . '</del>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                . number_format($coupon_price += $as_new_subtotal);
             } else {
             ?>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
                 <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
               </svg>
             <?php
-              echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+              echo number_format($grandtotal);
             }
             ?>
 
-          </div>
-          <div class="col-2 pt-3">
-            <form method="post" class="product-form">
 
-              <input type="button" value="-" name="decrement" class="decrement" data-id="<?php echo $productId ?>" <?php if ($qty == 1) {
-                                                                                                                      echo "disabled='disabled'";
-                                                                                                                    } ?> />
-              <input type="text" class="w-20 quantity" name="quantity" value="<?php echo $qty; ?>" readonly />
-              <input type="button" value="+" name="increment" class="increment" data-id="<?php echo $productId ?>" />
-            </form>
-          </div>
-          <div class="col-2 pt-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-            </svg>
-            <?php
-            $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty; ?>
-            <?php echo number_format($subtotal);
-            $as_subtotal += $subtotal;
-            $grandtotal += $subtotal; ?>
-          </div>
-          <div class="col-2 pt-3">
-            <form method="post">
-              <button name="remove" type="button" class="btn btn-danger as_cart_item_remove" value="<?php echo $productId ?>" data-id="<?php echo $productId ?>">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-x" viewBox="0 0 16 16">
-                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                </svg>Remove</button>
-            </form>
-          </div>
-        </div>
-      <?php
-      }
-      ?>
-    </div>
-    <div class="col-3 billing-details pt-5">
-      <div class="totals">
-        <div class="totals-item">
-          Total Products
-          <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-            </svg>
-            <?php
-            echo number_format($as_subtotal)
-            ?>
-          </div>
-        </div>
-        <div class="totals-item">
-          Delivery charges
-          <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-            </svg>100</div>
-        </div>
-        <div class="totals-item totals-item-total">
-          Grand Total
-          <div class="totals-value" id="cart-total">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-              <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-            </svg>
-            <?php echo number_format($grandtotal);
-            ?>
           </div>
         </div>
       </div>
       <a href="<?php echo get_permalink(103); ?>"><button class="checkout">Checkout</button></a>
     </div>
-  <?php
-  } else {
-  ?>
-
-    <div class="container-fluid  mt-100">
-      <div class="row">
-
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body cart">
-              <div class="col-sm-12 empty-cart-cls text-center">
-                <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
-                <h3><strong>Your Cart is Empty</strong></h3>
-                <h4>Add something to make me happy </h4>
-                <a href="<?php echo get_post_type_archive_link('product'); ?>" class=" btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
-                  </svg></a>
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-
-      </div>
-
-    </div>
-  <?php
+    <?php
+    // echo $data;
+    echo ob_get_clean();
+    exit;
   }
-  $html = ob_get_clean();
 
-  echo json_encode(array("html" => $html, "cartproductcount" => count($data)));
-  exit;
-}
+  add_action('wp_ajax_nopriv_as_removeproduct', 'as_removeproduct');
+  add_action('wp_ajax_as_removeproduct', 'as_removeproduct');
 
-add_action('wp_ajax_nopriv_as_emptycart', 'as_emptycart');
-add_action('wp_ajax_as_emptycart', 'as_emptycart');
-function as_emptycart()
-{
-  if (is_user_logged_in()) {
-    $current_user = wp_get_current_user();
-    $user_id = (string)$current_user->ID;
-  } else if (isset($_COOKIE['user_cart_id'])) {
-    $user_id = $_COOKIE['user_cart_id'];
-  } else {
-    $user_cart_id = random_strings(8);
-    setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
-    $user_id = $user_cart_id;
-  }
-  global $wpdb;
-  $wpdb->delete('session_management', ['cart_user_id' => $user_id]);
-  ob_start();
-  ?>
-  <div class="container-fluid  mt-100">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-body cart">
-            <div class="col-sm-12 empty-cart-cls text-center">
-              <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
-              <h3><strong>Your Cart is Empty</strong></h3>
-              <h4>Add something to make me happy </h4>
-              <a href="<?php echo get_post_type_archive_link('product'); ?>" class=" btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
-                </svg></a>
-            </div>
-          </div>
-        </div>
-
-
-      </div>
-
-    </div>
-
-  </div>
-<?php
-  exit;
-}
-
-add_action("wp", "product_discount");
-
-function product_discount()
-{
-  $obj = get_queried_object();
-
-  // print_r($obj);
-  if (is_singular('product') && $obj->post_type == "product") {
-    global $wpdb;
-    if (is_user_logged_in()) {
-      $current_user = wp_get_current_user();
-      $user_id = (string)$current_user->ID;
-      $post_id = $obj->ID;
-      $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$post_id");
-      if (!empty($product_data)) {
-        $addcount = $product_data[0]->count_product + 1;
-
-        $wpdb->update(
-          'product_discount',
-          array(
-            'count_product' => $addcount,
-          ),
-          array(
-            'user_id' => $user_id,
-            'product_id' => $post_id,
-          )
-        );
-      } else {
-        $wpdb->insert(
-          'product_discount',
-          array(
-            'user_id' => $user_id,
-            'product_id' => $post_id,
-            'count_product' => 1
-          )
-        );
-      }
-    }
-  }
-}
-add_filter("get_product_discountprice", "get_product_discountprice", 10, 2);
-
-function get_product_discountprice($price, $product_id)
-{
-  global $wpdb;
-  if (is_user_logged_in()) {
-    $current_user = wp_get_current_user();
-    $user_id = (string) $current_user->ID;
-    $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$product_id", ARRAY_A);
-
-    if ($product_data && $product_data[0]['count_product'] > 3) {
-      $discounted_price = (int) $price - ((int) $price * 0.10);
-      $discounted_price = round($discounted_price, 2);
-      return array("sale_price" => $discounted_price, "regular_price" => (int)$price);
-    } else {
-      return array("sale_price" => (int)$price, "regular_price" => (int)$price);
-    }
-  }
-  return array("sale_price" => (int)$price, "regular_price" => (int)$price);
-}
-
-
-
-// register a custom post type for coupon
-
-function as_coupon()
-{
-  $Coupon = array(
-    'name' => 'Coupon',
-    'label' => __('Coupon'),
-    'supports' => array('title', 'editor', 'author'),
-    'public' => true,
-    'has_archive' => true,
-    'menu_icon' => 'dashicons-money-alt'
-  );
-
-  register_post_type('as_coupon', $Coupon);
-}
-add_action('init', 'as_coupon');
-
-add_action('wp_ajax_nopriv_as_couponcode', 'as_couponcode');
-add_action('wp_ajax_as_couponcode', 'as_couponcode');
-
-
-
-
-
-
-
-function as_couponcode()
-{
-  print_r($_POST);
-  global $wpdb;
-
-  $args = array(
-    'post_type' => 'as_coupon',
-    's' => $_POST['coupon']
-
-  );
-  $posts = new WP_Query($args);
-  // echo "<pre>";
-  // print_r($posts);
-
-  if ($posts->have_posts()) {
-    $coupon_id = $posts->post->ID;
+  function as_removeproduct()
+  {
     if (is_user_logged_in()) {
       $current_user = wp_get_current_user();
       $user_id = (string)$current_user->ID;
@@ -1266,8 +1101,9 @@ function as_couponcode()
     global $wpdb;
     $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
     $data = maybe_unserialize($retrieve_data[0]['session_data']);
+    //  print_r($data);
+    unset($data['product'][$_POST['id']]);
 
-    $data['coupen_code'] = $coupon_id;
     $wpdb->update(
       'session_management',
       array(
@@ -1277,43 +1113,634 @@ function as_couponcode()
         "cart_user_id" => $user_id
       )
     );
+
+    $coupon_id = $data['coupen_code'];
+    $coupon_discount = get_post_meta($coupon_id, 'as_coupon_discount', true);
+    $type_discount = get_post_meta($coupon_id, 'type_discount', true);
+    $grandtotal = 100;
+    $as_subtotal = 0;
+    $as_new_subtotal = 100;
+
+    ob_start();
+
+
+    if (!empty($data['product'])) {
+    ?>
+      <div class="col-9 product-table">
+        <div class="row">
+          <div class="col-2 pt-3"><b>Image</b></div>
+          <div class="col-2 pt-3"><b>Product</b></div>
+          <div class="col-2 pt-3"><b>Price</b></div>
+          <div class="col-2 pt-3"><b>Quantity</b></div>
+          <div class="col-2 pt-3"><b>Sub Total</b></div>
+          <div class="col-2 pt-3"><b>Remove Product</b></div>
+        </div>
+        <?php
+
+
+        foreach ($data['product'] as $productId => $qty) {
+        ?>
+          <div class="row">
+            <div class="col-2 pt-3">
+              <img src="<?php echo get_the_post_thumbnail_url($productId) ?>" width="100px" height="100px">
+
+            </div>
+            <div class="col-2 pt-3">
+              <?php echo get_the_title($productId);
+              ?>
+
+            </div>
+            <div class="col-2 pt-3">
+              <?php
+              $product_id = $productId;
+              $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
+              // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
+
+              if ($price['sale_price'] != $price['regular_price']) {
+                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+              } else {
+              ?>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                  <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                </svg>
+              <?php
+                echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+              }
+              ?>
+
+            </div>
+            <div class="col-2 pt-3">
+              <form method="post" class="product-form">
+
+                <input type="button" value="-" name="decrement" class="decrement" data-id="<?php echo $productId ?>" <?php if ($qty == 1) {
+                                                                                                                        echo "disabled='disabled'";
+                                                                                                                      } ?> />
+                <input type="text" class="w-20 quantity" name="quantity" value="<?php echo $qty; ?>" readonly />
+                <input type="button" value="+" name="increment" class="increment" data-id="<?php echo $productId ?>" />
+              </form>
+            </div>
+            <div class="col-2 pt-3">
+              <?php
+
+
+              $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty;
+              $newprice = $price['sale_price'] * (int) $qty;
+
+
+              if ($subtotal != $newprice) {
+                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+</svg>'
+                  . number_format($subtotal) . '</del>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+<path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+</svg>'
+                  . number_format($newprice);
+              } else {
+              ?>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                  <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                </svg>
+              <?php
+                echo number_format($subtotal);
+              }
+              $as_subtotal += $subtotal;
+              $grandtotal += $subtotal;
+
+              ?>
+            </div>
+            <div class="col-2 pt-3">
+              <form method="post">
+                <button name="remove" type="button" class="btn btn-danger as_cart_item_remove" value="<?php echo $productId ?>" data-id="<?php echo $productId ?>">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                  </svg>Remove</button>
+              </form>
+            </div>
+          </div>
+        <?php
+        }
+        ?>
+      </div>
+      <div class="col-3 billing-details pt-5">
+        <div class="form-group"> <label>Have coupon?</label>
+          <div class="input-group">
+            <?php
+            ?>
+            <input type="text" class="form-control coupon" placeholder="Coupon code" value=<?php echo get_the_title($coupon_id); ?> />
+            <span class="input-group-append"><button class="btn btn-primary btn-apply as_coupon">Apply</button>
+            </span>
+            <div>
+              <span class="input-group-append">Coupen Code "<?php echo get_the_title($coupon_id); ?>" Apply Sucessfully</span>
+            </div>
+          </div>
+        </div>
+        <div class="totals">
+          <div class="totals-item">
+            Total Products
+            <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i>
+
+              <?php
+                    $coupon_price = (int) $as_subtotal * (100 - $coupon_discount) / 100;
+                    $coupon_price = round($coupon_price, 2);
+              if ($type_discount == 'percentage_discount') {
+          
+              
+                  echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($coupon_price);
+                
+              } else if ($type_discount == 'fix_discount') {
+               
+               
+                  echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($coupon_price);
+                
+              }
+              else {
+                echo number_format($newprice);
+              }
+              ?>
+            </div>
+          </div>
+          <div class="totals-item">
+            Delivery charges
+            <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+              </svg>100</div>
+          </div>
+          <div class="totals-item totals-item-total">
+            Grand Total
+            <div class="totals-value" id="cart-total">
+              <div class="totals-value" id="cart-total">
+                <?php
+                $coupon_price = (int) $as_subtotal - $coupon_discount;
+
+
+                if ($coupon_price != $as_subtotal) {
+                  echo '<del>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($grandtotal) . '</del>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($coupon_price += $as_new_subtotal);
+                } else {
+                ?>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                  </svg>
+                <?php
+                  echo number_format($grandtotal);
+                }
+                ?>
+
+              </div>
+            </div>
+          </div>
+          <a href="<?php echo get_permalink(103); ?>"><button class="checkout">Checkout</button></a>
+        </div>
+      <?php
+    } else {
+      ?>
+        <div class="container-fluid  mt-100">
+          <div class="row">
+
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-body cart">
+                  <div class="col-sm-12 empty-cart-cls text-center">
+                    <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+                    <h3><strong>Your Cart is Empty</strong></h3>
+                    <h4>Add something to make me happy </h4>
+                    <a href="<?php echo get_post_type_archive_link('product'); ?>" class=" btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                      </svg></a>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+          </div>
+
+        </div>
+      <?php
+    }
+    $html = ob_get_clean();
+
+    echo json_encode(array("html" => $html, "cartproductcount" => count($data)));
+    exit;
   }
-  // $coupon_id=get_the_ID();
-if ($data['coupen_code']>0){
 
-  $coupon_discount = get_post_meta(get_the_ID(), 'as_coupon_discount', true);
-  print_r($coupon_discount);
+  add_action('wp_ajax_nopriv_as_emptycart', 'as_emptycart');
+  add_action('wp_ajax_as_emptycart', 'as_emptycart');
 
-}
+  function as_emptycart()
+  {
+    if (is_user_logged_in()) {
+      $current_user = wp_get_current_user();
+      $user_id = (string)$current_user->ID;
+    } else if (isset($_COOKIE['user_cart_id'])) {
+      $user_id = $_COOKIE['user_cart_id'];
+    } else {
+      $user_cart_id = random_strings(8);
+      setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
+      $user_id = $user_cart_id;
+    }
+    global $wpdb;
+    $wpdb->delete('session_management', ['cart_user_id' => $user_id]);
+    ob_start();
+      ?>
+      <div class="container-fluid  mt-100">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body cart">
+                <div class="col-sm-12 empty-cart-cls text-center">
+                  <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+                  <h3><strong>Your Cart is Empty</strong></h3>
+                  <h4>Add something to make me happy </h4>
+                  <a href="<?php echo get_post_type_archive_link('product'); ?>" class=" btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                      <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                    </svg></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-}
+      </div>
+    <?php
+    exit;
+  }
 
-function as_couponcode_metabox()
-{
-  add_meta_box('test-meta-id', 'Coupon_Discount', 'Coupon_Discount_display', 'as_coupon');
-}
-add_action('add_meta_boxes', 'as_couponcode_metabox');
+  add_action("wp", "product_discount");
 
-function Coupon_Discount_display($post)
-{
+  function product_discount()
+  {
+    $obj = get_queried_object();
 
-  $coupon_discount = get_post_meta($post->ID, 'as_coupon_discount', true);
+    // print_r($obj);
+    if (is_singular('product') && $obj->post_type == "product") {
+      global $wpdb;
+      if (is_user_logged_in()) {
+        $current_user = wp_get_current_user();
+        $user_id = (string)$current_user->ID;
+        $post_id = $obj->ID;
+        $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$post_id");
+        if (!empty($product_data)) {
+          $addcount = $product_data[0]->count_product + 1;
 
-?>
-  <label for="new_meta"> Coupon_Discount </label>
-  <input type="text" id="as_discount_id" name="as_discount_id" value="<?php echo $coupon_discount ?>"/>
+          $wpdb->update(
+            'product_discount',
+            array(
+              'count_product' => $addcount,
+            ),
+            array(
+              'user_id' => $user_id,
+              'product_id' => $post_id,
+            )
+          );
+        } else {
+          $wpdb->insert(
+            'product_discount',
+            array(
+              'user_id' => $user_id,
+              'product_id' => $post_id,
+              'count_product' => 1
+            )
+          );
+        }
+      }
+    }
+  }
+  add_filter("get_product_discountprice", "get_product_discountprice", 10, 2);
 
-<?php
-}
+  function get_product_discountprice($price, $product_id)
+  {
+    global $wpdb;
+    if (is_user_logged_in()) {
+      $current_user = wp_get_current_user();
+      $user_id = (string) $current_user->ID;
+      $product_data = $wpdb->get_results("SELECT * FROM product_discount WHERE user_id=$user_id AND product_id=$product_id", ARRAY_A);
 
-function save_coupon_discount($post_id)
-{
-  if (array_key_exists('as_discount_id', $_POST)) {
-    update_post_meta(
-      $post_id,
-      'as_coupon_discount',
-      $_POST['as_discount_id']
+      if ($product_data && $product_data[0]['count_product'] > 3) {
+        $discounted_price = (int) $price - ((int) $price * 0.10);
+        $discounted_price = round($discounted_price, 2);
+        return array("sale_price" => $discounted_price, "regular_price" => (int)$price);
+      } else {
+        return array("sale_price" => (int)$price, "regular_price" => (int)$price);
+      }
+    }
+    return array("sale_price" => (int)$price, "regular_price" => (int)$price);
+  }
+
+
+
+  // register a custom post type for coupon
+
+  function as_coupon()
+  {
+    $Coupon = array(
+      'name' => 'Coupon',
+      'label' => __('Coupon'),
+      'supports' => array('title', 'editor', 'author'),
+      'public' => true,
+      'has_archive' => true,
+      'menu_icon' => 'dashicons-money-alt'
     );
+
+    register_post_type('as_coupon', $Coupon);
   }
-}
-add_action('save_post', 'save_coupon_discount');
+  add_action('init', 'as_coupon');
+
+  add_action('wp_ajax_nopriv_as_couponcode', 'as_couponcode');
+  add_action('wp_ajax_as_couponcode', 'as_couponcode');
+
+  function as_couponcode()
+  {
+    // print_r($_POST);
+    global $wpdb;
+
+    $args = array(
+      'post_type' => 'as_coupon',
+      's' => $_POST['coupon']
+
+    );
+    $posts = new WP_Query($args);
+    // echo "<pre>";
+    // print_r($posts);
+
+    if ($posts->have_posts()) {
+      $coupon_id = $posts->post->ID;
+      if (is_user_logged_in()) {
+        $current_user = wp_get_current_user();
+        $user_id = (string)$current_user->ID;
+      } else if (isset($_COOKIE['user_cart_id'])) {
+        $user_id = $_COOKIE['user_cart_id'];
+      } else {
+        $user_cart_id = random_strings(8);
+        setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
+        $user_id = $user_cart_id;
+      }
+      global $wpdb;
+      $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
+      $data = maybe_unserialize($retrieve_data[0]['session_data']);
+
+      $data['coupen_code'] = $coupon_id;
+      $wpdb->update(
+        'session_management',
+        array(
+          'session_data' => serialize($data),
+        ),
+        array(
+          "cart_user_id" => $user_id
+        )
+      );
+    }
+    $coupon_id = $posts->post->ID;
+
+
+    // print_r($coupon_id);
+
+    $coupon_discount = get_post_meta($coupon_id, 'as_coupon_discount', true);
+    $type_discount = get_post_meta($coupon_id, 'type_discount', true);
+
+    // print_r($coupon_discount);
+    // print_r($type_discount);
+    $grandtotal = 100;
+    $as_subtotal = 0;
+    $as_new_subtotal = 100;
+    ob_start();
+    ?>
+      <div class="col-9 product-table">
+        <div class="row">
+          <div class="col-2 pt-3"><b>Image</b></div>
+          <div class="col-2 pt-3"><b>Product</b></div>
+          <div class="col-2 pt-3"><b>Price</b></div>
+          <div class="col-2 pt-3"><b>Quantity</b></div>
+          <div class="col-2 pt-3"><b>Sub Total</b></div>
+          <div class="col-2 pt-3"><b>Remove Product</b></div>
+        </div>
+        <?php
+
+
+        foreach ($data['product'] as $productId => $qty) {
+        ?>
+          <div class="row">
+            <div class="col-2 pt-3">
+              <img src="<?php echo get_the_post_thumbnail_url($productId) ?>" width="100px" height="100px">
+
+            </div>
+            <div class="col-2 pt-3">
+              <?php echo get_the_title($productId);
+              ?>
+
+            </div>
+            <div class="col-2 pt-3">
+              <?php
+              $product_id = $productId;
+              $price = apply_filters("get_product_discountprice", get_post_meta($product_id, 'ecommerce_price', true), $product_id);
+              // echo number_format($price, ((int) $price == $price ? 0 : 2), '.', ',');
+
+              if ($price['sale_price'] != $price['regular_price']) {
+                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                  . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                  . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+              } else {
+              ?>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                  <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                </svg>
+              <?php
+                echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+              }
+              ?>
+
+            </div>
+            <div class="col-2 pt-3">
+              <form method="post" class="product-form">
+
+                <input type="button" value="-" name="decrement" class="decrement" data-id="<?php echo $productId ?>" <?php if ($qty == 1) {
+                                                                                                                        echo "disabled='disabled'";
+                                                                                                                      } ?> />
+                <input type="text" class="w-20 quantity" name="quantity" value="<?php echo $qty; ?>" readonly />
+                <input type="button" value="+" name="increment" class="increment" data-id="<?php echo $productId ?>" />
+              </form>
+            </div>
+            <div class="col-2 pt-3">
+
+              <?php
+
+
+              $subtotal = get_post_meta($productId, "ecommerce_price", true) * (int) $qty;
+              $newprice = $price['sale_price'] * (int) $qty;
+
+
+              if ($subtotal != $newprice) {
+                echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+</svg>'
+                  . number_format($subtotal) . '</del>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+<path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+</svg>'
+                  . number_format($newprice);
+              } else {
+              ?>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                  <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                </svg>
+              <?php
+                echo number_format($subtotal);
+              }
+              $as_subtotal += $subtotal;
+              $grandtotal += $subtotal;
+
+              ?>
+            </div>
+            <div class="col-2 pt-3">
+              <form method="post">
+                <button name="remove" type="button" class="btn btn-danger as_cart_item_remove" value="<?php echo $productId ?>" data-id="<?php echo $productId ?>">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                  </svg>Remove</button>
+              </form>
+            </div>
+          </div>
+        <?php
+        }
+        ?>
+      </div>
+      <div class="col-3 billing-details pt-5">
+        <div class="form-group"> <label>Have coupon?</label>
+          <div class="input-group">
+            <input type="text" class="form-control coupon" placeholder="Coupon code" value=<?php echo $_POST['coupon']; ?> />
+            <span class="input-group-append"><button class="btn btn-primary btn-apply as_coupon">Apply</button>
+            </span>
+            <div>
+              <span class="input-group-append">Coupen Code "<?php echo $_POST['coupon']; ?>" Apply Sucessfully</span>
+            </div>
+          </div>
+        </div>
+        <div class="totals">
+          <div class="totals-item">
+            Total Products
+            <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i>
+
+              <?php
+               $coupon_price = (int) $as_subtotal * (100 - $coupon_discount) / 100;
+               $coupon_price = round($coupon_price, 2);
+              if ($type_discount == 'percentage_discount') {
+                echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($coupon_price);
+                
+              } else if ($type_discount == 'fix_discount') {
+                 echo '<del>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($as_subtotal) . '</del>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($coupon_price);
+                }
+               else {
+                echo number_format($newprice);
+              }
+              ?>
+            </div>
+          </div>
+          <div class="totals-item">
+            Delivery charges
+            <div class="totals-value" id="cart-shipping"><i class="fa fa-inr"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+              </svg>100</div>
+          </div>
+          <div class="totals-item totals-item-total">
+            Grand Total
+            <div class="totals-value" id="cart-total">
+              <div class="totals-value" id="cart-total">
+                <?php
+                $coupon_price = (int) $as_subtotal - $coupon_discount;
+
+
+                if ($coupon_price != $as_subtotal) {
+                  echo '<del>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($grandtotal) . '</del>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($coupon_price += $as_new_subtotal);
+                } else {
+                ?>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                  </svg>
+                <?php
+                  echo number_format($grandtotal);
+                }
+                ?>
+
+              </div>
+            </div>
+          </div>
+          <a href="<?php echo get_permalink(103); ?>"><button class="checkout">Checkout</button></a>
+        </div>
+      <?php
+
+      echo ob_get_clean();
+      exit;
+      // $coupon_id=get_the_ID();
+
+    }
+
+
+    function as_couponcode_metabox()
+    {
+      add_meta_box('test-meta-id', 'Coupon Discount', 'Coupon_Discount_display', 'as_coupon');
+    }
+    add_action('add_meta_boxes', 'as_couponcode_metabox');
+
+    function Coupon_Discount_display($post)
+    {
+
+      $coupon_discount = get_post_meta($post->ID, 'as_coupon_discount', true);
+      $type_discount = get_post_meta($post->ID, 'type_discount', true);
+
+
+      ?>
+        <label for="new_meta"> Coupon amount</label>
+        <input type="text" id="as_discount_id" name="as_discount_id" value="<?php echo $coupon_discount ?>" /></br>
+
+        <label for="new_meta">Discount type:</label><br>
+        <input type="radio" name="type_discount" value="fix_discount" <?php checked($type_discount, 'fix_discount'); ?>>Fix Discount
+        <input type="radio" name="type_discount" value="percentage_discount" <?php checked($type_discount, 'percentage_discount'); ?>>Percentage Discount<br>
+
+
+
+      <?php
+    }
+    function save_coupon_discount($post_id)
+    {
+      if (array_key_exists('as_discount_id', $_POST)) {
+        update_post_meta(
+          $post_id,
+          'as_coupon_discount',
+          $_POST['as_discount_id']
+        );
+      }
+      if (array_key_exists('type_discount', $_POST)) {
+        update_post_meta(
+          $post_id,
+          'type_discount',
+          $_POST['type_discount']
+        );
+      }
+    }
+    add_action('save_post', 'save_coupon_discount');

@@ -432,6 +432,8 @@ jQuery(document).on("click", ".as_coupon", function () {
     data: coupondata,
     success: function (response) {
        console.log(response);
-    },
+       jQuery(".product-section").html(response);
+
+  },
   });
 });
