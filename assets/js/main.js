@@ -279,12 +279,12 @@ jQuery(document).on("keyup", "#phone", function () {
 jQuery(document).on("click", ".increment", function () {
   // var quantity = jQuery(".quantity").val();
   var quantity = jQuery(this).siblings(".quantity").val();
-  var id = jQuery(this).attr("data-id");
+  var id_increment = jQuery(this).attr("data-id");
   // console.log(id);
   var addqty = parseInt(quantity) + 1;
   // console.log(addqty);
   let data = {
-    id: id,
+    id: id_increment,
     qtyupdate: addqty,
     action: "as_update_qty",
   };
@@ -293,20 +293,21 @@ jQuery(document).on("click", ".increment", function () {
     url: as_ecommerce_ajax_object.ajax_url,
     data: data,
     success: function (sucess) {
-      //  console.log(sucess);
-      jQuery(".product-section").html(sucess);
+      console.log(sucess);
+      let data = JSON.parse(sucess);
+      jQuery(".product-section").html(data.html);
     },
   });
 });
 
 jQuery(document).on("click", ".decrement", function () {
   var quantity = jQuery(this).siblings(".quantity").val();
-  var id = jQuery(this).attr("data-id");
+  var id_decrement = jQuery(this).attr("data-id");
   // console.log(id);
   var addqty = parseInt(quantity) - 1;
   // console.log(addqty);
   let data = {
-    id: id,
+    id: id_decrement,
     qtyupdate: addqty,
     action: "as_update_decrement_qty",
   };
@@ -316,21 +317,23 @@ jQuery(document).on("click", ".decrement", function () {
     url: as_ecommerce_ajax_object.ajax_url,
     data: data,
     success: function (sucess) {
-      //  console.log(sucess);
-      jQuery(".product-section").html(sucess);
+      console.log(sucess);
+      let data = JSON.parse(sucess);
+      jQuery(".product-section").html(data.html);
     },
   });
 });
 
 jQuery(document).on("click", ".as_cart_item_remove", function () {
-  var id = jQuery(this).attr("data-id");
+  var id_remove = jQuery(this).attr("data-id");
   let data = {
-    id: id,
+    id: id_remove,
     action: "as_removeproduct",
   };
   jQuery.ajax({
     type: "post",
     url: as_ecommerce_ajax_object.ajax_url,
+
     data: data,
     success: function (response) {
       console.log(response);
@@ -362,7 +365,6 @@ jQuery(document).on("click", ".emptycart", function () {
 
 jQuery(document).on("click", ".as_signup", function () {
   var userdata = {};
-
   var firstname = jQuery("#firstname").val();
   var lastname = jQuery("#lastname").val();
   var email = jQuery("#email").val();
@@ -395,7 +397,6 @@ jQuery(document).on("click", ".as_signup", function () {
 jQuery(document).on("click", ".as_signin", function () {
   var email = jQuery("#email").val();
   var password = jQuery("#password").val();
-
   let data = {
     email: email,
     password: password,
@@ -426,14 +427,13 @@ jQuery(document).on("click", ".as_coupon", function () {
     coupon: coupon,
     action: "as_couponcode",
   };
-   jQuery.ajax({
+  jQuery.ajax({
     type: "post",
     url: as_ecommerce_ajax_object.ajax_url,
     data: coupondata,
     success: function (response) {
-       console.log(response);
-       jQuery(".product-section").html(response);
-
-  },
+      console.log(response);
+      jQuery(".product-section").html(response);
+    },
   });
 });
