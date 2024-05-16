@@ -14,14 +14,37 @@ position:relative;
 }
 .footer {
   background-color: #d5e3ea;
-  height: 10%;
+  /* height: 10%; */
   text-align: center;
-  font-size: x-large;
+
   float: left;
   padding-top: 20px;
   width: 100%;
  
 }
+
+.footer_image img{ 
+    height: 191px;
+    width: 201px;
+    border-radius: 10%;
+}
+.box {
+  border-radius: 2px;
+  display: inline-block;
+  height: 200px;
+  margin: 15px;
+  position: relative;
+  width: 200px;
+  background: #fff;
+  border-radius: 30%
+ }
+.box-text {
+  padding-top: 28px;
+  margin-left: 10%;
+}
+
+
+
 span.cart_total {
   min-width:17px;
   min-height:17px;

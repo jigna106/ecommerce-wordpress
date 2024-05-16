@@ -1,8 +1,10 @@
 <?php
 get_header();
+?>
+<h1> archive page </h1>
 
-echo get_the_content();?>
-<h1> page </h1>
+
+
 <?php
 get_footer();
 ?>

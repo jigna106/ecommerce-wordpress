@@ -1,7 +1,4 @@
 <?php session_start();
-
-
-
 $issucess = "";
 global $wpdb;
 if (isset($_POST['addtocart'])) {

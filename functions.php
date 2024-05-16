@@ -21,7 +21,10 @@ function create_custom_post_type()
         'supports' => array('title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields'),
         'public' => true,
         'has_archive' => true,
-        'menu_icon' => 'dashicons-products'
+        'menu_icon' => 'dashicons-products',
+        'show_in_rest' => true,
+        'rest_base'          => 'result',
+        'rest_controller_class' => 'WP_REST_Posts_Controller',
     );
     add_theme_support('custom-header');
     add_theme_support('automatic-feed-links');
@@ -218,6 +221,9 @@ add_action('wp_ajax_as_contactdata', 'as_contactdata');
 
 
 
+
+
+
 function as_contactdata()
 {
     print_r($_POST);
@@ -317,28 +323,27 @@ function as_get_product_filter_color()
                         <?php the_title(); ?>
                     </div>
                     <div>
-              Price:
-             <?php
-                $product_id = $post->ID;
-                $price = apply_filters("get_product_discountprice",get_post_meta($post->ID, 'ecommerce_price',true), $product_id);
-                    
-                if($price['sale_price'] != $price['regular_price']){
-                 echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
-                .number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',').'</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
-                .number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
-                }
-                else{
-                    ?>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                      <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-                    </svg>
-                    <?php
-                    echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
-                }
-                // print_r($product_id);
-               ?>
+                        Price:
+                        <?php
+                        $product_id = $post->ID;
+                        $price = apply_filters("get_product_discountprice", get_post_meta($post->ID, 'ecommerce_price', true), $product_id);
 
-            </div>
+                        if ($price['sale_price'] != $price['regular_price']) {
+                            echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                                . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                                . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+                        } else {
+                        ?>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                            </svg>
+                        <?php
+                            echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+                        }
+                        // print_r($product_id);
+                        ?>
+
+                    </div>
                 </a>
             </div>
     <?php
@@ -1206,4 +1211,69 @@ function as_cartdata_display()
     $html = ob_get_clean();
 
     return $html;
+}
+
+// rest-api 
+add_action('rest_api_init', 'test_api');
+
+function test_api()
+{
+    register_rest_route('test/api', '/blogpost/', array(
+        'methods' => 'GET',
+        'callback' => 'get_test_data',
+        'args' => [
+            'id',
+            'Categories'
+        ]
+    ));
+}
+
+function get_test_data($request)
+{
+    $params = $request->get_params();
+    $args = array(
+        'type'                     => 'post',
+        'taxonomy'                 => 'category',
+
+
+    );
+
+    $resulte = array();
+    foreach (get_posts($args) as $post) {
+        $data = (array)$post;
+        $data["category"] = get_the_category($post->ID);
+        $data["post_image"] = wp_get_attachment_url(get_post_thumbnail_id($post->ID));
+        $resulte[] = $data;
+    }
+    echo json_encode($resulte);
+    exit;
+}
+
+
+add_action('rest_api_init', 'single_data');
+
+function single_data(){
+register_rest_route('test/singlepost','/slug/',  array(
+    'methods' => 'GET',
+    'callback' => 'post_single',
+
+));
+}
+
+function post_single($slug) {
+
+    $args = [
+        'name' => $slug['slug'],
+        'post_type' => 'post'
+    ];
+
+    $post = get_posts($args);
+
+        $data['id'] = $post[0]->ID;
+        $data['title'] = $post[0]->post_title;
+        $data['slug'] = $post[0]->post_name;
+        
+    
+    echo json_encode($data);                                                                                                             
+    exit;
 }
