@@ -42,7 +42,10 @@ position:relative;
   padding-top: 28px;
   margin-left: 10%;
 }
-
+p.text-uppercase.categories {
+  color: #437a9b;
+  padding-right: 22px;
+}
 
 
 span.cart_total {

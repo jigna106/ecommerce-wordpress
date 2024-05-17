@@ -1243,6 +1243,7 @@ function get_test_data($request)
         $data = (array)$post;
         $data["category"] = get_the_category($post->ID);
         $data["post_image"] = wp_get_attachment_url(get_post_thumbnail_id($post->ID));
+        $data["tags"] = wp_get_post_terms($post->ID);
         $resulte[] = $data;
     }
     echo json_encode($resulte);
@@ -1252,28 +1253,51 @@ function get_test_data($request)
 
 add_action('rest_api_init', 'single_data');
 
-function single_data(){
-register_rest_route('test/singlepost','/slug/',  array(
-    'methods' => 'GET',
-    'callback' => 'post_single',
+function single_data()
+{
+    register_rest_route('test/singlepost', '/(?P<slug>[a-zA-Z0-9-]+)',  array(
+        'methods' => 'GET',
+        'callback' => 'post_single',
 
-));
+    ));
 }
-
-function post_single($slug) {
+function post_single($request)
+{
+    $params = $request->get_params();
 
     $args = [
-        'name' => $slug['slug'],
-        'post_type' => 'post'
+        'name' => $params['slug'],
+        'type' => 'post'
     ];
+    $post = get_posts($args)[0];
 
-    $post = get_posts($args);
+    $data = (array)$post;
+    $data["category"] = get_the_category($post->ID);
+    $data["post_image"] = wp_get_attachment_url(get_post_thumbnail_id($post->ID));
+    $data["tags"] = wp_get_post_terms($post->ID);
 
-        $data['id'] = $post[0]->ID;
-        $data['title'] = $post[0]->post_title;
-        $data['slug'] = $post[0]->post_name;
-        
-    
-    echo json_encode($data);                                                                                                             
+    echo json_encode($data);
     exit;
+}
+
+add_action('rest_api_init', 'createpost');
+function createpost()
+{
+
+    register_rest_route('createpost', '/createpost/', array(
+        'method' => 'POST',
+        'callback' => 'createpostapi'
+   
+    ));
+}
+
+function createpostapi($request)
+{
+        $post_arr = array(
+        'post_title' => $_POST['firstName'] . " " . $_POST['lastName'],
+        'post_content' => $_POST['firstName'] . " " . $_POST['lastName'],
+        'post_status' => 'draft',
+        'type' => 'post'
+      );
+      $id = wp_insert_post($post_arr);
 }

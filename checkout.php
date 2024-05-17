@@ -20,11 +20,7 @@ if (is_user_logged_in()) {
     $id = wp_insert_post($post_arr);
 
     // print_r($id);
-
-
-
-
-    update_post_meta(
+update_post_meta(
       $id,
       'ecommerce_billing_data',
       $_POST

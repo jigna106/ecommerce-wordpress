@@ -1,67 +1,55 @@
 <?php
 get_header();
 
-$returnpostdata = wp_remote_get('http://192.168.1.16/wordpress/wp-json/test/singlepost/slug');
-//  print_r($returnpostdata)
-$json = json_decode($returnpostdata['body']);
+if (have_posts()) {
+  while (have_posts()) {
+    the_post();
+    global $post;
 
-// print_r($json);
+    $returnpostdata = wp_remote_get('http://192.168.1.16/wordpress/wp-json/test/singlepost/' . $post->post_name);
+    $singlepostdata = json_decode($returnpostdata['body'], true);
+
+
+    // echo "<pre>";
+    // print_r($singlepostdata);
+    // echo "</pre>";
 
 
 ?>
-<div class="container">
-    <div class="row  justify-content-between">
-        <div class="col-12 col-md-12 col-lg-6 img-thumbnail as-img-thumbnail">
-            <div class="row category-list-wrapper">
-                <?php
-                foreach ($json as $jsondata) {
-                ?>
-        <span>
-            <?php
-$categories= wp_get_post_terms($jsondata['category']);
-                echo $categories;
-                ?> 
-                   </span>
-                
-                <?php
-                }
-                ?>
-            </div>
-            <img src="<?php echo wp_get_attachment_url(get_post_thumbnail_id($jsondata->ID)) ?>" height=600px , width=600px />
+    <div>
+      <a href="<?php echo get_permalink($singlepostdata['ID']) ?>" class="font-weight-bold text-decoration-none text-body">
+
+        <div class="footer_image">
+          <img src="<?php echo $singlepostdata['post_image']; ?>" />
         </div>
-        <div class="col-12 col-md-12 col-lg-6 d-flex align-items-center">
-            <div class="pt-2">
+        <?php
+        foreach ($singlepostdata['category'] as $cat) {
+        ?>
+          <p class="text-uppercase categories"><?php echo "Categories: " . $cat['name'];
+                                              } ?></p>
 
 
-                <div class="product-title text-bold my-3">
-
-                    <div class="about">
-                        <span class="font-weight-bold">
-                            <h1 class="text-uppercase">
-                                <?php echo $jsondata->post_title; ?></h5>
-                                <p><?php echo $jsondata->post_content ?></p>
-                        </span>
-
-                    </div>
-
-
-                </div>
-            </div>
+          <?php
+          foreach ($singlepostdata['tags'] as $tag) {
+          ?>
+            <p class="text-uppercase categories"><?php echo "tags: " . $tag['name'];
+                                                } ?></p>
 
 
 
+            <h5 class=""><?php echo $singlepostdata['post_title']; ?></h5>
+            <p><?php echo $singlepostdata['post_content'] ?></p>
+            <p class="text-uppercase categories"><?php
+                                                  $dateofpost = $singlepostdata['post_date'];
+                                                  echo  date("F j, Y", strtotime($dateofpost));;
+                                                  ?></p>
 
 
-        </div>
-
-
-
+      </a>
 
     </div>
-</div>
-
-
 <?php
-
+  }
+}
 get_footer();
 ?>
