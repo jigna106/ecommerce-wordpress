@@ -1226,6 +1226,28 @@ function test_api()
             'Categories'
         ]
     ));
+    register_rest_route('test/singlepost', '/(?P<slug>[a-zA-Z0-9-]+)',  array(
+        'methods' => 'GET',
+        'callback' => 'post_single',
+
+    ));
+
+    register_rest_route('v1/posts', '/createpost/', array(
+        'methods' => 'POST',
+        'callback' => 'createpostapi'
+
+    ));
+
+    register_rest_route('v1/delete', '/deletepost/', array(
+        'methods' => 'DELETE',
+        'callback' => 'deletepostapi'
+
+    ));
+    register_rest_route('v1/update', '/updatepost/', array(
+        'methods' => 'PUT',
+        'callback' => 'updatepostapi'
+
+    ));
 }
 
 function get_test_data($request)
@@ -1235,9 +1257,7 @@ function get_test_data($request)
         'type'                     => 'post',
         'taxonomy'                 => 'category',
 
-
     );
-
     $resulte = array();
     foreach (get_posts($args) as $post) {
         $data = (array)$post;
@@ -1247,19 +1267,7 @@ function get_test_data($request)
         $resulte[] = $data;
     }
     echo json_encode($resulte);
-    exit;
-}
-
-
-add_action('rest_api_init', 'single_data');
-
-function single_data()
-{
-    register_rest_route('test/singlepost', '/(?P<slug>[a-zA-Z0-9-]+)',  array(
-        'methods' => 'GET',
-        'callback' => 'post_single',
-
-    ));
+    die();
 }
 function post_single($request)
 {
@@ -1277,27 +1285,49 @@ function post_single($request)
     $data["tags"] = wp_get_post_terms($post->ID);
 
     echo json_encode($data);
-    exit;
-}
-
-add_action('rest_api_init', 'createpost');
-function createpost()
-{
-
-    register_rest_route('createpost', '/createpost/', array(
-        'method' => 'POST',
-        'callback' => 'createpostapi'
-   
-    ));
+    die();
 }
 
 function createpostapi($request)
 {
-        $post_arr = array(
-        'post_title' => $_POST['firstName'] . " " . $_POST['lastName'],
-        'post_content' => $_POST['firstName'] . " " . $_POST['lastName'],
+    $post_arr = array(
+        'post_title' => $request['firstname'] . " " . $request['lastname'],
+        'post_content' => $request['descrption'],
+        'post_author'   => get_current_user_id(),
         'post_status' => 'draft',
-        'type' => 'post'
-      );
-      $id = wp_insert_post($post_arr);
+        'post_type' => 'post'
+    );
+    $id = wp_insert_post($post_arr);
+    set_post_thumbnail($id, $request['image_upload']);
+    wp_set_object_terms($id, $request['category'], 'category');
+    wp_set_object_terms($id, $request['tag'], 'post_tag');
 }
+
+function deletepostapi($request)
+{
+
+    $params = $request->get_params();
+    $id = wp_delete_post($params['id']);
+}
+
+function updatepostapi($request)
+{
+    $params = $request->get_params();
+
+    $id = $params['id'];
+
+    $args = [
+        'ID' => $params['id'],
+        'post_title' => $request['firstname'] . " " . $request['lastname'],
+        'post_content' => $request['descrption']
+    ];
+
+    $updatedData = wp_update_post($args);
+    set_post_thumbnail($updatedData, $request['image_upload']);
+    wp_set_object_terms($updatedData, $request['category'], 'category');
+    wp_set_object_terms($updatedData, $request['tag'], 'post_tag');
+
+    // $post = get_posts($args)[0];
+    //  echo json_encode($updatedData);
+    die();
+ }
