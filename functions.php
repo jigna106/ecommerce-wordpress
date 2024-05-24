@@ -1290,17 +1290,27 @@ function post_single($request)
 
 function createpostapi($request)
 {
+    $params = $request->get_params();
     $post_arr = array(
-        'post_title' => $request['firstname'] . " " . $request['lastname'],
-        'post_content' => $request['descrption'],
+        'post_title' => $params['title'],
+        'post_content' => $params['description'],
         'post_author'   => get_current_user_id(),
         'post_status' => 'draft',
         'post_type' => 'post'
     );
     $id = wp_insert_post($post_arr);
-    set_post_thumbnail($id, $request['image_upload']);
-    wp_set_object_terms($id, $request['category'], 'category');
-    wp_set_object_terms($id, $request['tag'], 'post_tag');
+    // set_post_thumbnail($id, $params['image_upload']);
+    wp_set_object_terms($id, $params['categories'], 'category');
+    wp_set_object_terms($id, $params['tags'], 'post_tag');
+    
+    
+    return new WP_REST_Response(
+    	array(
+    		'success' => true,
+    		"massage" => "post created success fully",
+    		"created_id" => $id
+    	), 
+    );
 }
 
 function deletepostapi($request)

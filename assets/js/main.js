@@ -437,3 +437,37 @@ jQuery(document).on("click", ".as_coupon", function () {
     },
   });
 });
+
+jQuery(document).on("keyup", "#title", function () {
+  var letters = /^[A-Za-z]+$/;
+  var title = jQuery("#title").val();
+
+  if (title && !letters.test(title)) {
+    jQuery(".title_error").text("Alphabets Only");
+
+    return false;
+  } else if (title == "") {
+    jQuery(".title_error").text("Must be fill out");
+
+    return false;
+  } else {
+    jQuery(".title_error").text("");
+    return true;
+  }
+});
+
+jQuery(document).on("keyup", "#description", function () {
+  var description = jQuery("#description").val();
+  if (description.length >= 20) {
+    jQuery(".description_error").text(" ");
+
+    return false;
+  } else if (description == "") {
+    jQuery(".description_error").text("Must be fill out");
+
+    return false;
+  } else {
+    jQuery(".description_error").text("entre detail description");
+    return true;
+  }
+});
