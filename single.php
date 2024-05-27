@@ -25,30 +25,37 @@ if (have_posts()) {
         <?php
         foreach ($singlepostdata['category'] as $cat) {
         ?>
-          <p class="text-uppercase categories"><?php echo "Categories: " . $cat['name'];
-                                              } ?></p>
+          <p class="text-uppercase categories"><?php echo "Categories: " . $cat['name']; ?></p>
+        <?php } ?>
 
 
-          <?php
-          foreach ($singlepostdata['tags'] as $tag) {
-          ?>
-            <p class="text-uppercase categories"><?php echo "tags: " . $tag['name'];
-                                                } ?></p>
+        <?php
+        foreach ($singlepostdata['tags'] as $tag) {
+        ?>
+          <p class="text-uppercase categories"><?php echo "tags: " . $tag['name']; ?></p>
+        <?php } ?>
 
 
 
-            <h5 class=""><?php echo $singlepostdata['post_title']; ?></h5>
-            <p><?php echo $singlepostdata['post_content'] ?></p>
-            <p class="text-uppercase categories"><?php
-                                                  $dateofpost = $singlepostdata['post_date'];
-                                                  echo  date("F j, Y", strtotime($dateofpost));;
-                                                  ?></p>
+        <h5 class=""><?php echo $singlepostdata['post_title']; ?></h5>
+        <p><?php echo $singlepostdata['post_content'] ?></p>
+        <p class="text-uppercase categories"><?php
+                                              $dateofpost = $singlepostdata['post_date'];
+                                              echo  date("F j, Y", strtotime($dateofpost));;
+                                              ?></p>
 
 
       </a>
 
     </div>
 <?php
+if (current_user_can('administrator')) {
+
+    // Runs only if this PHP code is in a file that displays outside the admin panels, like the theme template.
+      $id=get_the_ID();
+      echo '<div style="text-align: center"><a href="'.site_url()."/updatepost/?id=".$singlepostdata['ID'].'"> Edit This Post</a></div>';
+    
+    }
   }
 }
 get_footer();

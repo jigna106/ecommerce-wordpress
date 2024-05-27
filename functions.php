@@ -1244,7 +1244,7 @@ function test_api()
 
     ));
     register_rest_route('v1/update', '/updatepost/', array(
-        'methods' => 'PUT',
+        'methods' => 'POST',
         'callback' => 'updatepostapi'
 
     ));
@@ -1280,9 +1280,9 @@ function post_single($request)
     $post = get_posts($args)[0];
 
     $data = (array)$post;
-    $data["category"] = get_the_category($post->ID);
-    $data["post_image"] = wp_get_attachment_url(get_post_thumbnail_id($post->ID));
-    $data["tags"] = wp_get_post_terms($post->ID);
+    $data["category"] = get_the_category($data['ID']);
+    $data["post_image"] = wp_get_attachment_url(get_post_thumbnail_id($data['ID']));
+    $data["tags"] = wp_get_post_terms($data['ID']);
 
     echo json_encode($data);
     die();
@@ -1302,14 +1302,14 @@ function createpostapi($request)
     // set_post_thumbnail($id, $params['image_upload']);
     wp_set_object_terms($id, $params['categories'], 'category');
     wp_set_object_terms($id, $params['tags'], 'post_tag');
-    
-    
+
+
     return new WP_REST_Response(
-    	array(
-    		'success' => true,
-    		"massage" => "post created success fully",
-    		"created_id" => $id
-    	), 
+        array(
+            'success' => true,
+            "massage" => "post created success fully",
+            "created_id" => $id
+        )
     );
 }
 
@@ -1328,16 +1328,25 @@ function updatepostapi($request)
 
     $args = [
         'ID' => $params['id'],
-        'post_title' => $request['firstname'] . " " . $request['lastname'],
-        'post_content' => $request['descrption']
+        'post_title' => $params['title'],
+        'post_content' => $params['description'],
+        'post_date'     => date('Y-m-d H:i:s')
     ];
 
     $updatedData = wp_update_post($args);
-    set_post_thumbnail($updatedData, $request['image_upload']);
-    wp_set_object_terms($updatedData, $request['category'], 'category');
-    wp_set_object_terms($updatedData, $request['tag'], 'post_tag');
+    // set_post_thumbnail($updatedData, $request['image_upload']);
+    wp_set_object_terms($updatedData, $params['category'], 'category');
+    wp_set_object_terms($updatedData, $params['tag'], 'post_tag');
 
-    // $post = get_posts($args)[0];
+
+    return new WP_REST_Response(
+        array(
+            'success' => true,
+            "sucessupdatemsg" => "post updated success fully",
+
+        )
+    );
+    $post = get_posts($args)[0];
     //  echo json_encode($updatedData);
-    die();
- }
+    // die();
+}

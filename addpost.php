@@ -6,10 +6,10 @@ get_header();
 if (current_user_can('administrator')) {
 
     if (isset($_POST['addnewpost'])) {
-        $createdpostdata = wp_remote_post('http://192.168.1.16/wordpress/wp-json/v1/posts/createpost/',array("body"=>$_POST) );
+        $createdpostdata = wp_remote_post('http://192.168.1.16/wordpress/wp-json/v1/posts/createpost/', array("body" => $_POST));
         $postdata = json_decode($createdpostdata['body'], true);
         // print_r($postdata);
-        
+
         echo $postdata['massage'];
     }
 ?>
@@ -43,13 +43,16 @@ if (current_user_can('administrator')) {
                                     ?>
                                     <label for="title" class="form-label">Select Categories</label>
                                     <select name="categories" id="categories">
+                                        <option value="">select your categories</option>
                                         <?php
                                         foreach ($cats as $cat) {
                                         ?>
-                                            <option value=<?php echo $cat->name ?>><?php echo $cat->name ?></option>
+                                            <option value="<?php echo $cat->name ?>"><?php echo $cat->name ?></option>
 
                                         <?php
                                         } ?>
+                                        <div class="selectcategories_error error"></div>
+
                                     </select>
                                 </div>
                             </div>
@@ -64,6 +67,7 @@ if (current_user_can('administrator')) {
                                     ?>
                                     <label for="title" class="form-label">Select tags</label>
                                     <select name="tags" id="tags">
+                                        <option value="">select your tags</option>
                                         <?php
                                         foreach ($tags as $tag) {
                                         ?>
@@ -71,12 +75,13 @@ if (current_user_can('administrator')) {
 
                                         <?php
                                         } ?>
+                                          <div class="selecttags_error error"></div>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="d-grid">
-                                    <input class="btn btn-primary" type="submit" name="addnewpost" id="addnewpost" value="ADDNEWPOST" />
+                                    <input class="btn btn-primary" type="submit" name="addnewpost" id="addnewpost" value="ADDNEWPOST" style="display: none "   />
                                 </div>
                             </div>
                         </div>

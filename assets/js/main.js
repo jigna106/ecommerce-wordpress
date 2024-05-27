@@ -439,17 +439,14 @@ jQuery(document).on("click", ".as_coupon", function () {
 });
 
 jQuery(document).on("keyup", "#title", function () {
+  addpostdisable();
   var letters = /^[A-Za-z]+$/;
   var title = jQuery("#title").val();
 
   if (title && !letters.test(title)) {
     jQuery(".title_error").text("Alphabets Only");
-
-    return false;
   } else if (title == "") {
     jQuery(".title_error").text("Must be fill out");
-
-    return false;
   } else {
     jQuery(".title_error").text("");
     return true;
@@ -457,17 +454,85 @@ jQuery(document).on("keyup", "#title", function () {
 });
 
 jQuery(document).on("keyup", "#description", function () {
+  addpostdisable();
   var description = jQuery("#description").val();
   if (description.length >= 20) {
     jQuery(".description_error").text(" ");
-
-    return false;
   } else if (description == "") {
     jQuery(".description_error").text("Must be fill out");
-
-    return false;
   } else {
     jQuery(".description_error").text("entre detail description");
     return true;
   }
 });
+
+jQuery(document).on("change", "#categories", function () {
+  checkcategories();
+  addpostdisable();
+});
+function checkcategories() {
+  var categories = jQuery("#categories").val();
+  console.log(categories);
+  if (categories == " ") {
+    jQuery("#selectcategories_error").html("select any one");
+  } else {
+    jQuery("#selectcategories_error").html(" ");
+  }
+}
+jQuery(document).on("change", "#tags", function () {
+  checktags();
+  addpostdisable();
+});
+function checktags() {
+  var tags = jQuery("#tags").val();
+  console.log(tags);
+  if (tags == " ") {
+    jQuery("#selecttags_error").html("select any one");
+  } else {
+    jQuery("#selecttags_error").html(" ");
+  }
+}
+function addpostdisable() {
+  var returnvalue = false;
+
+  var letters = /^[A-Za-z]+$/;
+  var title = jQuery("#title").val();
+
+  if (!letters.test(title)) {
+    console.log("10");
+    returnvalue = true;
+  } else if (title == "") {
+    console.log("11");
+    returnvalue = true;
+  }
+
+  var description = jQuery("#description").val();
+
+  if (description.length <= 20) {
+    console.log("12");
+    returnvalue = true;
+  } else if (description == "") {
+    console.log("13");
+    returnvalue = true;
+  }
+
+  var tags = jQuery("#tags").val();
+  var categories = jQuery("#categories").val();
+  if (categories == "") {
+    console.log("14");
+    returnvalue = true;
+  }
+
+  if (tags == "") {
+    console.log("15");
+    returnvalue = true;
+  }
+
+  if (returnvalue == true) {
+    // true
+    jQuery("#addnewpost").hide();
+  } else {
+    // false
+    jQuery("#addnewpost").show();
+  }
+}
