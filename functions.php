@@ -206,7 +206,8 @@ function wpdocs_theme_name_scripts()
         'as_ecommerce_ajax_object',
         array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'cart_itmes_data' => count(isset($data['product']) ? $data['product'] : array())
+            'cart_itmes_data' => count(isset($data['product']) ? $data['product'] : array()),
+            'rest_url' => get_rest_url() . "v1/as-post/"
         )
     );
 }
@@ -1218,7 +1219,7 @@ add_action('rest_api_init', 'test_api');
 
 function test_api()
 {
-    register_rest_route('test/api', '/blogpost/', array(
+    register_rest_route('v1/as-post', '/list/', array(
         'methods' => 'GET',
         'callback' => 'get_test_data',
         'args' => [
@@ -1226,24 +1227,24 @@ function test_api()
             'Categories'
         ]
     ));
-    register_rest_route('test/singlepost', '/(?P<slug>[a-zA-Z0-9-]+)',  array(
+    register_rest_route('v1/as-post', '/(?P<slug>[a-zA-Z0-9-]+)',  array(
         'methods' => 'GET',
         'callback' => 'post_single',
 
     ));
 
-    register_rest_route('v1/posts', '/createpost/', array(
+    register_rest_route('v1/as-post', '/create/', array(
         'methods' => 'POST',
         'callback' => 'createpostapi'
 
     ));
 
-    register_rest_route('v1/delete', '/deletepost/', array(
+    register_rest_route('v1/as-post', '/delete/', array(
         'methods' => 'DELETE',
         'callback' => 'deletepostapi'
 
     ));
-    register_rest_route('v1/update', '/updatepost/', array(
+    register_rest_route('v1/as-post', '/update/', array(
         'methods' => 'POST',
         'callback' => 'updatepostapi'
 
@@ -1315,38 +1316,43 @@ function createpostapi($request)
 
 function deletepostapi($request)
 {
-
     $params = $request->get_params();
-    $id = wp_delete_post($params['id']);
+    
+    $deleteData = wp_delete_post($params['postid']);
+
+    return new WP_REST_Response(
+        array(
+            'success' => true,
+            "sucessupdatemsg" => "Delete post  success fully",
+        )
+    );
 }
 
 function updatepostapi($request)
 {
     $params = $request->get_params();
 
-    $id = $params['id'];
 
+    // print_R($params);
+    // exit;
     $args = [
-        'ID' => $params['id'],
-        'post_title' => $params['title'],
-        'post_content' => $params['description'],
+        'ID' => $params['postid'],
+        'post_title' => $params['updatedtitle'],
+        'post_content' => $params['updatedescription'],
         'post_date'     => date('Y-m-d H:i:s')
     ];
 
     $updatedData = wp_update_post($args);
     // set_post_thumbnail($updatedData, $request['image_upload']);
-    wp_set_object_terms($updatedData, $params['category'], 'category');
-    wp_set_object_terms($updatedData, $params['tag'], 'post_tag');
-
-
+    wp_set_object_terms($updatedData, $params['categories'], 'category');
+    wp_set_object_terms($updatedData, $params['tags'], 'post_tag');
     return new WP_REST_Response(
         array(
             'success' => true,
             "sucessupdatemsg" => "post updated success fully",
-
         )
     );
-    $post = get_posts($args)[0];
+    // $post = get_posts($args)[0];
     //  echo json_encode($updatedData);
-    // die();
+    die();
 }

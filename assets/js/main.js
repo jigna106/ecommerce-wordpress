@@ -516,13 +516,12 @@ function addpostdisable() {
     returnvalue = true;
   }
 
-  var tags = jQuery("#tags").val();
   var categories = jQuery("#categories").val();
   if (categories == "") {
     console.log("14");
     returnvalue = true;
   }
-
+  var tags = jQuery("#tags").val();
   if (tags == "") {
     console.log("15");
     returnvalue = true;
@@ -536,3 +535,88 @@ function addpostdisable() {
     jQuery("#addnewpost").show();
   }
 }
+
+// insert post using api
+jQuery(document).on("click", "#addnewpost", function () {
+  var title = jQuery("#title").val();
+  var description = jQuery("#description").val();
+  var categories = jQuery("#categories").val();
+  var tags = jQuery("#tags").val();
+  let addpostdata = {
+    title: title,
+    description: description,
+    categories: categories,
+    tags: tags,
+  };
+  jQuery.ajax({
+    method: "POST",
+    url:  as_ecommerce_ajax_object.rest_url + "create/",
+    data: addpostdata,
+    success: function (response) {
+      console.log(response);
+    },
+  });
+});
+
+// get data using ajax and api
+jQuery(document).ready(function () {
+  var postname = jQuery("#postname").val();
+
+  jQuery.ajax({
+    method: "GET",
+    url:as_ecommerce_ajax_object.rest_url + postname,
+    success: function (response) {
+      // console.log(response);
+      jQuery("#postid").val(response.ID);
+      jQuery("#updatedtitle").val(response.post_title);
+      jQuery("#updatedescription").val(response.post_content);
+      jQuery("#categories").val(response.category[0].cat_name);
+      jQuery("#tags").val(response.tags[0].name);
+    },
+  });
+});
+
+
+jQuery(document).on("click", "#updatepost", function () {
+  var postid= jQuery("#postid").val();
+  var updatedtitle = jQuery("#updatedtitle").val();
+  var updatedescription = jQuery("#updatedescription").val();
+  var categories = jQuery("#categories").val();
+  var tags = jQuery("#tags").val();
+
+  let upddateddata = {
+    postid:postid,
+    updatedtitle: updatedtitle,
+    updatedescription: updatedescription,
+    categories: categories,
+    tags: tags,
+  };
+  jQuery.ajax({
+    method: "POST",
+    url: as_ecommerce_ajax_object.rest_url + "update/",
+    data: upddateddata,
+    success: function (response) {
+      console.log(response);
+     
+    },
+  });       
+});
+
+jQuery(document).on("click","#deletepost",function(){
+ var postid = jQuery("#postid").val();
+//  console.log(postid);
+
+ let deletedata = {
+  postid:postid,
+ };
+
+ jQuery.ajax({
+  method: "DELETE",
+  url: as_ecommerce_ajax_object.rest_url + "delete/",
+  data: deletedata,
+  success: function (response) {
+    console.log(response);
+   
+  },
+});  
+});

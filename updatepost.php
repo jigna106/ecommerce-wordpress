@@ -4,19 +4,22 @@ get_header();
 
 
 if (current_user_can('administrator')) {
-    if (isset($_POST['updatepost'])) {
-        $updatepostdata = wp_remote_post('http://192.168.1.16/wordpress/wp-json/v1/update/updatepost/',array("body" => $_POST));
-        $updatedpostdata = json_decode($updatepostdata['body'], true);
-        //  print_r($updatedpostdata);
-        echo $updatedpostdata['sucessupdatemsg'];
-    }
+    // if (isset($_POST['updatepost'])) {
+    //     $data = $_POST;
+    //     $data['id'] = $_GET['id'];
+    //     $updatepostdata = wp_remote_post('http://192.168.1.16/wordpress/wp-json/v1/update/updatepost/', array("body" => $data));
+    //     $updatedpostdata = json_decode($updatepostdata['body'], true);
+      
+    //     // print_r($updatepostdata);
+    // }
 
     if (have_posts()) {
         while (have_posts()) {
             the_post();
 
-            $returnpostdata = wp_remote_get('http://192.168.1.16/wordpress/wp-json/test/singlepost/' . get_post($_GET['id'])->post_name);
-            $singlepostdata = json_decode($returnpostdata['body'], true);
+
+                        // $returnpostdata = wp_remote_get('http://192.168.1.16/wordpress/wp-json/test/singlepost/' . $_GET['postname']);
+            // $singlepostdata = json_decode($returnpostdata['body'], true);
 
             // print_r($singlepostdata);
 ?>
@@ -27,16 +30,20 @@ if (current_user_can('administrator')) {
                         <div class="col-12 col-lg-9">
                             <div class="bg-white border rounded shadow-sm overflow-hidden">
                                 <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
+                                <input type="hidden" name="postname" id="postname" value="<?php echo $_GET['postname']; ?>"/>
+                                        
+                                
+                                <input type="hidden" name="id" id="postid" value=" "/>
                                     <div class="col-12 col-md-6">
                                         <label for="title" class="form-label">Title</label>
                                         <div class="input-group">
-                                            <input type="title" class="form-control" id="updatedtitle" name="updatedtitle" value="<?php echo $singlepostdata['post_title']; ?> ">
+                                            <input type="title" class="form-control" id="updatedtitle" name="updatedtitle" value=" "/>
                                             <div class="title_error error"></div>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <label for="description" class="form-label">Description</label>
-                                        <textarea class="form-control" id="updatedescription" name="updatedescription" rows="3"><?php echo $singlepostdata['post_content']; ?></textarea>
+                                        <textarea class="form-control" id="updatedescription" name="updatedescription" rows="3"></textarea>
                                         <div class="description_error error"></div>
                                     </div>
 
@@ -59,9 +66,7 @@ if (current_user_can('administrator')) {
                                         <?php
                                         foreach ($cats as $cat) {
                                         ?>
-                                            <option value="<?php echo $cat->name ?>" <?php if ($cat->name == $singlepostdata['category'][0]['name']) {
-                                                                                            echo "selected='selected'";
-                                                                                        } ?>> <?php echo $cat->name ?></option>
+                                            <option value="<?php echo $cat->name ?>"> <?php echo $cat->name ?></option>
 
                                         <?php
                                         } ?>
@@ -84,9 +89,7 @@ if (current_user_can('administrator')) {
                                         <?php
                                         foreach ($tags as $tag) {
                                         ?>
-                                            <option value="<?php echo $tag->name ?>" <?php if ($tag->name == $singlepostdata['tags'][0]['name']) {
-                                                                                            echo "selected='selected'";
-                                                                                        } ?>><?php echo $tag->name ?></option>
+                                            <option value="<?php echo $tag->name ?>"><?php echo $tag->name ?></option>
 
                                         <?php
                                         } ?>
@@ -96,7 +99,7 @@ if (current_user_can('administrator')) {
                             </div>
                             <div class="col-12">
                                 <div class="d-grid">
-                                    <input class="btn btn-primary" type="submit" name="updatepost" id="updatepost" value="UPDATEPOST" />
+                                    <input class="btn btn-primary" type="button" name="updatepost" id="updatepost" value="UPDATEPOST" />
                                 </div>
                             </div>
                                 </div>
@@ -115,4 +118,4 @@ if (current_user_can('administrator')) {
 
 
 
-        ?>
+       

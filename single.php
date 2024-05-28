@@ -6,7 +6,7 @@ if (have_posts()) {
     the_post();
     global $post;
 
-    $returnpostdata = wp_remote_get('http://192.168.1.16/wordpress/wp-json/test/singlepost/' . $post->post_name);
+    $returnpostdata = wp_remote_get('http://192.168.1.16/wordpress/wp-json/v1/as-post/' . $post->post_name);
     $singlepostdata = json_decode($returnpostdata['body'], true);
 
 
@@ -16,7 +16,8 @@ if (have_posts()) {
 
 
 ?>
-    <div>
+    <div style="text-align: center">
+    <input type="hidden" name="id" id="postid" value="<?php  echo $singlepostdata['ID']?>"/>
       <a href="<?php echo get_permalink($singlepostdata['ID']) ?>" class="font-weight-bold text-decoration-none text-body">
 
         <div class="footer_image">
@@ -48,13 +49,19 @@ if (have_posts()) {
       </a>
 
     </div>
-<?php
-if (current_user_can('administrator')) {
+    <?php
+    if (current_user_can('administrator')) {
 
-    // Runs only if this PHP code is in a file that displays outside the admin panels, like the theme template.
-      $id=get_the_ID();
-      echo '<div style="text-align: center"><a href="'.site_url()."/updatepost/?id=".$singlepostdata['ID'].'"> Edit This Post</a></div>';
-    
+      // Runs only if this PHP code is in a file that displays outside the admin panels, like the theme template.
+      $id = get_the_ID();
+      echo '<div style="text-align: center"><a href="' . site_url() . "/updatepost/?postname=" . $singlepostdata['post_name'] . '"> Edit This Post</a></div>';
+    ?>
+ <div style="text-align: center">
+      <input class="btn btn-primary" type="button" name="deletepost" id="deletepost" value="DELETEPOST" /></div>
+<?php
+
+
+
     }
   }
 }

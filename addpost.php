@@ -5,13 +5,13 @@ get_header();
 
 if (current_user_can('administrator')) {
 
-    if (isset($_POST['addnewpost'])) {
-        $createdpostdata = wp_remote_post('http://192.168.1.16/wordpress/wp-json/v1/posts/createpost/', array("body" => $_POST));
-        $postdata = json_decode($createdpostdata['body'], true);
-        // print_r($postdata);
+    // if (isset($_POST['addnewpost'])) {
+    //     $createdpostdata = wp_remote_post('http://192.168.1.16/wordpress/wp-json/v1/posts/createpost/', array("body" => $_POST));
+    //     $postdata = json_decode($createdpostdata['body'], true);
+    //     // print_r($postdata);
 
-        echo $postdata['massage'];
-    }
+    //     echo $postdata['massage'];
+    // }
 ?>
     <div class="container">
         <form method="post">
@@ -81,7 +81,7 @@ if (current_user_can('administrator')) {
                             </div>
                             <div class="col-12">
                                 <div class="d-grid">
-                                    <input class="btn btn-primary" type="submit" name="addnewpost" id="addnewpost" value="ADDNEWPOST" style="display: none "   />
+                                    <input class="btn btn-primary" type="button" name="addnewpost" id="addnewpost" value="ADDNEWPOST" style="display: none "   />
                                 </div>
                             </div>
                         </div>
