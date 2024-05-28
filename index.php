@@ -40,8 +40,6 @@ $json = json_decode($returnpostdata['body'], true);
                                                                     $dateofpost = $jsondata['post_date'];
                                                                     echo  date("F j, Y", strtotime($dateofpost));;
                                                                     ?></p>
-
-
                 </a>
             </div>
 

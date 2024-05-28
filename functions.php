@@ -200,6 +200,7 @@ function wpdocs_theme_name_scripts()
     wp_enqueue_script('jquery');
     wp_enqueue_script('ecommerce-swiper-script', get_template_directory_uri() . '/assets/js/swiper-bundle.min.js');
     wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js', array(), rand(), true);
+    wp_enqueue_script('ecommerce-script-texteditor', get_template_directory_uri() . '/assets/js/texteditor.js', array('jquery'), rand(), true);
     wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), rand(), true);
     wp_localize_script(
         'ecommerce-main-script',

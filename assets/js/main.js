@@ -550,7 +550,7 @@ jQuery(document).on("click", "#addnewpost", function () {
   };
   jQuery.ajax({
     method: "POST",
-    url:  as_ecommerce_ajax_object.rest_url + "create/",
+    url: as_ecommerce_ajax_object.rest_url + "create/",
     data: addpostdata,
     success: function (response) {
       console.log(response);
@@ -564,7 +564,7 @@ jQuery(document).ready(function () {
 
   jQuery.ajax({
     method: "GET",
-    url:as_ecommerce_ajax_object.rest_url + postname,
+    url: as_ecommerce_ajax_object.rest_url + postname,
     success: function (response) {
       // console.log(response);
       jQuery("#postid").val(response.ID);
@@ -576,16 +576,15 @@ jQuery(document).ready(function () {
   });
 });
 
-
 jQuery(document).on("click", "#updatepost", function () {
-  var postid= jQuery("#postid").val();
+  var postid = jQuery("#postid").val();
   var updatedtitle = jQuery("#updatedtitle").val();
   var updatedescription = jQuery("#updatedescription").val();
   var categories = jQuery("#categories").val();
   var tags = jQuery("#tags").val();
 
   let upddateddata = {
-    postid:postid,
+    postid: postid,
     updatedtitle: updatedtitle,
     updatedescription: updatedescription,
     categories: categories,
@@ -597,26 +596,38 @@ jQuery(document).on("click", "#updatepost", function () {
     data: upddateddata,
     success: function (response) {
       console.log(response);
-     
     },
-  });       
+  });
 });
 
-jQuery(document).on("click","#deletepost",function(){
- var postid = jQuery("#postid").val();
-//  console.log(postid);
-
- let deletedata = {
-  postid:postid,
- };
-
- jQuery.ajax({
-  method: "DELETE",
-  url: as_ecommerce_ajax_object.rest_url + "delete/",
-  data: deletedata,
-  success: function (response) {
-    console.log(response);
-   
-  },
-});  
+jQuery(document).on("click", "#deletepost", function () {
+  var postid = jQuery("#postid").val();
+  //  console.log(postid);
+  let data = confirm("Are you sure delete");
+  if (data) {
+    let deletedata = {
+      postid: postid,
+    };
+    jQuery.ajax({
+      method: "DELETE",
+      url: as_ecommerce_ajax_object.rest_url + "delete/",
+      data: deletedata,
+      success: function (response) {
+        console.log(response);
+      },
+    });
+  } else {
+    console.log("data not deleted");
+  }
 });
+
+ClassicEditor
+.create( document.querySelector( '#description' ) )
+.catch( error => {
+    console.error( error );
+} );
+// ClassicEditor
+// .create( document.querySelector( '#updatedescription' ) )
+// .catch( error => {
+//     console.error( error );
+// } );
