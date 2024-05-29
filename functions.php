@@ -198,10 +198,13 @@ function wpdocs_theme_name_scripts()
     wp_enqueue_style('ecommerce-boostrap-css', get_template_directory_uri() . '/assets/css/bootstrap.min.css', rand(), true);
     wp_enqueue_style('ecommerce-swiper-css', get_template_directory_uri() . '/assets/css/swiper.css', rand(), true);
     wp_enqueue_script('jquery');
+    wp_enqueue_editor();
     wp_enqueue_script('ecommerce-swiper-script', get_template_directory_uri() . '/assets/js/swiper-bundle.min.js');
     wp_enqueue_script('ecommerce-script', get_template_directory_uri() . '/assets/js/bootstrap.bundle.min.js', array(), rand(), true);
     wp_enqueue_script('ecommerce-script-texteditor', get_template_directory_uri() . '/assets/js/texteditor.js', array('jquery'), rand(), true);
     wp_enqueue_script('ecommerce-main-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), rand(), true);
+
+
     wp_localize_script(
         'ecommerce-main-script',
         'as_ecommerce_ajax_object',
@@ -1318,7 +1321,7 @@ function createpostapi($request)
 function deletepostapi($request)
 {
     $params = $request->get_params();
-    
+
     $deleteData = wp_delete_post($params['postid']);
 
     return new WP_REST_Response(

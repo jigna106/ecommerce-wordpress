@@ -184,7 +184,27 @@ jQuery(document).ready(function () {
     });
   });
 });
+
+
+
 jQuery(document).ready(function () {
+
+wp.editor.initialize("description", { tinymce: {
+    },
+quicktags: {
+    buttons: '..',
+   },
+
+});
+
+    wp.editor.initialize("updatedescription", { tinymce: {
+        
+    },
+    quicktags: {
+        buttons: '..'
+    },});
+
+
   jQuery(".as_shop_menu").mouseenter(function () {
     jQuery(".as_shop_menu .sub-menu").show();
   });
@@ -453,18 +473,20 @@ jQuery(document).on("keyup", "#title", function () {
   }
 });
 
-jQuery(document).on("keyup", "#description", function () {
-  addpostdisable();
-  var description = jQuery("#description").val();
-  if (description.length >= 20) {
-    jQuery(".description_error").text(" ");
-  } else if (description == "") {
-    jQuery(".description_error").text("Must be fill out");
-  } else {
-    jQuery(".description_error").text("entre detail description");
-    return true;
-  }
-});
+// jQuery(document).on("keyup", "#description", function () {
+//   addpostdisable();
+//   var description = jQuery("#description").val();
+//   // var description =  tinyMCE.activeEditor.getContent()
+//   console.log(description);
+//   if (description.length >= 20) {
+//     jQuery(".description_error").text(" ");
+//   } else if (description == "") {
+//     jQuery(".description_error").text("Must be fill out");
+//   } else {
+//     jQuery(".description_error").text("entre detail description");
+//     return true;
+//   }
+// });
 
 jQuery(document).on("change", "#categories", function () {
   checkcategories();
@@ -506,15 +528,15 @@ function addpostdisable() {
     returnvalue = true;
   }
 
-  var description = jQuery("#description").val();
+  // var description =   tinyMCE.activeEditor.getContent()
 
-  if (description.length <= 20) {
-    console.log("12");
-    returnvalue = true;
-  } else if (description == "") {
-    console.log("13");
-    returnvalue = true;
-  }
+  // if (description.length <= 20) {
+  //   console.log("12");
+  //   returnvalue = true;
+  // } else if (description == "") {
+  //   console.log("13");
+  //   returnvalue = true;
+  // }
 
   var categories = jQuery("#categories").val();
   if (categories == "") {
@@ -569,7 +591,7 @@ jQuery(document).ready(function () {
       // console.log(response);
       jQuery("#postid").val(response.ID);
       jQuery("#updatedtitle").val(response.post_title);
-      jQuery("#updatedescription").val(response.post_content);
+      tinymce.get('updatedescription').setContent(response.post_content);
       jQuery("#categories").val(response.category[0].cat_name);
       jQuery("#tags").val(response.tags[0].name);
     },
@@ -582,14 +604,14 @@ jQuery(document).on("click", "#updatepost", function () {
   var updatedescription = jQuery("#updatedescription").val();
   var categories = jQuery("#categories").val();
   var tags = jQuery("#tags").val();
-
   let upddateddata = {
     postid: postid,
     updatedtitle: updatedtitle,
-    updatedescription: updatedescription,
+    updatedescription: tinymce.get('updatedescription').getContent(),
     categories: categories,
     tags: tags,
   };
+  console.log(upddateddata)
   jQuery.ajax({
     method: "POST",
     url: as_ecommerce_ajax_object.rest_url + "update/",
@@ -620,14 +642,3 @@ jQuery(document).on("click", "#deletepost", function () {
     console.log("data not deleted");
   }
 });
-
-ClassicEditor
-.create( document.querySelector( '#description' ) )
-.catch( error => {
-    console.error( error );
-} );
-// ClassicEditor
-// .create( document.querySelector( '#updatedescription' ) )
-// .catch( error => {
-//     console.error( error );
-// } );

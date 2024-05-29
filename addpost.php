@@ -29,6 +29,8 @@ if (current_user_can('administrator')) {
                             <div class="col-12">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+
+                                
                                 <div class="description_error error"></div>
                             </div>
                             <div class="col-12 col-md-6">

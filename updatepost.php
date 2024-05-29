@@ -43,7 +43,7 @@ if (current_user_can('administrator')) {
                                     </div>
                                     <div class="col-12">
                                         <label for="description" class="form-label">Description</label>
-                                        <textarea class="form-control" id="updatedescription" name="updatedescription" rows="3"></textarea>
+                                        <textarea class="form-control" id="updatedescription" name="updatedescription" rows="3" value=""></textarea>
                                         <div class="description_error error"></div>
                                     </div>
 
