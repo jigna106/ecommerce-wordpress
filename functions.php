@@ -1211,7 +1211,7 @@ function as_cartdata_display()
             </div>
 
         </div>
-<?php
+    <?php
     }
     $html = ob_get_clean();
 
@@ -1360,3 +1360,45 @@ function updatepostapi($request)
     //  echo json_encode($updatedData);
     die();
 }
+
+// register meta box
+function addmeta_post_hobbies()
+{
+    add_meta_box(
+        'meta_fields_meta_box',
+        __('Hobbies'),
+        'hobbies_meta_box_callback',
+        'post'
+    );
+}
+
+
+function hobbies_meta_box_callback($post)
+{
+
+    $hobbiesvalue = get_post_meta($post->ID, 'hobbies_values', true);
+print_r($hobbiesvalue);
+    ?>
+    <div>
+        <input type="checkbox" id="dance" name="hobbies[]" value="Dance" >
+        <label for="dance"> Dance</label><br>
+        <input type="checkbox" id="travelling" name="hobbies[]" value="Travelling"/>
+        <label for="travelling"> Travelling</label><br>
+        <input type="checkbox" id="music" name="hobbies[]" value="Music"/>
+        <label for="music">music</label><br><br>
+    </div>
+<?php
+}
+add_action('add_meta_boxes', 'addmeta_post_hobbies');
+
+function save_hobbies($post_id)
+{
+    if (array_key_exists('hobbies', $_POST)) {
+        update_post_meta(
+            $post_id,
+            'hobbies_values',
+            $_POST['hobbies']
+        );
+    }
+ }
+add_action('save_post', 'save_hobbies');
