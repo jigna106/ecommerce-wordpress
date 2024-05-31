@@ -185,25 +185,127 @@ jQuery(document).ready(function () {
   });
 });
 
-
-
 jQuery(document).ready(function () {
+  wp.editor.initialize("description", {
+    tinymce: {
+      theme: "modern",
+      skin: "lightgray",
+      language: "en",
+      formats: {
+        alignleft: [
+          {
+            selector: "p, h1, h2, h3, h4, h5, h6, td, th, div, ul, ol, li",
+            styles: { textAlign: "left" },
+          },
+          { selector: "img, table, dl.wp-caption", classes: "alignleft" },
+        ],
+        aligncenter: [
+          {
+            selector: "p, h1, h2, h3, h4, h5, h6, td, th, div, ul, ol, li",
+            styles: { textAlign: "center" },
+          },
+          { selector: "img, table, dl.wp-caption", classes: "aligncenter" },
+        ],
+        alignright: [
+          {
+            selector: "p, h1, h2, h3, h4, h5, h6, td, th, div, ul, ol, li",
+            styles: { textAlign: "right" },
+          },
+          { selector: "img, table, dl.wp-caption", classes: "alignright" },
+        ],
+        strikethrough: { inline: "del" },
+      },
+      relative_urls: false,
+      remove_script_host: false,
+      convert_urls: false,
 
-wp.editor.initialize("description", { tinymce: {
+      entities: "38, amp, 60, lt, 62, gt ",
+      entity_encoding: "raw",
+      keep_styles: false,
+      paste_webkit_styles: "font-weight font-style color",
+      preview_styles:
+        "font-family font-size font-weight font-style text-decoration text-transform",
+      tabfocus_elements: ": prev ,: next",
+      plugins:
+        "charmap, hr, media, paste, tabfocus, textcolor, fullscreen, wordpress, wpeditimage, wpgallery, wplink, wpdialogs, wpview",
+      resize: "vertical",
+      menubar: false,
+      indent: false,
+      toolbar1:
+        "bold, italic, strikethrough, bullist, numlist, blockquote, hr, alignleft, aligncenter, alignright, link, unlink, wp_more, spellchecker, fullscreen, wp_adv",
+      toolbar2:
+        "formatselect, underline, alignjustify, forecolor, pastetext, removeformat, charmap, outdent, indent, undo, redo, wp_help",
+      toolbar3: "",
+      toolbar4: "",
+      body_class: "id post-type-post-status-publish post-format-standard",
+      wpeditimage_disable_captions: false,
+      wpeditimage_html5_captions: true,
     },
-quicktags: {
-    buttons: '..',
-   },
 
-});
+    quicktags: {
+      buttons: "..",
+    },
+  });
 
-    wp.editor.initialize("updatedescription", { tinymce: {
-        
+  wp.editor.initialize("updatedescription", {
+    tinymce: {
+      theme: "modern",
+      skin: "lightgray",
+      language: "en",
+      formats: {
+        alignleft: [
+          {
+            selector: "p, h1, h2, h3, h4, h5, h6, td, th, div, ul, ol, li",
+            styles: { textAlign: "left" },
+          },
+          { selector: "img, table, dl.wp-caption", classes: "alignleft" },
+        ],
+        aligncenter: [
+          {
+            selector: "p, h1, h2, h3, h4, h5, h6, td, th, div, ul, ol, li",
+            styles: { textAlign: "center" },
+          },
+          { selector: "img, table, dl.wp-caption", classes: "aligncenter" },
+        ],
+        alignright: [
+          {
+            selector: "p, h1, h2, h3, h4, h5, h6, td, th, div, ul, ol, li",
+            styles: { textAlign: "right" },
+          },
+          { selector: "img, table, dl.wp-caption", classes: "alignright" },
+        ],
+        strikethrough: { inline: "del" },
+      },
+      relative_urls: false,
+      remove_script_host: false,
+      convert_urls: false,
+
+      entities: "38, amp, 60, lt, 62, gt ",
+      entity_encoding: "raw",
+      keep_styles: false,
+      paste_webkit_styles: "font-weight font-style color",
+      preview_styles:
+        "font-family font-size font-weight font-style text-decoration text-transform",
+      tabfocus_elements: ": prev ,: next",
+      plugins:
+        "charmap, hr, media, paste, tabfocus, textcolor, fullscreen, wordpress, wpeditimage, wpgallery, wplink, wpdialogs, wpview",
+      resize: "vertical",
+      menubar: false,
+      indent: false,
+      toolbar1:
+        "bold, italic, strikethrough, bullist, numlist, blockquote, hr, alignleft, aligncenter, alignright, link, unlink, wp_more, spellchecker, fullscreen, wp_adv",
+      toolbar2:
+        "formatselect, underline, alignjustify, forecolor, pastetext, removeformat, charmap, outdent, indent, undo, redo, wp_help",
+      toolbar3: "",
+      toolbar4: "",
+      body_class: "id post-type-post-status-publish post-format-standard",
+      wpeditimage_disable_captions: false,
+      wpeditimage_html5_captions: true,
     },
     quicktags: {
-        buttons: '..'
-    },});
-
+      buttons: "..",
+    },
+  });
 
   jQuery(".as_shop_menu").mouseenter(function () {
     jQuery(".as_shop_menu .sub-menu").show();
@@ -537,7 +639,6 @@ function addpostdisable() {
   //   console.log("13");
   //   returnvalue = true;
   // }
-
   var categories = jQuery("#categories").val();
   if (categories == "") {
     console.log("14");
@@ -561,14 +662,24 @@ function addpostdisable() {
 // insert post using api
 jQuery(document).on("click", "#addnewpost", function () {
   var title = jQuery("#title").val();
-  var description = jQuery("#description").val();
+  // var description = jQuery("#description").val();
+
+  var description = tinymce.get("description").getContent();
   var categories = jQuery("#categories").val();
   var tags = jQuery("#tags").val();
+  var checkboxdata = jQuery("input[name='hobbies[]']:checked");
+  let hobbievalue = [];
+  for (let i = 0; i < checkboxdata.length; i++) {
+    if (checkboxdata[i].checked) {
+      hobbievalue.push(checkboxdata[i].value);
+    }
+  }
   let addpostdata = {
     title: title,
     description: description,
     categories: categories,
     tags: tags,
+    checkboxdata: hobbievalue,
   };
   jQuery.ajax({
     method: "POST",
@@ -583,17 +694,20 @@ jQuery(document).on("click", "#addnewpost", function () {
 // get data using ajax and api
 jQuery(document).ready(function () {
   var postname = jQuery("#postname").val();
-
   jQuery.ajax({
     method: "GET",
     url: as_ecommerce_ajax_object.rest_url + postname,
     success: function (response) {
-      // console.log(response);
+      console.log(response);
       jQuery("#postid").val(response.ID);
       jQuery("#updatedtitle").val(response.post_title);
-      tinymce.get('updatedescription').setContent(response.post_content);
+      tinymce.get("updatedescription").setContent(response.post_content);
+      
       jQuery("#categories").val(response.category[0].cat_name);
       jQuery("#tags").val(response.tags[0].name);
+      response.hobbies.forEach(function (item) {
+        jQuery("input[value='" + item + "']").attr("checked", "checked");
+      });
     },
   });
 });
@@ -604,14 +718,22 @@ jQuery(document).on("click", "#updatepost", function () {
   var updatedescription = jQuery("#updatedescription").val();
   var categories = jQuery("#categories").val();
   var tags = jQuery("#tags").val();
+  var checkboxdata = jQuery("input[name='hobbies[]']:checked");
+  let hobbievalue = [];
+  for (let i = 0; i < checkboxdata.length; i++) {
+    if (checkboxdata[i].checked) {
+      hobbievalue.push(checkboxdata[i].value);
+    }
+  }
   let upddateddata = {
     postid: postid,
     updatedtitle: updatedtitle,
-    updatedescription: tinymce.get('updatedescription').getContent(),
+    updatedescription: tinymce.get("updatedescription").getContent(),
     categories: categories,
     tags: tags,
+    checkboxdata: hobbievalue,
   };
-  console.log(upddateddata)
+  console.log(upddateddata);
   jQuery.ajax({
     method: "POST",
     url: as_ecommerce_ajax_object.rest_url + "update/",

@@ -29,8 +29,6 @@ if (current_user_can('administrator')) {
                             <div class="col-12">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-
-                                
                                 <div class="description_error error"></div>
                             </div>
                             <div class="col-12 col-md-6">
@@ -44,7 +42,7 @@ if (current_user_can('administrator')) {
                                     $cats = get_categories($args);
                                     ?>
                                     <label for="title" class="form-label">Select Categories</label>
-                                    <select name="categories" id="categories">
+                                    <select name="categories" id="categories" multiple>
                                         <option value="">select your categories</option>
                                         <?php
                                         foreach ($cats as $cat) {
@@ -68,7 +66,7 @@ if (current_user_can('administrator')) {
                                     $tags = get_categories($args);
                                     ?>
                                     <label for="title" class="form-label">Select tags</label>
-                                    <select name="tags" id="tags">
+                                    <select name="tags" id="tags" multiple>
                                         <option value="">select your tags</option>
                                         <?php
                                         foreach ($tags as $tag) {
@@ -77,13 +75,30 @@ if (current_user_can('administrator')) {
 
                                         <?php
                                         } ?>
-                                          <div class="selecttags_error error"></div>
+                                        <div class="selecttags_error error"></div>
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-12 col-md-6">
+
+                                <div class="form-item-lable">
+                                    <label>Hobbies: </label>
+                                </div>
+                                <div class="">
+                                    <input type="checkbox" id="dance" name="hobbies[]" value="Dance" />
+                                    <label for="dance" class="form-label"> Dance</label>
+                                    <input type="checkbox" id="travelling" name="hobbies[]" value="Travelling" />
+                                    <label for="travelling" class="form-label"> Travelling</label>
+                                    <input type="checkbox" id="music" name="hobbies[]" value="Music" />
+                                    <label for="music" class="form-label">music</label>
+
+
+                                </div>
+
+                            </div>
                             <div class="col-12">
                                 <div class="d-grid">
-                                    <input class="btn btn-primary" type="button" name="addnewpost" id="addnewpost" value="ADDNEWPOST" style="display: none "   />
+                                    <input class="btn btn-primary" type="button" name="addnewpost" id="addnewpost" value="ADDNEWPOST" style="display: none " />
                                 </div>
                             </div>
                         </div>

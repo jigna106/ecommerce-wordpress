@@ -1288,6 +1288,7 @@ function post_single($request)
     $data["category"] = get_the_category($data['ID']);
     $data["post_image"] = wp_get_attachment_url(get_post_thumbnail_id($data['ID']));
     $data["tags"] = wp_get_post_terms($data['ID']);
+    $data["hobbies"]= get_post_meta($data['ID'],'hobbies_values',true);
 
     echo json_encode($data);
     die();
@@ -1307,7 +1308,7 @@ function createpostapi($request)
     // set_post_thumbnail($id, $params['image_upload']);
     wp_set_object_terms($id, $params['categories'], 'category');
     wp_set_object_terms($id, $params['tags'], 'post_tag');
-
+    update_post_meta($id,'hobbies_values',$_POST['checkboxdata']);
 
     return new WP_REST_Response(
         array(
@@ -1350,6 +1351,8 @@ function updatepostapi($request)
     // set_post_thumbnail($updatedData, $request['image_upload']);
     wp_set_object_terms($updatedData, $params['categories'], 'category');
     wp_set_object_terms($updatedData, $params['tags'], 'post_tag');
+    update_post_meta($updatedData,'hobbies_values',$_POST['checkboxdata']);
+
     return new WP_REST_Response(
         array(
             'success' => true,
@@ -1377,14 +1380,23 @@ function hobbies_meta_box_callback($post)
 {
 
     $hobbiesvalue = get_post_meta($post->ID, 'hobbies_values', true);
-print_r($hobbiesvalue);
+    // print_r($hobbiesvalue);
     ?>
     <div>
-        <input type="checkbox" id="dance" name="hobbies[]" value="Dance" >
+        <input type="checkbox" id="dance" name="hobbies[]" value="Dance" <?php if (in_array("Dance", $hobbiesvalue)) {
+                                                                                echo
+                                                                                "checked='checked'";
+                                                                            } ?> />
         <label for="dance"> Dance</label><br>
-        <input type="checkbox" id="travelling" name="hobbies[]" value="Travelling"/>
+        <input type="checkbox" id="travelling" name="hobbies[]" value="Travelling" <?php if (in_array("Travelling", $hobbiesvalue)) {
+                                                                                        echo
+                                                                                        "checked='checked'";
+                                                                                    } ?> />
         <label for="travelling"> Travelling</label><br>
-        <input type="checkbox" id="music" name="hobbies[]" value="Music"/>
+        <input type="checkbox" id="music" name="hobbies[]" value="Music" <?php if (in_array("Music", $hobbiesvalue)) {
+                                                                                echo
+                                                                                "checked='checked'";
+                                                                            } ?> />
         <label for="music">music</label><br><br>
     </div>
 <?php
@@ -1400,5 +1412,5 @@ function save_hobbies($post_id)
             $_POST['hobbies']
         );
     }
- }
+}
 add_action('save_post', 'save_hobbies');

@@ -9,7 +9,7 @@ if (current_user_can('administrator')) {
     //     $data['id'] = $_GET['id'];
     //     $updatepostdata = wp_remote_post('http://192.168.1.16/wordpress/wp-json/v1/update/updatepost/', array("body" => $data));
     //     $updatedpostdata = json_decode($updatepostdata['body'], true);
-      
+
     //     // print_r($updatepostdata);
     // }
 
@@ -18,7 +18,7 @@ if (current_user_can('administrator')) {
             the_post();
 
 
-                        // $returnpostdata = wp_remote_get('http://192.168.1.16/wordpress/wp-json/test/singlepost/' . $_GET['postname']);
+            // $returnpostdata = wp_remote_get('http://192.168.1.16/wordpress/wp-json/test/singlepost/' . $_GET['postname']);
             // $singlepostdata = json_decode($returnpostdata['body'], true);
 
             // print_r($singlepostdata);
@@ -30,14 +30,14 @@ if (current_user_can('administrator')) {
                         <div class="col-12 col-lg-9">
                             <div class="bg-white border rounded shadow-sm overflow-hidden">
                                 <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
-                                <input type="hidden" name="postname" id="postname" value="<?php echo $_GET['postname']; ?>"/>
-                                        
-                                
-                                <input type="hidden" name="id" id="postid" value=" "/>
+                                    <input type="hidden" name="postname" id="postname" value="<?php echo $_GET['postname']; ?>" />
+
+
+                                    <input type="hidden" name="id" id="postid" value=" " />
                                     <div class="col-12 col-md-6">
                                         <label for="title" class="form-label">Title</label>
                                         <div class="input-group">
-                                            <input type="title" class="form-control" id="updatedtitle" name="updatedtitle" value=" "/>
+                                            <input type="title" class="form-control" id="updatedtitle" name="updatedtitle" value=" " />
                                             <div class="title_error error"></div>
                                         </div>
                                     </div>
@@ -62,7 +62,7 @@ if (current_user_can('administrator')) {
                                     $cats = get_categories($args);
                                     ?>
                                     <label for="title" class="form-label">Select Categories</label>
-                                    <select name="categories" id="categories">
+                                    <select name="categories" id="categories" multiple>
                                         <?php
                                         foreach ($cats as $cat) {
                                         ?>
@@ -85,7 +85,7 @@ if (current_user_can('administrator')) {
                                     $tags = get_categories($args);
                                     ?>
                                     <label for="title" class="form-label">Select tags</label>
-                                    <select name="tags" id="tags">
+                                    <select name="tags" id="tags" multiple>
                                         <?php
                                         foreach ($tags as $tag) {
                                         ?>
@@ -97,6 +97,23 @@ if (current_user_can('administrator')) {
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-item-lable">
+                                    <label>Hobbies: </label>
+                                </div>
+                                <div class="">
+                                    <input type="checkbox" id="dance" name="hobbies[]" value="Dance" />
+                                    <label for="dance" class="form-label"> Dance</label>
+                                    <input type="checkbox" id="travelling" name="hobbies[]" value="Travelling" />
+                                    <label for="travelling" class="form-label"> Travelling</label>
+                                    <input type="checkbox" id="music" name="hobbies[]" value="Music" />
+                                    <label for="music" class="form-label">music</label>
+                                </div>
+
+                            </div>
+
+
                             <div class="col-12">
                                 <div class="d-grid">
                                     <input class="btn btn-primary" type="button" name="updatepost" id="updatepost" value="UPDATEPOST" />
@@ -115,7 +132,3 @@ if (current_user_can('administrator')) {
     }
     get_footer();
         ?>
-
-
-
-       
