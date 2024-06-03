@@ -575,47 +575,90 @@ jQuery(document).on("keyup", "#title", function () {
   }
 });
 
-// jQuery(document).on("keyup", "#description", function () {
-//   addpostdisable();
-//   var description = jQuery("#description").val();
-//   // var description =  tinyMCE.activeEditor.getContent()
-//   console.log(description);
-//   if (description.length >= 20) {
-//     jQuery(".description_error").text(" ");
-//   } else if (description == "") {
-//     jQuery(".description_error").text("Must be fill out");
-//   } else {
-//     jQuery(".description_error").text("entre detail description");
-//     return true;
-//   }
-// });
+jQuery(document).on("keyup", "#updatedtitle", function () {
+  updatepostdisable();
+  var letters = /^[A-Za-z]+$/;
+  var updatedtitle = jQuery("#updatedtitle").val();
+
+  if (updatedtitle && !letters.test(updatedtitle)) {
+    jQuery(".title_error").text("Alphabets Only");
+  } else if (updatedtitle == "") {
+    jQuery(".title_error").text("Must be fill out");
+  } else {
+    jQuery(".title_error").text("");
+    return true;
+  }
+});
+jQuery(document).on("keyup", "#description", function () {
+  
+  // var description = jQuery("#description").val();
+  // console.log(description)
+  var description = tinymce.get("description");
+ 
+
+  
+   console.log(description);
+  if (description.length >= 20) {
+    jQuery(".description_error").text(" ");
+  } else if (description == "") {
+    jQuery(".description_error").text("Must be fill out");
+  } else {
+    jQuery(".description_error").text("entre detail description");
+    return true;
+  }
+});
 
 jQuery(document).on("change", "#categories", function () {
   checkcategories();
-  addpostdisable();
 });
 function checkcategories() {
+  addpostdisable();
+  updatepostdisable();
   var categories = jQuery("#categories").val();
   console.log(categories);
-  if (categories == " ") {
-    jQuery("#selectcategories_error").html("select any one");
+  if (categories == "") {
+    jQuery(".selectcategories_error").html("select any one");
   } else {
-    jQuery("#selectcategories_error").html(" ");
+    jQuery(".selectcategories_error").html(" ");
   }
 }
 jQuery(document).on("change", "#tags", function () {
   checktags();
   addpostdisable();
+  updatepostdisable();
 });
 function checktags() {
   var tags = jQuery("#tags").val();
   console.log(tags);
-  if (tags == " ") {
-    jQuery("#selecttags_error").html("select any one");
+  if (tags.length === 0) {
+    jQuery(".tags_error").html("select any one");
+    console.log("tages error");
   } else {
-    jQuery("#selecttags_error").html(" ");
+    jQuery(".tags_error").html(" ");
+    console.log("tages error empty");
   }
 }
+
+jQuery(document).on("click", "input[type='checkbox']", function () {
+  hobbies();
+});
+function hobbies() {
+  addpostdisable();
+  updatepostdisable();
+  var checkboxdata = jQuery('input[name = "hobbies[]"]:checked');
+  var flags = false;
+  for (let i = 0; i < checkboxdata.length; i++) {
+    if (checkboxdata[i].checked) {
+      flags = true;
+    }
+  }
+  if (!flags) {
+    jQuery(".checkbox_error").html("Please choose atleast one value");
+  } else {
+    jQuery(".checkbox_error").html(" ");
+  }
+}
+
 function addpostdisable() {
   var returnvalue = false;
 
@@ -623,22 +666,42 @@ function addpostdisable() {
   var title = jQuery("#title").val();
 
   if (!letters.test(title)) {
-    console.log("10");
+    // console.log("10");
     returnvalue = true;
   } else if (title == "") {
+    // console.log("11");
+    returnvalue = true;
+  }
+  var categories = jQuery("#categories").val();
+  if (categories == "") {
+    // console.log("14");
+    returnvalue = true;
+  }
+  var tags = jQuery("#tags").val();
+  if (tags == "") {
+    // console.log("15");
+    returnvalue = true;
+  }
+  if (returnvalue == true) {
+    // true
+    jQuery("#addnewpost").hide();
+  } else {
+    // false
+    jQuery("#addnewpost").show();
+  }
+}
+
+function updatepostdisable() {
+  var returnvalue = false;
+  var letters = /^[A-Za-z]+$/;
+  var updatedtitle = jQuery("#updatedtitle").val();
+  if (!letters.test(updatedtitle)) {
+    console.log("10");
+    returnvalue = true;
+  } else if (updatedtitle == "") {
     console.log("11");
     returnvalue = true;
   }
-
-  // var description =   tinyMCE.activeEditor.getContent()
-
-  // if (description.length <= 20) {
-  //   console.log("12");
-  //   returnvalue = true;
-  // } else if (description == "") {
-  //   console.log("13");
-  //   returnvalue = true;
-  // }
   var categories = jQuery("#categories").val();
   if (categories == "") {
     console.log("14");
@@ -650,21 +713,30 @@ function addpostdisable() {
     returnvalue = true;
   }
 
+  var checkboxdata = jQuery('input[name = "hobbies[]"]:checked');
+  var flags = false;
+  for (let i = 0; i < checkboxdata.length; i++) {
+    if (checkboxdata[i].checked) {
+      flags = true;
+    }
+  }
+  if (!flags) {
+    jQuery(".checkbox_error").html("Please choose atleast one value");
+    returnvalue = true;
+  }
   if (returnvalue == true) {
     // true
-    jQuery("#addnewpost").hide();
+    jQuery("#updatepost").hide();
   } else {
     // false
-    jQuery("#addnewpost").show();
+    jQuery("#updatepost").show();
   }
 }
 
 // insert post using api
 jQuery(document).on("click", "#addnewpost", function () {
   var title = jQuery("#title").val();
-  // var description = jQuery("#description").val();
-
-  var description = tinymce.get("description").getContent();
+  var description = tinymce.get("description");
   var categories = jQuery("#categories").val();
   var tags = jQuery("#tags").val();
   var checkboxdata = jQuery("input[name='hobbies[]']:checked");
@@ -686,7 +758,11 @@ jQuery(document).on("click", "#addnewpost", function () {
     url: as_ecommerce_ajax_object.rest_url + "create/",
     data: addpostdata,
     success: function (response) {
-      console.log(response);
+    
+        jQuery(".result .success").html(response.massage);
+    
+      // console.log(response);
+      // console.log(response);
     },
   });
 });
@@ -702,9 +778,23 @@ jQuery(document).ready(function () {
       jQuery("#postid").val(response.ID);
       jQuery("#updatedtitle").val(response.post_title);
       tinymce.get("updatedescription").setContent(response.post_content);
-      
-      jQuery("#categories").val(response.category[0].cat_name);
-      jQuery("#tags").val(response.tags[0].name);
+
+      var catagoriesvalue = [];
+      response.category.forEach(function (item) {
+        // console.log("foreach respose",response.category);
+        // console.log("foreach respose itmes",item);
+        catagoriesvalue.push(item.cat_name);
+      });
+      jQuery("#categories").val(catagoriesvalue).attr("selected :selected");
+
+      var tagsvalue = [];
+      response.tags.forEach(function (item) {
+        // console.log("foreach respose",response.category);
+        // console.log("foreach respose itmes",item);
+        tagsvalue.push(item.name);
+      });
+      jQuery("#tags").val(tagsvalue).attr("selected :selected");
+
       response.hobbies.forEach(function (item) {
         jQuery("input[value='" + item + "']").attr("checked", "checked");
       });
@@ -739,6 +829,11 @@ jQuery(document).on("click", "#updatepost", function () {
     url: as_ecommerce_ajax_object.rest_url + "update/",
     data: upddateddata,
     success: function (response) {
+      if (success == true) {
+        jQuery(".result .success").html(response.sucessupdatemsg);
+      } else {
+        jQuery(".result .error").html(" ");
+      }
       console.log(response);
     },
   });

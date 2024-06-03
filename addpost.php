@@ -14,6 +14,10 @@ if (current_user_can('administrator')) {
     // }
 ?>
     <div class="container">
+    <div class="result">
+            <div class="error"> </div>
+            <div class="success"></div>
+        </div>
         <form method="post">
             <div class="row justify-content-lg-center">
                 <div class="col-12 col-lg-9">
@@ -42,7 +46,7 @@ if (current_user_can('administrator')) {
                                     $cats = get_categories($args);
                                     ?>
                                     <label for="title" class="form-label">Select Categories</label>
-                                    <select name="categories" id="categories" multiple>
+                                    <select name="categories[]" id="categories" multiple="multiple">
                                         <option value="">select your categories</option>
                                         <?php
                                         foreach ($cats as $cat) {
@@ -51,10 +55,11 @@ if (current_user_can('administrator')) {
 
                                         <?php
                                         } ?>
-                                        <div class="selectcategories_error error"></div>
+
 
                                     </select>
                                 </div>
+                                <div class="selectcategories_error error"></div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="input-group">
@@ -75,9 +80,11 @@ if (current_user_can('administrator')) {
 
                                         <?php
                                         } ?>
-                                        <div class="selecttags_error error"></div>
+
+
                                     </select>
                                 </div>
+                                <div class="tags_error error"></div>
                             </div>
                             <div class="col-12 col-md-6">
 
@@ -91,10 +98,8 @@ if (current_user_can('administrator')) {
                                     <label for="travelling" class="form-label"> Travelling</label>
                                     <input type="checkbox" id="music" name="hobbies[]" value="Music" />
                                     <label for="music" class="form-label">music</label>
-
-
                                 </div>
-
+                                <div class="checkbox_error error"></div>
                             </div>
                             <div class="col-12">
                                 <div class="d-grid">
@@ -106,7 +111,9 @@ if (current_user_can('administrator')) {
                 </div>
             </div>
         </form>
+        
     </div>
+
 
 <?php
 } else {

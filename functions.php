@@ -1285,7 +1285,7 @@ function post_single($request)
     $post = get_posts($args)[0];
 
     $data = (array)$post;
-    $data["category"] = get_the_category($data['ID']);
+    $data["category"] = get_the_category($data['ID'],'category',true);
     $data["post_image"] = wp_get_attachment_url(get_post_thumbnail_id($data['ID']));
     $data["tags"] = wp_get_post_terms($data['ID']);
     $data["hobbies"]= get_post_meta($data['ID'],'hobbies_values',true);

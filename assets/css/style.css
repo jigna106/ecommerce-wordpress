@@ -261,3 +261,14 @@ ul#menu-logout-user-menu li a {
 }
 
 
+.error {
+  color: red;
+  font-size: xx-large;
+  text-align: center;
+}
+
+.success{
+  color:rgb(12, 102, 12);
+  font-size: xx-large;
+  text-align: center;
+}
