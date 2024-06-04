@@ -6,7 +6,7 @@ if (have_posts()) {
     the_post();
     global $post;
 
-    $returnpostdata = wp_remote_get('http://192.168.1.16/wordpress/wp-json/v1/as-post/' . $post->post_name);
+    $returnpostdata = wp_remote_get('http://192.168.1.8/wordpress/wp-json/v1/as-post/' . $post->post_name);
     $singlepostdata = json_decode($returnpostdata['body'], true);
 
     // echo "<pre>";

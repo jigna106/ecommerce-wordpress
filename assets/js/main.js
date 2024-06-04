@@ -240,7 +240,22 @@ jQuery(document).ready(function () {
       body_class: "id post-type-post-status-publish post-format-standard",
       wpeditimage_disable_captions: false,
       wpeditimage_html5_captions: true,
-    },
+      setup: function (ed) {
+        ed.on("keyup", function (e) {
+          var content = ed.getContent();
+          console.log("content", content);
+          //   console.log(description);
+          if (content.length >= 20) {
+            jQuery(".description_error").text(" ");
+          } else if (content == "") {
+            jQuery(".description_error").text("Must be fill out");
+          } else {
+            jQuery(".description_error").text("entre detail description");
+            return true;
+          }
+        });
+      },
+    },      
 
     quicktags: {
       buttons: "..",
@@ -301,6 +316,23 @@ jQuery(document).ready(function () {
       body_class: "id post-type-post-status-publish post-format-standard",
       wpeditimage_disable_captions: false,
       wpeditimage_html5_captions: true,
+      
+      setup: function (ed) {
+        ed.on("keyup", function (e) {
+          var content = ed.getContent();
+          console.log("content", content);
+          //   console.log(description);
+          if (content.length >= 20) {
+            jQuery(".description_error").text(" ");
+          } else if (content == "") {
+            jQuery(".description_error").text("Must be fill out");
+          } else {
+            jQuery(".description_error").text("entre detail description");
+            return true;
+          }
+        });
+      },
+
     },
     quicktags: {
       buttons: "..",
@@ -589,15 +621,12 @@ jQuery(document).on("keyup", "#updatedtitle", function () {
     return true;
   }
 });
-jQuery(document).on("keyup", "#description", function () {
-  
-  // var description = jQuery("#description").val();
-  // console.log(description)
-  var description = tinymce.get("description");
- 
 
-  
-   console.log(description);
+jQuery(document).on("keyup change", "#description", function () {
+  var description = jQuery("#description").val();
+  var content = tinymce.get("description");
+  console.log(content);
+  console.log(description);
   if (description.length >= 20) {
     jQuery(".description_error").text(" ");
   } else if (description == "") {
@@ -758,9 +787,8 @@ jQuery(document).on("click", "#addnewpost", function () {
     url: as_ecommerce_ajax_object.rest_url + "create/",
     data: addpostdata,
     success: function (response) {
-    
-        jQuery(".result .success").html(response.massage);
-    
+      jQuery(".result .success").html(response.massage);
+
       // console.log(response);
       // console.log(response);
     },

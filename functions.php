@@ -445,6 +445,78 @@ function shop_orders()
 }
 add_action('init', 'shop_orders');
 
+
+
+
+add_filter('manage_shoporder_posts_columns', 'as_custom_posts_columns');
+function as_custom_posts_columns($columns)
+{
+    $columns['product_details'] = __('Product_Details', 'as');
+    $columns['qty'] = __('Qty', 'as');
+    $columns['price'] = __('Price', 'as');
+
+    return $columns;
+}
+
+add_filter('manage_shoporder_posts_columns', 'as_orderlist_columns');
+function as_orderlist_columns($columns)
+{
+
+
+    $columns = array(
+        'cb' => $columns['cb'],
+        'title' => __('Title'),
+        'product_details' => __('ProductDetails', 'as'),
+        'price' => __('Price', 'as'),
+        'grandtotal' => __('Grandtottal', 'as'),
+        'status' => __('status', 'as'),
+        'Date' => __('Date', 'as')
+    );
+
+
+    return $columns;
+}
+
+add_action('manage_shoporder_posts_custom_column', 'smashing_realestate_column', 10, 2);
+function smashing_realestate_column($column, $post_id)
+{
+    global $post;
+    $cartdata['product'] = get_post_meta($post_id, 'ecommerce_cart_data', true);
+    $grandtotal = 100;
+    foreach ($cartdata['product'] as $product_id => $qty) {
+        // print_r($cartdata['product']);
+       
+
+        if ('product_details' === $column) {
+            echo get_the_title($product_id) . "   X" . $qty . "<br>";
+        }
+
+
+        $totalprice = get_post_meta($product_id, "ecommerce_price", true);
+
+        $subtotal = (int) $totalprice * (int) $qty;
+
+        if ('price' === $column) {
+
+            echo "₹" . number_format($subtotal) . "<br>";
+        }
+        $grandtotal += $subtotal;
+
+       
+    }
+
+    if ('grandtotal' === $column) {
+        echo "₹" . number_format($grandtotal);
+    }
+
+    if ('status' == trim($column)) {
+
+        // $status = get_post_status($post);
+        echo $post->post_status;
+    }
+}
+
+
 function my_custom_status_creation()
 {
     register_post_status(
@@ -472,8 +544,8 @@ function my_custom_status_creation()
     register_post_status(
         'pending_payment',
         array(
-            'label' => _x('Pending_Payment', 'post'),
-            'label_count' => _n_noop('pending_payment <span class="count">(%s)</span>', 'Pending Payment <span class="count">(%s)</span>'),
+            'label' => _x('PendingPayment', 'post'),
+            'label_count' => _n_noop('pendingpayment <span class="count">(%s)</span>', 'Pending Payment <span class="count">(%s)</span>'),
             'public' => true,
             'exclude_from_search' => false,
             'show_in_admin_all_list' => true,
@@ -489,7 +561,7 @@ function my_custom_status_add_in_quick_edit()
     jQuery(document).ready( function() {
         jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"completed\">Completed</option>' );  
         jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"proccesing\">Proccesing</option>' );   
-        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"pending_payment\">pending_payment</option>' );       
+        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"pending_payment\">pendingpayment</option>' );       
     }); 
     </script>";
 }
@@ -501,7 +573,7 @@ function my_custom_status_add_in_post_page()
     jQuery(document).ready( function() {        
         jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"completed\">completed</option>' );
         jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"Proccesing\">Proccesing</option>' );
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"pending_payment\">pending_payment</option>' );
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"pending_payment\">pendingpayment</option>' );
       });
  </script>";
 }
@@ -535,7 +607,9 @@ function ecommerce_cartdata_display($post)
 {
 
     $cartdata['product'] = get_post_meta($post->ID, 'ecommerce_cart_data', true);
+    $order = get_post_meta($post->ID, 'ecommerce_billing_data', true);
     // print_r($cartdata);
+
 ?>
     <div class="admin-cartdata">
         <table style="width:100%">
@@ -575,7 +649,7 @@ function ecommerce_cartdata_display($post)
             }
                 ?>
                 <td>
-                    <?php echo $grandtotal; ?>
+                    <?php echo  $grandtotal; ?>
                 </td>
                 </tr>
         </table>
@@ -1285,10 +1359,10 @@ function post_single($request)
     $post = get_posts($args)[0];
 
     $data = (array)$post;
-    $data["category"] = get_the_category($data['ID'],'category',true);
+    $data["category"] = get_the_category($data['ID'], 'category', true);
     $data["post_image"] = wp_get_attachment_url(get_post_thumbnail_id($data['ID']));
     $data["tags"] = wp_get_post_terms($data['ID']);
-    $data["hobbies"]= get_post_meta($data['ID'],'hobbies_values',true);
+    $data["hobbies"] = get_post_meta($data['ID'], 'hobbies_values', true);
 
     echo json_encode($data);
     die();
@@ -1308,7 +1382,7 @@ function createpostapi($request)
     // set_post_thumbnail($id, $params['image_upload']);
     wp_set_object_terms($id, $params['categories'], 'category');
     wp_set_object_terms($id, $params['tags'], 'post_tag');
-    update_post_meta($id,'hobbies_values',$_POST['checkboxdata']);
+    update_post_meta($id, 'hobbies_values', $_POST['checkboxdata']);
 
     return new WP_REST_Response(
         array(
@@ -1351,7 +1425,7 @@ function updatepostapi($request)
     // set_post_thumbnail($updatedData, $request['image_upload']);
     wp_set_object_terms($updatedData, $params['categories'], 'category');
     wp_set_object_terms($updatedData, $params['tags'], 'post_tag');
-    update_post_meta($updatedData,'hobbies_values',$_POST['checkboxdata']);
+    update_post_meta($updatedData, 'hobbies_values', $_POST['checkboxdata']);
 
     return new WP_REST_Response(
         array(
