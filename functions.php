@@ -25,6 +25,7 @@ function create_custom_post_type()
         'show_in_rest' => true,
         'rest_base'          => 'result',
         'rest_controller_class' => 'WP_REST_Posts_Controller',
+
     );
     add_theme_support('custom-header');
     add_theme_support('automatic-feed-links');
@@ -437,8 +438,10 @@ function shop_orders()
         'label' => __('Shoporder'),
         'supports' => array('title', 'editor', 'author'),
         'public' => true,
-        'has_archive' => true,
-        'menu_icon' => 'dashicons-update'
+        'has_archive' => false,
+        'menu_icon' => 'dashicons-update',
+        'publicly_queryable' => false
+
     );
 
     register_post_type('shoporder', $Orders);
@@ -466,10 +469,10 @@ function as_orderlist_columns($columns)
     $columns = array(
         'cb' => $columns['cb'],
         'title' => __('Title'),
-        'product_details' => __('ProductDetails', 'as'),
+        'product_details' => __('Product Details', 'as'),
         'price' => __('Price', 'as'),
-        'grandtotal' => __('Grandtottal', 'as'),
-        'status' => __('status', 'as'),
+        'grandtotal' => __('Grand Total', 'as'),
+        'status' => __('Status', 'as'),
         'Date' => __('Date', 'as')
     );
 
@@ -481,11 +484,11 @@ add_action('manage_shoporder_posts_custom_column', 'smashing_realestate_column',
 function smashing_realestate_column($column, $post_id)
 {
     global $post;
-    $cartdata['product'] = get_post_meta($post_id, 'ecommerce_cart_data', true);
+    $cartdata = get_post_meta($post_id, 'ecommerce_cart_data', true);
     $grandtotal = 100;
     foreach ($cartdata['product'] as $product_id => $qty) {
-        // print_r($cartdata['product']);
-       
+        //  print_r($cartdata);
+
 
         if ('product_details' === $column) {
             echo get_the_title($product_id) . "   X" . $qty . "<br>";
@@ -501,8 +504,6 @@ function smashing_realestate_column($column, $post_id)
             echo "₹" . number_format($subtotal) . "<br>";
         }
         $grandtotal += $subtotal;
-
-       
     }
 
     if ('grandtotal' === $column) {
@@ -512,11 +513,23 @@ function smashing_realestate_column($column, $post_id)
     if ('status' == trim($column)) {
 
         // $status = get_post_status($post);
-        echo $post->post_status;
+
+        if ('draft' == $post->post_status) {
+
+            echo "Draft";
+        } else if ('publish' == $post->post_status) {
+            echo "Publish";
+        } else if ('pendingpayment' == $post->post_status) {
+            echo "Pending Payment";
+        } else if ('completed' == $post->post_status) {
+            echo "Completed";
+        } else if ('proccesing' == $post->post_status) {
+            echo "Proccesing";
+        } else {
+            echo $post->post_status;
+        }
     }
 }
-
-
 function my_custom_status_creation()
 {
     register_post_status(
@@ -541,17 +554,14 @@ function my_custom_status_creation()
             'show_in_admin_status_list' => true
         )
     );
-    register_post_status(
-        'pending_payment',
-        array(
-            'label' => _x('PendingPayment', 'post'),
-            'label_count' => _n_noop('pendingpayment <span class="count">(%s)</span>', 'Pending Payment <span class="count">(%s)</span>'),
-            'public' => true,
-            'exclude_from_search' => false,
-            'show_in_admin_all_list' => true,
-            'show_in_admin_status_list' => true
-        )
-    );
+    register_post_status('pendingpayment', array(
+        'label'                     => _x('PendingPayment', 'post'),
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        'label_count'               => _n_noop('PendingPayment <span class="count">(%s)</span>', 'PendingPayment <span class="count">(%s)</span>'),
+    ));
 }
 add_action('init', 'my_custom_status_creation');
 
@@ -559,9 +569,9 @@ function my_custom_status_add_in_quick_edit()
 {
     echo "<script>
     jQuery(document).ready( function() {
-        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"completed\">Completed</option>' );  
-        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"proccesing\">Proccesing</option>' );   
-        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"pending_payment\">pendingpayment</option>' );       
+        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"Completed\">Completed</option>' );  
+        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"Proccesing\">Proccesing</option>' );   
+        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"PendingPayment\">PendingPayment</option>' );       
     }); 
     </script>";
 }
@@ -571,9 +581,9 @@ function my_custom_status_add_in_post_page()
 {
     echo "<script>
     jQuery(document).ready( function() {        
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"completed\">completed</option>' );
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"Proccesing\">Proccesing</option>' );
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"pending_payment\">pendingpayment</option>' );
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"Completed\">Completed</option>' );
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"proccesing\">Proccesing</option>' );
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"PendingPayment\">PendingPayment</option>' );
       });
  </script>";
 }
@@ -591,11 +601,11 @@ function billingdata_display($post)
 {
     $data = get_post_meta($post->ID, 'ecommerce_billing_data', true);
     // print_r($data);
-    echo '<p><strong>' . __('firstname') . ':</strong> ' . $data['firstName'] . '</p>';
-    echo '<p><strong>' . __('lastname') . ':</strong> ' . $data['lastName'] . '</p>';
-    echo '<p><strong>' . __('email') . ':</strong> ' . $data['email'] . '</p>';
+    echo '<p><strong>' . __('Firstname') . ':</strong> ' . $data['firstName'] . '</p>';
+    echo '<p><strong>' . __('Lastname') . ':</strong> ' . $data['lastName'] . '</p>';
+    echo '<p><strong>' . __('Email') . ':</strong> ' . $data['email'] . '</p>';
     echo '<p><strong>' . __('Address') . ':</strong> ' . $data['address'] . '</p>';
-    echo '<p><strong>' . __('paymentmethod') . ':</strong> ' . $data['paymentMethod'] . '</p>';
+    echo '<p><strong>' . __('Paymentmethod') . ':</strong> ' . $data['paymentMethod'] . '</p>';
 }
 
 function ecommerce_cartdata()
@@ -606,52 +616,65 @@ add_action('add_meta_boxes', 'ecommerce_cartdata');
 function ecommerce_cartdata_display($post)
 {
 
-    $cartdata['product'] = get_post_meta($post->ID, 'ecommerce_cart_data', true);
+    $cartdata = get_post_meta($post->ID, 'ecommerce_cart_data', true);
     $order = get_post_meta($post->ID, 'ecommerce_billing_data', true);
     // print_r($cartdata);
 
 ?>
     <div class="admin-cartdata">
         <table style="width:100%">
-            <tr>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>subTotal</th>
-                <th>Grand total</th>
-            </tr>
-            <?php
-            $grandtotal = 100;
-            foreach ($cartdata['product'] as $product_id => $qty) {
-            ?>
+            <thead>
                 <tr>
-                    <td><img src="<?php echo get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px"></td>
-                    <td>
-                        <?php echo get_the_title($product_id); ?>
-                    </td>
-                    <td>
-                        <?php echo $qty ?>
-                    </td>
-                    <td>
-                        <?php echo get_post_meta($product_id, "ecommerce_price", true); ?>
-                    </td>
-                    <td>
-                        <?php
-                        $totalprice = get_post_meta($product_id, "ecommerce_price", true);
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Sub Total</th>
 
-                        $subtotal = (int) $totalprice * (int) $qty;
-                        ?>
-                        <?php echo $subtotal;
-                        $grandtotal += $subtotal; ?>
-                    </td>
-                <?php
-            }
-                ?>
-                <td>
-                    <?php echo  $grandtotal; ?>
-                </td>
                 </tr>
+            </thead>
+            <tbody>
+                <?php
+                $grandtotal = 100;
+                foreach ($cartdata['product'] as $product_id => $qty) {
+                ?>
+
+                    <tr>
+                        <td><img src="<?php echo get_the_post_thumbnail_url($product_id) ?>" width="100px" height="100px"></td>
+                        <td>
+                            <?php echo get_the_title($product_id); ?>
+                        </td>
+                        <td>
+                            <?php echo $qty ?>
+                        </td>
+                        <td>
+                            <?php echo get_post_meta($product_id, "ecommerce_price", true); ?>
+                        </td>
+                        <td>
+                            <?php
+                            $totalprice = get_post_meta($product_id, "ecommerce_price", true);
+
+                            $subtotal = (int) $totalprice * (int) $qty;
+                            ?>
+                            <?php echo $subtotal;
+                            $grandtotal += $subtotal; ?>
+                        </td>
+                    <?php
+                }
+                    ?>
+
+                    </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="cart_data">
+                        Grand Total
+                    </td>
+                    <td>
+                        <?php echo  $grandtotal; ?>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 <?php
@@ -664,12 +687,14 @@ function contact()
         'supports' => array('title', 'editor', 'author'),
         'public' => true,
         'has_archive' => true,
-        'menu_icon' => 'dashicons-format-chat'
+        'menu_icon' => 'dashicons-format-chat',
+
     );
 
     register_post_type('contact', $Contact);
 }
 add_action('init', 'contact');
+
 function contact_data_()
 {
     add_meta_box('contact_data_id', 'Contact-Data', 'contact_data__display', 'contact');
@@ -1002,8 +1027,6 @@ function as_couponcode()
             )
         );
     }
-
-
     $html = as_cartdata_display();
     echo json_encode(array("html" => $html, "cartproductcount" => count($data['product'])));
     exit;

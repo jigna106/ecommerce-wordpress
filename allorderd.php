@@ -34,6 +34,10 @@ if ($current_user->ID) {
                             $orderdata = get_post_meta(get_the_ID(), 'ecommerce_billing_data', true);
                             $orderhistory = get_post_meta(get_the_ID(), 'ecommerce_cart_data', true);
 
+
+
+
+                            // print_r($orderhistory);
                             $total_qty = 0;
                             $total_product = 0;
                             $grandtotal = 100;
@@ -65,11 +69,14 @@ if ($current_user->ID) {
                                 </td>
                                 <td>
                                     <?php
-                                    foreach ($orderhistory['product'] as $product_id => $qty) { ?>
+                                      foreach($orderhistory['product'] as $product_id => $qty) { 
 
+
+                                        ?>
+    
                                         <div>
 
-                                            <?php echo $post->post_title; ?> X
+                                        <?php echo get_the_title($product_id) ?>X
                                             <?php echo $qty ?>
 
                                         </div>
