@@ -431,7 +431,7 @@ function register_my_menus()
 add_action('init', 'register_my_menus');
 
 
-function shop_orders()
+function shop_shoporder()
 {
     $Orders = array(
         'name' => 'Shoporder',
@@ -446,9 +446,79 @@ function shop_orders()
 
     register_post_type('shoporder', $Orders);
 }
-add_action('init', 'shop_orders');
+add_action('init', 'shop_shoporder');
 
 
+
+function wpdocs_custom_post_status()
+{
+    register_post_status('processing', array(
+        'label'                     => _x('Processing', 'post'),
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        'label_count'               => _n_noop('Processing <span class="count">(%s)</span>', 'Processing <span class="count">(%s)</span>'),
+    ));
+    register_post_status('pending-payment', array(
+        'label'                     => _x('PendingPayment', 'post'),
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        'label_count'               => _n_noop('PendingPayment <span class="count">(%s)</span>', 'PendingPayment <span class="count">(%s)</span>'),
+    ));
+    register_post_status('complete', array(
+        'label'                     => _x('Complete', 'post'),
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        'label_count'               => _n_noop('Complete <span class="count">(%s)</span>', 'Complete <span class="count">(%s)</span>'),
+    ));
+}
+add_action('init', 'wpdocs_custom_post_status');
+
+function my_custom_status_add_in_quick_edit()
+{
+    echo "<script>
+    jQuery(document).ready( function() {
+    
+        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"processing\">Processing</option>' );  
+        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"pending-payment\">PendingPayment</option>' );   
+        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"complete\">Complete</option>' );       
+    }); 
+    </script>";
+}
+add_action('admin_footer-edit.php', 'my_custom_status_add_in_quick_edit');
+
+function my_custom_status_add_in_post_page()
+{
+    echo "<script>
+
+    jQuery(document).ready( function() {        
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"processing\">Processing</option>' );
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"pending-payment\">PendingPayment</option>' );
+        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"complete\">Complete</option>' );
+
+        
+        var new_status = jQuery('#hidden_post_status').val();
+        if (new_status == 'processing'){
+             jQuery('#post-status-display').html('Processing');
+             jQuery('select[name=\"post_status\"]').val('processing'); 
+        } else if(new_status == 'pending-payment'){
+            jQuery('#post-status-display').html('PendingPayment'); 
+            jQuery('select[name=\"post_status\"]').val('pending-payment'); 
+        }else if(new_status == 'complete'){
+            jQuery('#post-status-display').html('Complete'); 
+            jQuery('select[name=\"post_status\"]').val('complete'); 
+        }
+      });
+  
+</script>";
+}
+add_action('admin_footer-post.php', 'my_custom_status_add_in_post_page');
+add_action('admin_footer-post-new.php', 'my_custom_status_add_in_post_page');
 
 
 add_filter('manage_shoporder_posts_columns', 'as_custom_posts_columns');
@@ -512,17 +582,17 @@ function smashing_realestate_column($column, $post_id)
 
     if ('status' == trim($column)) {
 
-        // $status = get_post_status($post);
+        $status = get_post_status($post);
 
         if ('draft' == $post->post_status) {
 
             echo "Draft";
         } else if ('publish' == $post->post_status) {
             echo "Publish";
-        } else if ('pendingpayment' == $post->post_status) {
-            echo "Pending Payment";
-        } else if ('completed' == $post->post_status) {
-            echo "Completed";
+        } else if ('pending-payment' == $post->post_status) {
+            echo "PendingPayment";
+        } else if ('complete' == $post->post_status) {
+            echo "Complete";
         } else if ('proccesing' == $post->post_status) {
             echo "Proccesing";
         } else {
@@ -530,65 +600,7 @@ function smashing_realestate_column($column, $post_id)
         }
     }
 }
-function my_custom_status_creation()
-{
-    register_post_status(
-        'completed',
-        array(
-            'label' => _x('Completed', 'post'),
-            'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Completed <span class="count">(%s)</span>'),
-            'public' => true,
-            'exclude_from_search' => false,
-            'show_in_admin_all_list' => true,
-            'show_in_admin_status_list' => true
-        )
-    );
-    register_post_status(
-        'proccesing',
-        array(
-            'label' => _x('Proccesing', 'post'),
-            'label_count' => _n_noop('Proccesing <span class="count">(%s)</span>', 'Proccesing <span class="count">(%s)</span>'),
-            'public' => true,
-            'exclude_from_search' => false,
-            'show_in_admin_all_list' => true,
-            'show_in_admin_status_list' => true
-        )
-    );
-    register_post_status('pendingpayment', array(
-        'label'                     => _x('PendingPayment', 'post'),
-        'public'                    => true,
-        'exclude_from_search'       => false,
-        'show_in_admin_all_list'    => true,
-        'show_in_admin_status_list' => true,
-        'label_count'               => _n_noop('PendingPayment <span class="count">(%s)</span>', 'PendingPayment <span class="count">(%s)</span>'),
-    ));
-}
-add_action('init', 'my_custom_status_creation');
 
-function my_custom_status_add_in_quick_edit()
-{
-    echo "<script>
-    jQuery(document).ready( function() {
-        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"Completed\">Completed</option>' );  
-        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"Proccesing\">Proccesing</option>' );   
-        jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"PendingPayment\">PendingPayment</option>' );       
-    }); 
-    </script>";
-}
-add_action('admin_footer-edit.php', 'my_custom_status_add_in_quick_edit');
-
-function my_custom_status_add_in_post_page()
-{
-    echo "<script>
-    jQuery(document).ready( function() {        
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"Completed\">Completed</option>' );
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"proccesing\">Proccesing</option>' );
-        jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"PendingPayment\">PendingPayment</option>' );
-      });
- </script>";
-}
-add_action('admin_footer-post.php', 'my_custom_status_add_in_post_page');
-add_action('admin_footer-post-new.php', 'my_custom_status_add_in_post_page');
 
 
 function ecommerce_billingdata_()
@@ -607,6 +619,24 @@ function billingdata_display($post)
     echo '<p><strong>' . __('Address') . ':</strong> ' . $data['address'] . '</p>';
     echo '<p><strong>' . __('Paymentmethod') . ':</strong> ' . $data['paymentMethod'] . '</p>';
 }
+
+
+function sale_count()
+{
+    add_meta_box('salling-id', 'Salecount-data', 'salecount_display', 'product');
+}
+add_action('add_meta_boxes', 'sale_count');
+
+function salecount_display($post)
+{
+
+
+
+}
+
+
+
+
 
 function ecommerce_cartdata()
 {

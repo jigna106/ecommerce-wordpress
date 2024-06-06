@@ -45,7 +45,7 @@ echo "</pre>";
                             <!-- 6-7 working days  -->
                             <?php
                             $name = $post->post_name;
-                            if ($post->post_status == "completed") {
+                            if ($post->post_status == "complete") {
                               echo   ' Hello ' . $name . ' Your order has been delivered.';
                             }
                             if ($post->post_status == 'pending_payment') {
@@ -55,10 +55,13 @@ echo "</pre>";
                               // echo " Your Order has been shipped from the warehouse but payment pending \n";
                               // echo "6-7 working days";
                             }
-                            if ($post->post_status == 'Proccesing') {
+                            if ($post->post_status == 'processing') {
                               echo "order is still being processed";
                             }
                             if ($post->post_status == 'draft') {
+                              echo " order has not yet shipped from the warehouse.";
+                            }
+                            if ($post->post_status == 'publish') {
                               echo " order has not yet shipped from the warehouse.";
                             }
                             ?>

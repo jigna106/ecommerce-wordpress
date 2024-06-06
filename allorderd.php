@@ -4,7 +4,7 @@ get_header();
 if ($current_user->ID) {
     $args = array(
         'post_type' => 'shoporder',
-        'post_status' => array('draft','pending','completed','Proccesing','pending_payment'),
+        'post_status' => array('publish','draft','pending','processing','pending-payment','complete'),
         'author' => $current_user->ID,
     );
 
