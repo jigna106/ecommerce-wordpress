@@ -629,13 +629,86 @@ add_action('add_meta_boxes', 'sale_count');
 
 function salecount_display($post)
 {
-
-
-
+    $salecount = get_post_meta($post->ID, 'sale_count', true);
+?>
+    <label for="sale_count"> Sale Count of Product </label>
+    <input type="text" id="sale_count" name="sale_count" value="<?php echo $salecount ?>" /><br>
+<?php
 }
 
+function save_sale_count($post_id)
+{
+    if (is_user_logged_in()) {
+        $current_user = wp_get_current_user();
+        $user_id = (string) $current_user->ID;
+    } else if (isset($_COOKIE['user_cart_id'])) {
+        $user_id = $_COOKIE['user_cart_id'];
+    } else {
+        $user_cart_id = random_strings(8);
+        setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
+        $user_id = $user_cart_id;
+    }
+    global $wpdb;
+    $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
+    $data = maybe_unserialize($retrieve_data[0]['session_data']);
+    print_r($data);
+    print_r($retrieve_data);
+    if (array_key_exists('sale_count', $_POST)) {
+        update_post_meta(
+            $post_id,
+            'sale_count',
+            $_POST['total_qty']
+        );
+    }
+}
+add_action('save_post', 'save_sale_count');
 
 
+
+function product_qty()
+{
+    add_meta_box('product-qty-id', 'Total-qty-product', 'product_total_qty', 'product');
+}
+add_action('add_meta_boxes', 'product_qty');
+
+function product_total_qty($post)
+{
+
+    $totalqtyproduct = get_post_meta($post->ID, 'as_total_product_qty', true);
+    $leftproductqty = get_post_meta($post->ID, 'as_left_product_qty', true);
+
+?>
+    <label for="total_qty"> Total Qty of Product</label>
+    <input type="text" id="total_qty" name="total_qty" value="<?php echo $totalqtyproduct ?>" /><br>
+    <lable for="leftproductqty">Left product qty </lable>
+    <input type="text" id="left_qty" name="left_qty" value="<?php echo $leftproductqty ?>" />
+
+<?php
+}
+function save_total_product_qty($post_id)
+{
+    if (array_key_exists('total_qty', $_POST)) {
+        update_post_meta(
+            $post_id,
+            'as_total_product_qty',
+            $_POST['total_qty']
+        );
+    }
+}
+add_action('save_post', 'save_total_product_qty');
+
+
+function save_left_product_qty($post_id)
+{
+    // if (array_key_exists('total_qty', $_POST)) {
+    //     update_post_meta(
+    //         $post_id,
+    //         'as_total_product_qty',
+    //         $_POST['total_qty']
+    //     );
+    // }
+}
+add_action('save_post', 'save_left_product_qty');
 
 
 function ecommerce_cartdata()
@@ -837,7 +910,7 @@ function as_update_decrement_qty()
     $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
     $data = maybe_unserialize($retrieve_data[0]['session_data']);
     $qty = $_POST['qtyupdate'];
-    $id = $_POST['id'];
+    $id = $_POST['id'];         
 
     $data['product'][$id] = (int) $qty;
     $wpdb->update(
