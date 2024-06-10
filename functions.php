@@ -638,28 +638,13 @@ function salecount_display($post)
 
 function save_sale_count($post_id)
 {
-    if (is_user_logged_in()) {
-        $current_user = wp_get_current_user();
-        $user_id = (string) $current_user->ID;
-    } else if (isset($_COOKIE['user_cart_id'])) {
-        $user_id = $_COOKIE['user_cart_id'];
-    } else {
-        $user_cart_id = random_strings(8);
-        setcookie('user_cart_id', $user_cart_id, time() + (86400 * 30), "/");
-        $user_id = $user_cart_id;
-    }
-    global $wpdb;
-    $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
-    $data = maybe_unserialize($retrieve_data[0]['session_data']);
-    print_r($data);
-    print_r($retrieve_data);
-    if (array_key_exists('sale_count', $_POST)) {
-        update_post_meta(
-            $post_id,
-            'sale_count',
-            $_POST['total_qty']
-        );
-    }
+    // if (array_key_exists('sale_count', $_POST)) {
+    //     update_post_meta(
+    //         $post_id,
+    //         'sale_count',
+    //         $_POST['total_qty']
+    //     );
+    // }
 }
 add_action('save_post', 'save_sale_count');
 
@@ -667,31 +652,26 @@ add_action('save_post', 'save_sale_count');
 
 function product_qty()
 {
-    add_meta_box('product-qty-id', 'Total-qty-product', 'product_total_qty', 'product');
+    add_meta_box('product-qty-id', 'Stock', 'product_total_qty', 'product');
 }
 add_action('add_meta_boxes', 'product_qty');
 
 function product_total_qty($post)
 {
-
-    $totalqtyproduct = get_post_meta($post->ID, 'as_total_product_qty', true);
-    $leftproductqty = get_post_meta($post->ID, 'as_left_product_qty', true);
-
+    $Stockproduct = get_post_meta($post->ID, 'as_stock', true);
 ?>
-    <label for="total_qty"> Total Qty of Product</label>
-    <input type="text" id="total_qty" name="total_qty" value="<?php echo $totalqtyproduct ?>" /><br>
-    <lable for="leftproductqty">Left product qty </lable>
-    <input type="text" id="left_qty" name="left_qty" value="<?php echo $leftproductqty ?>" />
-
+    <label for="stock">Stock </label>
+    <input type="text" id="stock" name="stock" value="<?php echo $Stockproduct ?>" /><br>
 <?php
 }
+
 function save_total_product_qty($post_id)
 {
-    if (array_key_exists('total_qty', $_POST)) {
+    if (array_key_exists('stock', $_POST)) {
         update_post_meta(
             $post_id,
-            'as_total_product_qty',
-            $_POST['total_qty']
+            'as_stock',
+            $_POST['stock']
         );
     }
 }
@@ -817,12 +797,7 @@ function contact_data__display($post)
 }
 function random_strings($length_of_string)
 {
-
-    // String of all alphanumeric character
     $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-    // Shuffle the $str_result and returns substring
-    // of specified length
     return substr(
         str_shuffle($str_result),
         0,
@@ -910,7 +885,7 @@ function as_update_decrement_qty()
     $retrieve_data = $wpdb->get_results("SELECT * FROM session_management WHERE cart_user_id='$user_id'", ARRAY_A);
     $data = maybe_unserialize($retrieve_data[0]['session_data']);
     $qty = $_POST['qtyupdate'];
-    $id = $_POST['id'];         
+    $id = $_POST['id'];
 
     $data['product'][$id] = (int) $qty;
     $wpdb->update(

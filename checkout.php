@@ -20,7 +20,7 @@ if (is_user_logged_in()) {
     $id = wp_insert_post($post_arr);
 
     // print_r($id);
-update_post_meta(
+    update_post_meta(
       $id,
       'ecommerce_billing_data',
       $_POST
@@ -34,6 +34,22 @@ update_post_meta(
       'ecommerce_cart_data',
       $data
     );
+
+    if (isset(($retrieve_data[0]))) {
+      $data = maybe_unserialize($retrieve_data[0]['session_data']);
+ foreach ($data['product'] as $productId => $qty) {
+        $Stockproduct = get_post_meta($productId, 'as_stock', true);
+        $stock = $Stockproduct - $qty;
+        update_post_meta(
+          $productId,
+          'as_stock',
+          $stock
+        );
+      }
+    
+    }
+    
+
     // exit;
     unset($_POST);
     $wpdb->delete('session_management', ['cart_user_id' => $user_id]);

@@ -96,3 +96,24 @@ function display_archive_state($states){
     return $states;
 }
 add_filter('display_post_states', 'display_archive_state');
+
+
+
+$cart = array();
+        if (isset($_SESSION['cart_json'])) {
+            $cart = json_decode($_SESSION['cart_json'], true);
+        }
+        
+        foreach ($cart as $val) {
+            $product_id=$val['product_id'];
+            $quantity = $val['quantity'];
+            
+            $product_stock = get_post_meta($product_id, 'ecommerce_stock', true);
+            $sell_count = get_post_meta($product_id, 'sell_count', true);
+
+            $new_quantity = $product_stock - $quantity;
+            $new_sell_count = intval($sell_count) + $quantity;
+
+            update_post_meta($product_id, 'sell_count', $new_sell_count);
+            update_post_meta($product_id, 'ecommerce_stock', $new_quantity);
+        }
