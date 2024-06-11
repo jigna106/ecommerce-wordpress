@@ -37,19 +37,15 @@ if (is_user_logged_in()) {
 
     if (isset(($retrieve_data[0]))) {
       $data = maybe_unserialize($retrieve_data[0]['session_data']);
- foreach ($data['product'] as $productId => $qty) {
+      foreach ($data['product'] as $productId => $qty) {
         $Stockproduct = get_post_meta($productId, 'as_stock', true);
         $stock = $Stockproduct - $qty;
-        update_post_meta(
-          $productId,
-          'as_stock',
-          $stock
-        );
+        $salecountproduct = get_post_meta($productId, 'sale_count', true);
+        $ascount = (int) $salecountproduct + (int) $qty;
+        update_post_meta($productId, 'as_stock', $stock);
+        update_post_meta($productId, 'sale_count', $ascount);
       }
-    
     }
-    
-
     // exit;
     unset($_POST);
     $wpdb->delete('session_management', ['cart_user_id' => $user_id]);

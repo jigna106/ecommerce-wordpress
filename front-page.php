@@ -88,13 +88,28 @@ if ($the_query->have_posts()) {
                             </div>
                         </a>
                     </div>
-
                 <?php
                 }
 
                 ?>
             </div>
         </div>
+    </div>
+    <div>
+        <?php
+
+        $catgories = get_terms(array(
+            'taxonomy' => 'product_cat',
+
+        ));
+        // echo "<pre>";
+        // print_r($catgories);
+        foreach ($catgories as $catgory) {
+
+            echo do_shortcode("[as_saleproduct categories=$catgory->name]");
+        }
+
+        ?>
     </div>
 
 <?php

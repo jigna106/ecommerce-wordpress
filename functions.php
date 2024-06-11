@@ -648,8 +648,6 @@ function save_sale_count($post_id)
 }
 add_action('save_post', 'save_sale_count');
 
-
-
 function product_qty()
 {
     add_meta_box('product-qty-id', 'Stock', 'product_total_qty', 'product');
@@ -1589,3 +1587,103 @@ function save_hobbies($post_id)
     }
 }
 add_action('save_post', 'save_hobbies');
+
+
+// most sales products
+add_shortcode('as_saleproduct', 'as_saleproduct_shortcode');
+
+function as_saleproduct_shortcode($atts)
+{
+    print_r($atts);
+    $stock = 10;
+    $catgories = wp_get_post_terms(get_the_ID(), "product_cat");
+    // print_r($catgories);
+    $args = array(
+        'post_type' => 'product',
+        'posts_per_page' => '3',
+        'tax_query' => array(  
+                array(
+                    'taxonomy' =>$atts['categories'],
+                    'field' => 'slug',
+                    'terms' => 'name',
+                    
+                )
+            ),
+        'meta_query' => array(
+            array(
+                'key' => 'sale_count',
+                'value' => $stock,
+                'compare' => '>='
+            )
+        ),
+    );
+
+    $your_custom_query = new WP_Query($args);
+
+
+    // echo "<pre>";
+    // print_r($your_custom_query);
+    // echo "</pre>";
+
+?>
+    <div class="container">
+        <div class="row">
+            <div class="LatestProduct">
+                <h1>Most Popular Products</h1>
+            </div>
+            <div class="row d-flex justify-content-between products-items">
+                <?php
+                while ($your_custom_query->have_posts()) {
+                    $your_custom_query->the_post();
+                ?>
+                    <div class="col-md-4">
+                        <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
+                            <?php
+                            $catgories = wp_get_post_terms(get_the_ID(), "product_cat");
+                            // print_r($catgories)
+                            ?>
+                            <div class="row category-list-wrapper">
+                                <?php
+                                foreach ($catgories as $catgoriy) {
+                                ?>
+                                    <span>
+                                        <?php echo $catgoriy->name; ?>
+                                    </span>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                            <div class="col-4">
+                                <?php echo the_post_thumbnail('product-thumb') ?>
+                            </div>
+                            <div class="col-md-12 text-uppercase text-lg">
+                                <?php the_title(); ?>
+                            </div>
+                            <div class="col-md-12 text-uppercase text-lg">
+
+                                <?php
+                                $product_id = get_the_ID();
+                                $price = apply_filters("get_product_discountprice", get_post_meta(get_the_ID(), 'ecommerce_price', true), $product_id);
+                                if ($price['sale_price'] != $price['regular_price']) {
+                                    echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>' . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+                                } else {
+                                ?>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                        <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                                    </svg>
+                                <?php
+                                    echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+                                }
+                                ?>
+                            </div>
+                        </a>
+                    </div>
+
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+<?php
+}
