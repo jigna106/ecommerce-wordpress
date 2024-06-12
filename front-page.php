@@ -35,6 +35,7 @@ $the_query = new WP_Query($args);
 // print_r($the_query);
 // echo "</pre>";
 if ($the_query->have_posts()) {
+   
 ?>
     <div class="container">
         <div class="row">
@@ -45,6 +46,8 @@ if ($the_query->have_posts()) {
                 <?php
                 while ($the_query->have_posts()) {
                     $the_query->the_post();
+                    $Stockproduct = get_post_meta($post->ID, 'as_stock', true);
+                    if ($Stockproduct > 0) {
                 ?>
                     <div class="col-md-4">
                         <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
@@ -89,6 +92,7 @@ if ($the_query->have_posts()) {
                         </a>
                     </div>
                 <?php
+                    }
                 }
 
                 ?>
@@ -106,13 +110,16 @@ if ($the_query->have_posts()) {
         // print_r($catgories);
         foreach ($catgories as $catgory) {
 
-            echo do_shortcode("[as_saleproduct categories=$catgory->name]");
+            echo do_shortcode("[as_saleproduct categories= $catgory->name]");
         }
 
         ?>
     </div>
 
 <?php
+}else{
+    
+
 }
 get_footer();
 ?>

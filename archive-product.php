@@ -23,6 +23,8 @@ $args = array(
 );
 
 $brands = get_categories($args);
+
+
 // print_r($Colors );
 ?>
 <div class="container main-content">
@@ -32,53 +34,50 @@ $brands = get_categories($args);
       <h3>Colors</h3>
       <?php
       foreach ($Colors as $Color) {
-        ?>
+      ?>
         <div class="col-12 col-sm-6 col-md-4 col-lg-4">
           <div class="list-item">
             <label>
               <?php echo $Color->name; ?>
 
-              <input type="checkbox" id="color" value="<?php echo $Color->name; ?>" name="color"
-                data-id="<?php echo $Color->name; ?>" /></a>
+              <input type="checkbox" id="color" value="<?php echo $Color->name; ?>" name="color" data-id="<?php echo $Color->name; ?>" /></a>
             </label>
           </div>
         </div>
-        <?php
+      <?php
       }
       ?>
       <h3>Catgories</h3>
       <?php
       foreach ($catgories as $catgorie) {
-        ?>
+      ?>
         <div class="col-12 col-sm-6 col-md-4 col-lg-4">
           <div class="list-item">
             <label>
               <?php echo $catgorie->name; ?>
-              <input type="checkbox" id="catgorie" value="<?php echo $catgorie->name; ?>" name="catgorie"
-                data-id="<?php echo $catgorie->name; ?>" /></a>
+              <input type="checkbox" id="catgorie" value="<?php echo $catgorie->name; ?>" name="catgorie" data-id="<?php echo $catgorie->name; ?>" /></a>
             </label>
           </div>
         </div>
 
-        <?php
+      <?php
       }
       ?>
       <h3>Brands</h3>
       <?php
       foreach ($brands as $brand) {
-        ?>
+      ?>
         <div class="col-12 col-sm-6 col-md-4 col-lg-4">
           <div class="list-item">
             <label>
               <?php echo $brand->name; ?>
 
-              <input type="checkbox" id="brand" value="<?php echo $brand->name; ?>" name="brand"
-                data-id="<?php echo $brand->name; ?>" /></a>
+              <input type="checkbox" id="brand" value="<?php echo $brand->name; ?>" name="brand" data-id="<?php echo $brand->name; ?>" /></a>
             </label>
           </div>
         </div>
 
-        <?php
+      <?php
       }
       ?>
 
@@ -112,60 +111,65 @@ $brands = get_categories($args);
     if (have_posts()) {
       while (have_posts()) {
         the_post();
-        ?>
-        <div class="col-4 pt-3 ">
-          <?php
-          $catgories = wp_get_post_terms($post->ID, "product_cat");
-          //print_r($catgories)
-          ?>
-          <div class="row category-list-wrapper">
+        $Stockproduct = get_post_meta($post->ID, 'as_stock', true);
+        if ($Stockproduct > 0) {
+    ?>
+          <div class="col-4 pt-3 ">
             <?php
-            foreach ($catgories as $catgoriy) {
-              ?>
-              <span>
-                <?php echo $catgoriy->name; ?>
-              </span>
-              <?php
-            }
+            $catgories = wp_get_post_terms($post->ID, "product_cat");
+
+            // print_r($Stockproduct);
+
+            //print_r($catgories)
             ?>
-          </div>
-          <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
-            <div class="col-3">
-              <?php echo the_post_thumbnail('product-thumb') ?>
+            <div class="row category-list-wrapper">
+              <?php
+              foreach ($catgories as $catgoriy) {
+
+              ?>
+                <span>
+                  <?php echo $catgoriy->name; ?>
+                </span>
+              <?php
+              }
+              ?>
             </div>
-            <div class="col-12 pt-3 text-uppercase text-lg">
-              <?php the_title(); ?>
-            </div>
-            <div>
-              Price:
-             <?php
+            <a href="<?php echo get_permalink() ?>" class="font-weight-bold text-decoration-none text-body">
+              <div class="col-3">
+                <?php echo the_post_thumbnail('product-thumb') ?>
+              </div>
+              <div class="col-12 pt-3 text-uppercase text-lg">
+                <?php the_title(); ?>
+              </div>
+              <div>
+                Price:
+                <?php
                 $product_id = $post->ID;
-                $price = apply_filters("get_product_discountprice",get_post_meta($post->ID, 'ecommerce_price',true), $product_id);
-                    
-                if($price['sale_price'] != $price['regular_price']){
-                 echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
-                .number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',').'</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
-                .number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
-                }
-                else{
-                    ?>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-                      <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
-                    </svg>
-                    <?php
-                    echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
+                $price = apply_filters("get_product_discountprice", get_post_meta($post->ID, 'ecommerce_price', true), $product_id);
+
+                if ($price['sale_price'] != $price['regular_price']) {
+                  echo '<del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',') . '</del><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" /></svg>'
+                    . number_format($price['sale_price'], ((int) $price['sale_price'] == $price['sale_price'] ? 0 : 2), '.', ',');
+                } else {
+                ?>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z" />
+                  </svg>
+                <?php
+                  echo number_format($price['regular_price'], ((int) $price['regular_price'] == $price['regular_price'] ? 0 : 2), '.', ',');
                 }
                 // print_r($product_id);
-               ?>
+                ?>
 
-            </div>
-          </a>
-        </div>
-
-        <?php
-
+              </div>
+            </a>
+          </div>
+    <?php
+        }
       }
     }
+
     ?>
     <?php
     global $wp_query;
@@ -185,20 +189,20 @@ $brands = get_categories($args);
         </select>
       </div>
     </div>
-  <div class="as-page-number">
+    <div class="as-page-number">
       <input type="hidden" class="page-number-hidden" value="1" />
       <ul class="pagination justify-content-center">
-        <li class="page-item"><input type="button" name="backward" value="<" class="backward page-link"
-            disabled='disabled' /></li>
+        <li class="page-item"><input type="button" name="backward" value="<" class="backward page-link" disabled='disabled' /></li>
         <?php
         for ($i = 1; $i <= ($totalpagenumber); $i++) {
-         ?>
-        <li class="page-item"><input type="button" name="page-number" value="<?php echo $i ?>" class="page-number page-link <?php 
-          if($i==1)
-          {echo "active";}
-          ?>" />
+        ?>
+          <li class="page-item"><input type="button" name="page-number" value="<?php echo $i ?>" class="page-number page-link <?php
+                                                                                                                              if ($i == 1) {
+                                                                                                                                echo "active";
+                                                                                                                              }
+                                                                                                                              ?>" />
           </li>
-          
+
         <?php
         }
         ?>
@@ -209,8 +213,6 @@ $brands = get_categories($args);
 
 
 </div>
-
-
 <?php
 get_footer();
 ?>
