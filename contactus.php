@@ -1,5 +1,9 @@
 <?php /* Template Name: contactus */
 get_header();
+
+$current_user = wp_get_current_user();
+$user_id = (string)$current_user->ID;
+// print_r($user_id);
 ?>
 <section class="bg-light py-3 py-md-5">
     <div class="container">
@@ -17,6 +21,8 @@ get_header();
                 <div class="col-12 col-lg-9">
                     <div class="bg-white border rounded shadow-sm overflow-hidden">
                         <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
+
+                        <input type="hidden" name="userid" id="userid" value= "<?php  echo $user_id ?> " />
                             <div class="col-12 col-md-6">
                                 <label for="firstname" class="form-label">First Name</label>
                                 <div class="input-group">

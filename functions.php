@@ -1602,7 +1602,7 @@ function as_saleproduct_shortcode($atts)
     $args = array(
         'post_type' => 'product',
         'posts_per_page' => '3',
-        'orderby' => 'sale_count',
+
         'tax_query' => array(
             array(
                 'taxonomy' => "product_cat",
@@ -1612,18 +1612,21 @@ function as_saleproduct_shortcode($atts)
         ),
         'meta_query' => array(
             'relation' => 'AND',
-            array(
+            'sale_count_product' => array(
                 'key' => 'sale_count',
                 'value' => $stock,
                 'compare' => '>='
             ),
-            array(
+            'stock_count_product' =>   array(
                 'key' => 'as_stock',
                 'value' =>  $Stockproduct,
                 'compare' => '>'
             ),
-
-        )
+        ),
+        'orderby' => array(
+            'sale_count_product' => 'DESC',
+            'stock_count_product' => 'ASC'
+        ),
     );
     $your_custom_query = new WP_Query($args);
     // echo "<pre>";
@@ -1701,3 +1704,60 @@ function as_saleproduct_shortcode($atts)
 <?php
     }
 }
+
+// crud operation using rest api for contact page
+
+add_action('rest_api_init', 'contact_restapi');
+
+function contact_restapi()
+{
+
+    register_rest_route('v1/as-post', '/createcontact/', array(
+        'methods' => 'POST',
+        'callback' => 'createcontactpost',
+       ));
+
+       register_rest_route('v1/as-post', '/contactlist/', array(
+        'methods' => 'GET',
+        'callback' => 'listcontactpost',
+
+       ));
+
+}
+
+function createcontactpost($request)
+{
+    global $wpdb;
+
+    $params = $request->get_params();
+  
+    // print_r($contact_user_id);
+    $wpdb->insert(
+        'contact_data',
+        array(
+            'contact_user_id' => $params['userid'],
+            'contact_data' => serialize($params),
+        )
+    );
+    $post_arr = array(
+        'post_title' => $params['firstname'] . " " .  $params['lastname'],
+        'post_content' => $params['message'],
+        'post_type' => 'contact',
+        'post_author'   => get_current_user_id(),
+        'post_status' => 'draft',
+
+    );
+
+    $id = wp_insert_post($post_arr);
+    return new WP_REST_Response(
+        array(
+            'success' => true,
+            "massage" => "post created success fully",
+            "created_id" => $id
+        )
+    );
+}
+ function listcontactpost(){
+
+
+ }

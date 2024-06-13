@@ -154,36 +154,36 @@ function make_ajax(text = 1, selctedsize = 12) {
   });
 }
 
-jQuery(document).ready(function () {
-  jQuery(document).on("click", "#Contact_page_submit", function () {
-    var contactdata = {};
+// jQuery(document).ready(function () {
+//   jQuery(document).on("click", "#Contact_page_submit", function () {
+//     var contactdata = {};
 
-    var firstname = jQuery("#firstname").val();
-    var lastname = jQuery("#lastname").val();
-    var email = jQuery("#email").val();
-    var phone = jQuery("#phone").val();
-    var message = jQuery("#message").val();
+//     var firstname = jQuery("#firstname").val();
+//     var lastname = jQuery("#lastname").val();
+//     var email = jQuery("#email").val();
+//     var phone = jQuery("#phone").val();
+//     var message = jQuery("#message").val();
 
-    contactdata.Firstname = firstname;
-    contactdata.Lastname = lastname;
-    contactdata.Email = email;
-    contactdata.phone = phone;
-    contactdata.Message = message;
+//     contactdata.Firstname = firstname;
+//     contactdata.Lastname = lastname;
+//     contactdata.Email = email;
+//     contactdata.phone = phone;
+//     contactdata.Message = message;
 
-    let contactdataajax = {
-      data: contactdata,
-      action: "as_contactdata",
-    };
-    jQuery.ajax({
-      type: "post",
-      url: as_ecommerce_ajax_object.ajax_url,
-      data: contactdataajax,
-      success: function (getdata) {
-        console.log(getdata);
-      },
-    });
-  });
-});
+//     let contactdataajax = {
+//       data: contactdata,
+//       action: "as_contactdata",
+//     };
+//     jQuery.ajax({
+//       type: "post",
+//       url: as_ecommerce_ajax_object.ajax_url,
+//       data: contactdataajax,
+//       success: function (getdata) {
+//         console.log(getdata);
+//       },
+//     });
+//   });
+// });
 
 jQuery(document).ready(function () {
   wp.editor.initialize("description", {
@@ -255,7 +255,7 @@ jQuery(document).ready(function () {
           }
         });
       },
-    },      
+    },
 
     quicktags: {
       buttons: "..",
@@ -316,7 +316,7 @@ jQuery(document).ready(function () {
       body_class: "id post-type-post-status-publish post-format-standard",
       wpeditimage_disable_captions: false,
       wpeditimage_html5_captions: true,
-      
+
       setup: function (ed) {
         ed.on("keyup", function (e) {
           var content = ed.getContent();
@@ -332,7 +332,6 @@ jQuery(document).ready(function () {
           }
         });
       },
-
     },
     quicktags: {
       buttons: "..",
@@ -886,4 +885,34 @@ jQuery(document).on("click", "#deletepost", function () {
   } else {
     console.log("data not deleted");
   }
+});
+
+// contact post api
+
+jQuery(document).on("click", "#Contact_page_submit", function () {
+
+  var firstname = jQuery("#firstname").val();
+  var lastname = jQuery("#lastname").val();
+  var email = jQuery("#email").val();
+  var phone = jQuery("#phone").val();
+  var message = jQuery("#message").val();
+  var user_id = jQuery("#userid").val();
+  let addcontactdata = {
+    firstname: firstname,
+    lastname: lastname,
+    email: email,
+    phone:phone,
+    message: message,
+    userid:user_id,
+  };
+  jQuery.ajax({
+    method: "POST",
+    url: as_ecommerce_ajax_object.rest_url + "createcontact/",
+    data: addcontactdata,
+    success: function (response) {
+      // jQuery(".result .success").html(response.massage);
+      // console.log(response);
+      // console.log(response);
+    },
+  });
 });

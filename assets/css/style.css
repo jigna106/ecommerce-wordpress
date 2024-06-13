@@ -272,3 +272,11 @@ ul#menu-logout-user-menu li a {
   font-size: xx-large;
   text-align: center;
 }
+.contactlist{
+  .name{
+    border-bottom: 1px dotted #ccc;
+    cursor: pointer;
+   
+  }
+  padding-top: 20px;
+}
