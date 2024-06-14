@@ -1397,18 +1397,14 @@ add_action('rest_api_init', 'test_api');
 
 function test_api()
 {
-    register_rest_route('v1/as-post', '/list/', array(
-        'methods' => 'GET',
-        'callback' => 'get_test_data',
-        'args' => [
-            'id',
-            'Categories'
-        ]
+    register_rest_route('v1/as-post', '/createcontact/', array(
+        'methods' => 'POST',
+        'callback' => 'createcontactpost',
     ));
-    register_rest_route('v1/as-post', '/(?P<slug>[a-zA-Z0-9-]+)',  array(
-        'methods' => 'GET',
-        'callback' => 'post_single',
 
+    register_rest_route('v1/as-post', '/contactlist/', array(
+        'methods' => 'GET',
+        'callback' => 'listcontactpost',
     ));
 
     register_rest_route('v1/as-post', '/create/', array(
@@ -1425,6 +1421,19 @@ function test_api()
     register_rest_route('v1/as-post', '/update/', array(
         'methods' => 'POST',
         'callback' => 'updatepostapi'
+
+    ));
+    register_rest_route('v1/as-post', '/list/', array(
+        'methods' => 'GET',
+        'callback' => 'get_test_data',
+        'args' => [
+            'id',
+            'Categories'
+        ]
+    ));
+    register_rest_route('v1/as-post', '/(?P<slug>[a-zA-Z0-9-]+)',  array(
+        'methods' => 'GET',
+        'callback' => 'post_single',
 
     ));
 }
@@ -1705,38 +1714,26 @@ function as_saleproduct_shortcode($atts)
     }
 }
 
-// crud operation using rest api for contact page
-
-add_action('rest_api_init', 'contact_restapi');
-
-function contact_restapi()
-{
-
-    register_rest_route('v1/as-post', '/createcontact/', array(
-        'methods' => 'POST',
-        'callback' => 'createcontactpost',
-       ));
-
-       register_rest_route('v1/as-post', '/contactlist/', array(
-        'methods' => 'GET',
-        'callback' => 'listcontactpost',
-
-       ));
-
-}
 
 function createcontactpost($request)
 {
     global $wpdb;
 
     $params = $request->get_params();
-  
-    // print_r($contact_user_id);
+
+    print_r($params);
     $wpdb->insert(
         'contact_data',
         array(
             'contact_user_id' => $params['userid'],
-            'contact_data' => serialize($params),
+            'firstname' => $params['firstname'],
+            'lastname' => $params['lastname'],
+            'email' => $params['email'],
+            'phoneno' => $params['phone'],
+            'message' => $params['message'],
+            'createddate' => $params['createddate'],
+            'updateddate' => $params['updateddate'],
+            // 'contact_data' => serialize($params),
         )
     );
     $post_arr = array(
@@ -1757,7 +1754,15 @@ function createcontactpost($request)
         )
     );
 }
- function listcontactpost(){
 
 
- }
+function listcontactpost($request)
+{
+    global $wpdb;
+
+    $retrieve_data = $wpdb->get_results("SELECT * FROM contact_data", ARRAY_A);
+    // print_r($retrieve_data);
+
+    echo json_encode($retrieve_data);
+    die();
+}

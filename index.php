@@ -4,7 +4,6 @@ get_header();
 
 $returnpostdata = wp_remote_get('http://192.168.1.8/wordpress/wp-json/v1/as-post/list/');
 //  print_r($returnpostdata)
-
 $json = json_decode($returnpostdata['body'], true);
 ?>
 

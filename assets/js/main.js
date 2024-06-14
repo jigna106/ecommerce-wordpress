@@ -392,6 +392,7 @@ jQuery(document).on("keyup", "#email", function () {
     jQuery("#email_error").text("Must be fill out");
     return false;
   } else {
+
     jQuery("#email_error").text("");
     return true;
   }
@@ -897,6 +898,9 @@ jQuery(document).on("click", "#Contact_page_submit", function () {
   var phone = jQuery("#phone").val();
   var message = jQuery("#message").val();
   var user_id = jQuery("#userid").val();
+  var createddate =jQuery("#createddate").val();
+  var updateddate =jQuery("#updateddate").val();
+
   let addcontactdata = {
     firstname: firstname,
     lastname: lastname,
@@ -904,6 +908,9 @@ jQuery(document).on("click", "#Contact_page_submit", function () {
     phone:phone,
     message: message,
     userid:user_id,
+    createddate:createddate,
+    updateddate:updateddate,
+  
   };
   jQuery.ajax({
     method: "POST",
@@ -915,4 +922,17 @@ jQuery(document).on("click", "#Contact_page_submit", function () {
       // console.log(response);
     },
   });
+});
+jQuery(document).ready(function () {
+  jQuery.ajax({
+    method: "GET",
+    url: as_ecommerce_ajax_object.rest_url + "contactlist/",
+    success: function (response) {
+      console.log(response);
+      
+      
+    },
+  });
+
+
 });

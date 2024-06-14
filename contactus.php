@@ -23,6 +23,8 @@ $user_id = (string)$current_user->ID;
                         <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
 
                         <input type="hidden" name="userid" id="userid" value= "<?php  echo $user_id ?> " />
+                        <input type="hidden" name="createddate" id="createddate" value=" <?php echo date("F j, Y, g:i a") ?>" />
+                        <input type="hidden" name="updateddate" id="updateddate" value=" <?php echo date("F j, Y, g:i a") ?>" />
                             <div class="col-12 col-md-6">
                                 <label for="firstname" class="form-label">First Name</label>
                                 <div class="input-group">
