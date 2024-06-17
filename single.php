@@ -47,9 +47,7 @@ if (have_posts()) {
 }
 
 if (current_user_can('administrator')) {
-
-  // Runs only if this PHP code is in a file that displays outside the admin panels, like the theme template.
-  $id = get_the_ID();
+ $id = get_the_ID();
   echo '<div style="text-align: center"><a href="' . site_url() . "/updatepost/?postname=" . $singlepostdata['post_name'] . '"> Edit This Post</a></div>';
   ?>
   <div style="text-align: center">

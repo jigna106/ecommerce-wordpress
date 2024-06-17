@@ -1,13 +1,22 @@
 <?php /* Template Name: listcontact */
 get_header();
-global $post;
+// global $post;
 
 $returncontactdata = wp_remote_get('http://192.168.1.8/wordpress/wp-json/v1/as-post/contactlist/');
+
+
 $json = json_decode($returncontactdata['body'], true);
+
 // echo "<pre>";
 // print_r($json);
 // echo "</pre>";
+
+// $contactid= $json['ID'];
+
 ?>
+
+
+
 <div class="contactlist" ng-app="app" ng-controller="AppCtrl">
 
   <div class="row text-center">
@@ -16,7 +25,7 @@ $json = json_decode($returncontactdata['body'], true);
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th scope="col">User_id</th>
+        <th scope="col">Query_id</th>
         <th scope="col">Firstname</th>
         <th scope="col">Lastname</th>
         <th scope="col">Email</th>
@@ -28,30 +37,30 @@ $json = json_decode($returncontactdata['body'], true);
 
       </tr>
     </thead>
+  
     <?php
     foreach ($json as $jsondata) {
-    ?>
-      <tbody>
-        <tr>
-          <td><?php echo $jsondata['contact_user_id']; ?></td>
-          <td><?php echo $jsondata['firstname']; ?></td>
-          <td><?php echo $jsondata['lastname']; ?></td>
-          <td><?php echo $jsondata['email']; ?></td>
-          <td><?php echo $jsondata['phoneno']; ?></td>
-          <td><?php echo $jsondata['message']; ?></td>
-          <td><?php echo $jsondata['createddate']; ?></td>
-          <td><?php echo $jsondata['updateddate']; ?></td>
+
+    ?><tbody>
+        
+        <tr> 
+          <td><?php echo $jsondata['ID']; ?></td>
+          <td><?php echo $jsondata['user_info']['firstname']; ?></td>
+          <td><?php echo $jsondata['user_info']['lastname']; ?></td>
+          <td><?php echo $jsondata['user_info']['email']; ?></td>
+          <td><?php echo $jsondata['user_info']['phoneno']; ?></td>
+          <td><?php echo $jsondata['post_content'] ?></td>
+          <td><?php echo $jsondata['user_info']['createddate']; ?></td>
+          <td><?php echo $jsondata['user_info']['updateddate']; ?></td>
           <td colspan="2">
-            <input type="button" value="Edit" name="Edit" />
-            <input type="button" value="delete" name="Delete" />
+            <input type="button" name="editcontact" id="editcontact" value="EDITCONTACT" />
+            <input type="button" name="deletecontact" id="deletecontact" value="DELETECONTACT" />
           </td>
         </tr>
-
-
       </tbody>
     <?php
-
     }
+
     ?>
   </table>
 </div>

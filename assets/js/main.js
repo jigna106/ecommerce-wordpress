@@ -392,7 +392,6 @@ jQuery(document).on("keyup", "#email", function () {
     jQuery("#email_error").text("Must be fill out");
     return false;
   } else {
-
     jQuery("#email_error").text("");
     return true;
   }
@@ -891,26 +890,26 @@ jQuery(document).on("click", "#deletepost", function () {
 // contact post api
 
 jQuery(document).on("click", "#Contact_page_submit", function () {
-
   var firstname = jQuery("#firstname").val();
   var lastname = jQuery("#lastname").val();
   var email = jQuery("#email").val();
   var phone = jQuery("#phone").val();
   var message = jQuery("#message").val();
   var user_id = jQuery("#userid").val();
-  var createddate =jQuery("#createddate").val();
-  var updateddate =jQuery("#updateddate").val();
+
+  var createddate = jQuery("#createddate").val();
+  var updateddate = jQuery("#updateddate").val();
 
   let addcontactdata = {
     firstname: firstname,
     lastname: lastname,
     email: email,
-    phone:phone,
+    phone: phone,
     message: message,
-    userid:user_id,
-    createddate:createddate,
-    updateddate:updateddate,
-  
+    userid: user_id,
+
+    createddate: createddate,
+    updateddate: updateddate,
   };
   jQuery.ajax({
     method: "POST",
@@ -928,11 +927,30 @@ jQuery(document).ready(function () {
     method: "GET",
     url: as_ecommerce_ajax_object.rest_url + "contactlist/",
     success: function (response) {
-      console.log(response);
-      
-      
+      // console.log(response);
     },
   });
+});
 
+jQuery(document).on("click", "#deletecontact", function () {
+  
+  var Contact_id = jQuery("#contactid").val();
+  console.log(Contact_id);
 
+  let data = confirm("Are you sure delete Contact");
+  if (data) {
+    let deletedata = {
+      postid: postid,
+    };
+    jQuery.ajax({
+      method: "DELETE",
+      url: as_ecommerce_ajax_object.rest_url + "deletecontact/",
+      data: deletedata,
+      success: function (response) {
+        console.log(response);
+      },
+    });
+  } else {
+    console.log("data not deleted");
+  }
 });

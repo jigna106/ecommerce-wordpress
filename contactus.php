@@ -4,6 +4,8 @@ get_header();
 $current_user = wp_get_current_user();
 $user_id = (string)$current_user->ID;
 // print_r($user_id);
+
+
 ?>
 <section class="bg-light py-3 py-md-5">
     <div class="container">
@@ -23,6 +25,7 @@ $user_id = (string)$current_user->ID;
                         <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
 
                         <input type="hidden" name="userid" id="userid" value= "<?php  echo $user_id ?> " />
+                   
                         <input type="hidden" name="createddate" id="createddate" value=" <?php echo date("F j, Y, g:i a") ?>" />
                         <input type="hidden" name="updateddate" id="updateddate" value=" <?php echo date("F j, Y, g:i a") ?>" />
                             <div class="col-12 col-md-6">

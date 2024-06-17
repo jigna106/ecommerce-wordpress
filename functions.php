@@ -777,23 +777,7 @@ function contact()
 }
 add_action('init', 'contact');
 
-function contact_data_()
-{
-    add_meta_box('contact_data_id', 'Contact-Data', 'contact_data__display', 'contact');
-}
-add_action('add_meta_boxes', 'contact_data_');
 
-function contact_data__display($post)
-{
-
-    $contactdata = get_post_meta($post->ID, 'contact_data', true);
-    //  print_r($contactdata);
-    echo '<p><strong>' . __('firstname') . ':</strong> ' . $contactdata['data']['Firstname'] . '</p>';
-    echo '<p><strong>' . __('lastname') . ':</strong> ' . $contactdata['data']['Lastname'] . '</p>';
-    echo '<p><strong>' . __('email') . ':</strong> ' . $contactdata['data']['Email'] . '</p>';
-    echo '<p><strong>' . __('phonenumber') . ':</strong> ' . $contactdata['data']['phone'] . '</p>';
-    echo '<p><strong>' . __('Message') . ':</strong> ' . $contactdata['data']['Message'] . '</p>';
-}
 function random_strings($length_of_string)
 {
     $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -1407,6 +1391,13 @@ function test_api()
         'callback' => 'listcontactpost',
     ));
 
+    register_rest_route('v1/as-post', '/deletecontact/', array(
+        'methods' => 'DELETE',
+        'callback' => 'deletecontact',
+    )
+
+    );
+
     register_rest_route('v1/as-post', '/create/', array(
         'methods' => 'POST',
         'callback' => 'createpostapi'
@@ -1710,7 +1701,7 @@ function as_saleproduct_shortcode($atts)
                 </div>
             </div>
         </div>
-<?php
+    <?php
     }
 }
 
@@ -1718,24 +1709,28 @@ function as_saleproduct_shortcode($atts)
 function createcontactpost($request)
 {
     global $wpdb;
-
     $params = $request->get_params();
+    $get_user = $wpdb->get_row("SELECT * FROM contact_data WHERE contact_user_id='" . $params['userid'] . "'", ARRAY_A);
 
-    print_r($params);
-    $wpdb->insert(
-        'contact_data',
-        array(
-            'contact_user_id' => $params['userid'],
-            'firstname' => $params['firstname'],
-            'lastname' => $params['lastname'],
-            'email' => $params['email'],
-            'phoneno' => $params['phone'],
-            'message' => $params['message'],
-            'createddate' => $params['createddate'],
-            'updateddate' => $params['updateddate'],
-            // 'contact_data' => serialize($params),
-        )
-    );
+    if (isset($get_user['id'])) {
+        $contact_id = $get_user['id'];
+    } else {
+        $wpdb->insert(
+            'contact_data',
+            array(
+                'contact_user_id' => $params['userid'],
+                'firstname' => $params['firstname'],
+                'lastname' => $params['lastname'],
+                'email' => $params['email'],
+                'phoneno' => $params['phone'],
+                'createddate' => $params['createddate'],
+                'updateddate' => $params['updateddate'],
+                // 'contact_data' => serialize($params),
+            )
+        );
+
+        $contact_id = $wpdb->insert_id;
+    }
     $post_arr = array(
         'post_title' => $params['firstname'] . " " .  $params['lastname'],
         'post_content' => $params['message'],
@@ -1746,23 +1741,96 @@ function createcontactpost($request)
     );
 
     $id = wp_insert_post($post_arr);
+    update_post_meta(
+        $id,
+        'refrence_id',
+        $contact_id
+    );
     return new WP_REST_Response(
         array(
             'success' => true,
             "massage" => "post created success fully",
-            "created_id" => $id
+            "created_id" => $id,
         )
     );
 }
+
+function refrence_id()
+{
+    add_meta_box('refrence-id', 'Contact-Refrence-Id', 'refrence_id_display', 'contact');
+}
+add_action('add_meta_boxes', 'refrence_id');
+function refrence_id_display($post)
+{
+    $refrence_id = get_post_meta($post->ID, 'refrence_id', true);
+
+    ?>
+    <input type="text" id="refrence_id" name="refrence_id" value="<?php echo $refrence_id ?>" /><br>
+
+<?php
+}
+
+
+function contact_data_()
+{
+    add_meta_box('contact_data_id', 'Contact-Data', 'contact_data__display', 'contact');
+}
+add_action('add_meta_boxes', 'contact_data_');
+
+function contact_data__display($post)
+{
+    global $wpdb;
+
+
+    $retrieve_data = $wpdb->get_results("SELECT * FROM contact_data", ARRAY_A);
+    // print_r($retrieve_data);
+
+
+    echo '<p><strong>' . __('firstname') . ':</strong> ' . $retrieve_data[0]['firstname'] . '</p>';
+    echo '<p><strong>' . __('lastname') . ':</strong> ' . $retrieve_data[0]['lastname'] . '</p>';
+    echo '<p><strong>' . __('email') . ':</strong> ' . $retrieve_data[0]['email'] . '</p>';
+    echo '<p><strong>' . __('phonenumber') . ':</strong> ' . $retrieve_data[0]['phoneno'] . '</p>';
+}
+
 
 
 function listcontactpost($request)
 {
     global $wpdb;
 
-    $retrieve_data = $wpdb->get_results("SELECT * FROM contact_data", ARRAY_A);
-    // print_r($retrieve_data);
+    $params = $request->get_params();
+    $id = get_current_user_id();
+    // print_r($id);
+    $query = new WP_Query(array(
+        "post_type" => "contact"
+    ));
 
-    echo json_encode($retrieve_data);
+    $return_data = array();
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+
+            global $post;
+            $data_array = (array)$post;
+            $data_array["user_info"] = $wpdb->get_row("SELECT * FROM contact_data WHERE id =". get_post_meta($post->ID,"refrence_id",true), ARRAY_A);
+          
+            $return_data[] =  $data_array;
+        }
+    }
+    echo json_encode($return_data);
     die();
+}
+
+function deletecontact($request){
+    $params = $request->get_params();
+
+    $deleteData = wp_delete_post($params['Contact_id']);
+
+    return new WP_REST_Response(
+        array(
+            'success' => true,
+            "sucessupdatemsg" => "Delete post  success fully",
+        )
+    );
+
 }
